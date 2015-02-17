@@ -3,11 +3,12 @@
 <head>
     <meta charset="utf-8">
     <title>RHforum » {% block title %}{% endblock %}</title></title>
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <style>
 
 * {box-sizing: border-box;}
 
-body {width: 70%; margin: auto; font-family: "Ubuntu"; padding-bottom: 64px;}
+body {width: 75%; margin: auto; font-family: 'Ubuntu', sans-serif;; padding-bottom: 64px;}
 
 a {color: #006;}
 a:hover {color: #339;}
@@ -34,11 +35,20 @@ a.row-text:hover {color: #004 !important;}
 .post-data {border-bottom: 1px solid #ddd; width: 100%; text-align: right; font-size: smaller;}
 .post-text {padding: 4px;}
 .post-text p {text-indent: 4%;}
-.post-text textarea {width: 100%; min-height: 100px; border: none; font-family: "Ubuntu";}
+.post-text textarea {width: 100%; min-height: 100px; border: none; font-family: 'Ubuntu', sans-serif;;}
 
 .new-thread #name {width: 100%; margin-bottom:6px; font-size: 24px;}
 
 .fail {color: #800;}
+
+@media (max-width: 800px) {
+    body {width: 90%;}
+    .row {position: relative; min-height: 62px;}
+    .row-data {font-size: 12px; position: absolute; bottom: 0; right: 0;}
+    
+    .post-contents {margin-left: 0;}
+    .post-sidebar {float: left; position: inherit; height: auto; border-bottom: 1px solid #ddd; margin-right: 4px;}
+}
 
     </style>
 </head>
