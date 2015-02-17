@@ -6,21 +6,41 @@
     <h1><a href="/">RHForum</a></h1>
     <div class="fora">
         {% for forum in fora %}
-            <div class="row">
-                <div class="row-data">
-                    <div class="row-total">{{ forum.threads | count }} témat</div>
-                    <div class="row-last">
-                        {% if forum.last_post %}
-                            Nejnovější: <a href="{{forum.last_post.thread.url}}">{{ forum.last_post.thread.name }} od {{ forum.last_post.author.name }}</a>
-                        {% endif %}
+            {% if forum != edit_forum %}
+                <div class="row">
+                    <div class="row-data">
+                        <div class="row-total">{{ forum.threads | count }} témat</div>
+                        <div class="row-last">
+                            {% if forum.last_post %}
+                                Nejnovější: <a href="{{forum.last_post.thread.url}}">{{ forum.last_post.thread.name }} od {{ forum.last_post.author.name }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <a class="row-text" href="{{forum.url}}">
+                        <div class="row-name">{{forum.name}}</div>
+                        <div class="row-description">{{forum.description}}</div>
+                    </a>
+                </div>
+            {% else %}
+                <form class="form-edit-forum" method="POST">
+                <div class="row">
+                    <div class="row-data">
+                        {{form.move_up}}<br>
+                        {{form.move_down}}
+                    </div>
+                    <div class="row-text">
+                        <div class="row-name">{{form.name}}</div>
+                        <div class="row-description">{{form.description}} {{form.save}}</div>
                     </div>
                 </div>
-                <a class="row-text" href="{{forum.url}}">
-                    <div class="row-name">{{forum.name}}</div>
-                    <div class="row-description">{{forum.description}}</div>
-                </a>
-            </div>
+                </form>
+            {% endif %}
         {% endfor %}
     </div>
-    <h2>Aktivní témata</h2>
+    {% if g.user and g.user.rights >= 4 %}
+        <div class="forum-admin">
+            <a href="/edit-forum/new">Přidat fórum</a>
+        </div>
+    {% endif %}
+    <!--h2>Aktivní témata</h2>-->
 {% endblock %}

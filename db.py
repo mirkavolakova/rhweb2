@@ -31,6 +31,10 @@ class User(Base):
     @property
     def num_posts(self):
         return session.query(Post).filter(Post.author == self).count()
+    
+    @property
+    def admin(self):
+        return self.rights >= 4
 
 class Forum(Base):
     __tablename__ = 'fora'
@@ -41,6 +45,7 @@ class Forum(Base):
     description = Column(UnicodeText)
     minviewrights = Column(Integer)
     minpostrights = Column(Integer)
+    position = Column(Integer)
     
     @property
     def url(self):
@@ -97,14 +102,14 @@ class ThreadRead(Base):
 Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
-f = Forum(name="Novinky", identifier="novinky", description="Novinky ve světě RH")
+f = Forum(name="Novinky", identifier="novinky", description="Novinky ve světě RH", position=0)
 session.add(f)
-f2 = Forum(name="Obecné", identifier="obecne", description="Posty o čemkoli")
+f2 = Forum(name="Obecné", identifier="obecne", description="Posty o čemkoli", position=1)
 session.add(f2)
-f3 = Forum(name="Ostatní", identifier="ostatni", description="Popisek")
+f3 = Forum(name="Ostatní", identifier="ostatni", description="Popisek", position=2)
 session.add(f3)
 
-u = User(name="Uživatel")
+u = User(name="Uživatel", rights=4)
 session.add(u)
 
 t = Thread(name="První téma na fóru", description="Yay!", timestamp=datetime.now(), laststamp=datetime.now(), forum=f, author=u)

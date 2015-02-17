@@ -3,6 +3,11 @@
 {% block title %}{{ forum.name }}{% endblock %}
 
 {% block content %}
+    {% if g.user and g.user.rights >= 4 %}
+        <div class="forum-admin">
+            <a href="/edit-forum/{{forum.id}}">Editovat fórum</a>
+        </div>
+    {% endif %}
     <h1><a href="/">RHForum</a> » <a href="{{forum.url}}">{{forum.name}}</a></h1>
     <div class="threads">
         {% for thread in threads %}

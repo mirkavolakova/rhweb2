@@ -44,10 +44,41 @@ def shutdown_session(exception=None):
     db.session.close()
     db.session.remove()
 
+class ForumForm(Form):
+    name = TextField('Jméno', [validators.required()])
+    description = TextField('Popisek', [validators.required()])
+    move_up = SubmitField('↑')
+    move_down = SubmitField('↓')
+    save = SubmitField('Uložit')
+
 @app.route("/")
 def index():
     fora = db.session.query(db.Forum)
-    return render_template("index.html", fora=fora)
+    return render_template("index.html", fora=fora, edit_forum = None)
+
+@app.route("/edit-forum/<int:forum_id>", methods="GET POST".split())
+@app.route("/edit-forum/new", methods="GET POST".split())
+def edit_forum(forum_id=None):
+    if not g.user.admin: abort(403) # TODO minrights decorator
+    fora = db.session.query(db.Forum)
+    if forum_id:
+        forum = db.session.query(db.Forum).get(forum_id)
+    else:
+        forum = db.Forum()
+        fora = list(fora) + [forum]
+    form = ForumForm(request.form, forum)
+    if request.method == "POST" and form.validate():
+        forum.name = form.name.data
+        forum.identifier = forum.name.lower().replace(' ', '-')
+        forum.description = form.description.data
+        if not forum_id:
+            db.session.add(forum)
+            flash("Fórum přidáno.")
+        else:
+            flash("Fórum upraveno.")
+        db.session.commit()
+        return redirect("/")
+    return render_template("index.html", fora=fora, edit_forum=forum, form=form)
 
 class LoginForm(Form):
     name = TextField('Jméno', [validators.required()])
@@ -115,6 +146,7 @@ def forum(forum_id, forum_identifier=None):
     return render_template("forum.html", forum=forum, threads=threads, form=form)
 
 
+# TODO <path:thread_identificator>
 @app.route("/<int:forum_id>/<int:topic_id>", methods="GET POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>", methods="GET POST".split())
 def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
@@ -130,6 +162,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
         return redirect(thread.url+"#latest") # TODO id
     
     return render_template("thread.html", thread=thread, forum=thread.forum, form=form, now=datetime.now())
+
 
 if __name__ == "__main__":
     app.run(host="", port=8080, debug=True, threaded=True)
