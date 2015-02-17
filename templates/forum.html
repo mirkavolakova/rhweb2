@@ -5,11 +5,11 @@
 {% block content %}
     <h1><a href="/">RHForum</a> » <a href="{{forum.url}}">{{forum.name}}</a></h1>
     <div class="threads">
-        {% for thread in forum.threads %}
+        {% for thread in threads %}
             <div class="row">
                 <div class="row-data">
                     <div class="row-total">{{ thread.posts | count }} příspěvků</div>
-                    <div class="row-last">Nejnovější: <a href="{{thread.posts[-1].url}}"> od {{ thread.posts[-1].author.name }}</a></div>
+                    <div class="row-last" title="{{thread.laststamp|datetime}}">Nejnovější: <a href="{{thread.posts[-1].url}}"> od {{ thread.posts[-1].author.name }}</a></div>
                 </div>
                 <a class="row-text" href="{{thread.url}}">
                     <div class="row-name">{{thread.name}} <span class="author" href="#">{{thread.author.name}}</span></div>
@@ -21,7 +21,7 @@
     {% if g.user %}
         <h2>Nové téma</h2>
         <form method="POST" class="new-thread">
-            {{ form.name }}
+            {{ form.name(tabindex=1) }}
             <div class="post">
                 <div class="post-sidebar">
                     <div><a href="{{ g.user.url }}">{{ g.user.name }}</a></div>
@@ -31,10 +31,10 @@
                             {{ now | datetime }}
                         </div>
                         <div class="post-text">
-                            {{ form.text }}
+                            {{ form.text(tabindex=2) }}
                         </div>
                         <div class="newpost-controls">
-                            {{ form.submit }}
+                            {{ form.submit(tabindex=3) }}
                         </div>
                     </div>
                 </div>

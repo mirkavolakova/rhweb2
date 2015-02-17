@@ -100,15 +100,19 @@ def logout():
 @app.route("/<int:forum_id>-<forum_identifier>", methods="GET POST".split())
 def forum(forum_id, forum_identifier=None):
     forum = db.session.query(db.Forum).get(forum_id)
+    threads = db.session.query(db.Thread).filter(db.Thread.forum == forum).order_by(db.Thread.laststamp.desc())
     form = ThreadForm(request.form)
     if request.method == 'POST' and form.validate():
-        thread = db.Thread(forum=forum, author=g.user, timestamp=datetime.now(),
+        now = datetime.now()
+        thread = db.Thread(forum=forum, author=g.user, timestamp=now, laststamp=now,
             name=form.name.data)
-        post = db.Post(thread=thread, author=g.user, timestamp=datetime.now(),
+        db.session.add(thread)
+        post = db.Post(thread=thread, author=g.user, timestamp=now,
             text=form.text.data)
-        pass
-        # TODO
-    return render_template("forum.html", forum=forum, form=form)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(thread.url)
+    return render_template("forum.html", forum=forum, threads=threads, form=form)
 
 
 @app.route("/<int:forum_id>/<int:topic_id>", methods="GET POST".split())
@@ -117,8 +121,11 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     thread = db.session.query(db.Thread).get(thread_id)
     form = PostForm(request.form)
     if request.method == 'POST' and form.validate():
-        post = db.Post(thread=thread, author=g.user, timestamp=datetime.now(),
+        now = datetime.now()
+        post = db.Post(thread=thread, author=g.user, timestamp=now,
             text=form.text.data)
+        db.session.add(post)
+        thread.laststamp = now
         db.session.commit()
         return redirect(thread.url+"#latest") # TODO id
     

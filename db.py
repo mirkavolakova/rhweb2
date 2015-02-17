@@ -48,7 +48,7 @@ class Forum(Base):
         
     @property
     def last_post(self):
-        return session.query(Post).join(Post.thread).filter(Thread.forum == self).order_by(Post.timestamp).first()
+        return session.query(Post).join(Post.thread).filter(Thread.forum == self).order_by(Post.timestamp.desc()).first()
     
 
 class Thread(Base):
@@ -107,7 +107,7 @@ session.add(f3)
 u = User(name="Uživatel")
 session.add(u)
 
-t = Thread(name="První téma na fóru", description="Yay!", forum=f, author=u)
+t = Thread(name="První téma na fóru", description="Yay!", timestamp=datetime.now(), laststamp=datetime.now(), forum=f, author=u)
 session.add(t)
 
 p = Post(thread=t, author=u, text="First post!  <b>Test</b>!", timestamp=datetime.now())
