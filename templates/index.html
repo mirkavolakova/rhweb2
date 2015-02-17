@@ -1,0 +1,25 @@
+{% extends "_base.html" %}
+
+{% block title %}index{% endblock %}
+
+{% block content %}
+    <h1><a href="/">RHForum</a></h1>
+    <div class="fora">
+        {% for forum in fora %}
+            <div class="row">
+                <div class="row-data">
+                    <div class="row-total">{{ forum.threads | count }} témat</div>
+                    <div class="row-last">
+                        {% if forum.last_post %}
+                            Nejnovější: <a href="{{forum.last_post.thread.url}}">{{ forum.last_post.thread.name }} od {{ forum.last_post.author.name }}</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <a class="row-text" href="{{forum.url}}">
+                    <div class="row-name">{{forum.name}}</div>
+                    <div class="row-description">{{forum.description}}</div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

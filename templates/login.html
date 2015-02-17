@@ -1,0 +1,15 @@
+{% extends "_base.html" %}
+
+{% block title %}login{% endblock %}
+
+{% block content %}
+    <h1><a href="/">RHForum</a> » <a href="/login">Login</a></h1>
+    Integrace s dokuwiki prosím?
+    <form method="POST">
+        {{login_form.name}}
+        {{login_form.submit}}
+    </form>
+    {% if failed %}
+        <p class="fail">Nesprávné uživatelské jméno.  <a href="/register">Registrace</a>
+    {% endif %}
+{% endblock %}

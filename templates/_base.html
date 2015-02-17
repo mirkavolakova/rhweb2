@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>RHforum » {% block title %}{% endblock %}</title></title>
+    <style>
+
+* {box-sizing: border-box;}
+
+body {width: 70%; margin: auto; font-family: "Ubuntu"; padding-bottom: 64px;}
+
+a {color: #006;}
+a:hover {color: #339;}
+
+.topbar {text-align: right;}
+
+.flash {border: 1px solid rgb(197, 188, 16); background: rgb(248, 241, 190);
+    border-radius:8px; padding: 8px; margin: 6px 12px 0px 12px;}
+
+.row {border-bottom: 1px solid #ddd; display: block; clear: both; padding: 3px;}
+.row:hover {background: #ddf;}
+.row-name {font-size: 24px;}
+.row-data {float: right; text-align: right; }
+a.row-text {display: block; text-decoration: none; color: black;}
+a.row-text:hover {color: #004 !important;}
+
+.row-name .author {font-size: 16px; margin-left: 12px; font-style:italic;}
+.row-name .author::before {content: '—';}
+
+.post {min-height: 100px; border-bottom: 1px solid #ddd; margin-bottom: 14px; position: relative;}
+.post-sidebar {height: 100%; min-height: 100px; display:inline-block; width: 150px; border-right: 1px solid #ddd;
+    float: left; background: white; text-align: center; position: absolute;}
+.post-contents {margin-left: 150px; padding-left: 8px; height: 100%; min-height: 100px;  }
+.post-data {border-bottom: 1px solid #ddd; width: 100%; text-align: right; font-size: smaller;}
+.post-text {padding: 4px;}
+.post-text p {text-indent: 4%;}
+.post-text textarea {width: 100%; min-height: 100px; border: none; font-family: "Ubuntu";}
+
+.new-thread #name {width: 100%; margin-bottom:6px; font-size: 24px;}
+
+.fail {color: #800;}
+
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        {% if g.user %}
+            Přihlášen/a za <a href="{{g.user.url}}">{{g.user.name}}</a> &bull; <a href="/logout">Odhlásit se</a>
+        {% else %}
+            <a href="/login">Přihlásit se</a> &bull; <a href="/register">Registrovat</a>
+        {% endif %}
+    </div>
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+    
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

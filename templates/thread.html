@@ -1,0 +1,47 @@
+{% extends "_base.html" %}
+
+{% block title %}{{ forum.name }} » {{ thread.name }}{% endblock %}
+
+{% block content %}
+    <h1><a href="/">RHForum</a> » <a href="{{forum.url}}">{{forum.name}}</a> » <a href="{{thread.url}}">{{thread.name}}</a></h1>
+    <div class="posts">
+        {% for post in thread.posts %}
+            <div class="post">
+                <div class="post-sidebar">
+                    <div><a href="{{post.author.url}}">{{ post.author.name }}</a></div>
+                    <div>{{ post.author.num_posts }} příspěvků</div>
+                </div>
+                <div class="post-contents">
+                    <div class="post-data">
+                        {{ post.timestamp | datetime }}
+                    </div>
+                    <div class="post-text">
+                        <p>{{ post.text | safe | replace("\n", "\n<p>"|safe) | safe }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% if g.user %}
+        <h2>Nový příspěvek</h2>
+        <form method="POST">
+            <div class="post">
+                <div class="post-sidebar">
+                    <div><a href="{{ g.user.url }}">{{ g.user.name }}</a></div>
+                </div>
+                    <div class="post-contents">
+                        <div class="post-data">
+                            {{ now | datetime }}
+                        </div>
+                        <div class="post-text">
+                            {{ form.text }}
+                        </div>
+                        <div class="newpost-controls">
+                            {{ form.submit }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

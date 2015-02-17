@@ -1,0 +1,12 @@
+{% extends "_base.html" %}
+
+{% block title %}register{% endblock %}
+
+{% block content %}
+    <h1><a href="/">RHForum</a> » <a href="/register">Register</a></h1>
+    <form method="POST">
+        Jméno: {{form.name}}<br>
+        Email: {{form.email}}<br>
+        {{form.submit}}
+    </form>
+{% endblock %}
