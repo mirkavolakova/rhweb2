@@ -25,8 +25,10 @@
                 <form class="form-edit-forum" method="POST">
                 <div class="row">
                     <div class="row-data">
-                        {{form.move_up}}<br>
-                        {{form.move_down}}
+                        {% if not new %}
+                            {{form.move_up or ""}}<br>
+                            {{form.move_down or ""}}
+                        {% endif %}
                     </div>
                     <div class="row-text">
                         <div class="row-name">{{form.name}}</div>
@@ -37,7 +39,7 @@
             {% endif %}
         {% endfor %}
     </div>
-    {% if g.user and g.user.rights >= 4 %}
+    {% if g.user and g.user.rights >= 4 and not edit_forum %}
         <div class="forum-admin">
             <a href="/edit-forum/new">Přidat fórum</a>
         </div>

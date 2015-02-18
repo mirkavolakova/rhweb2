@@ -53,14 +53,14 @@ class ForumForm(Form):
 
 @app.route("/")
 def index():
-    fora = db.session.query(db.Forum)
+    fora = db.session.query(db.Forum).order_by(db.Forum.position)
     return render_template("index.html", fora=fora, edit_forum = None)
 
 @app.route("/edit-forum/<int:forum_id>", methods="GET POST".split())
 @app.route("/edit-forum/new", methods="GET POST".split())
 def edit_forum(forum_id=None):
     if not g.user.admin: abort(403) # TODO minrights decorator
-    fora = db.session.query(db.Forum)
+    fora = db.session.query(db.Forum).order_by(db.Forum.position).all()
     if forum_id:
         forum = db.session.query(db.Forum).get(forum_id)
     else:
@@ -71,14 +71,35 @@ def edit_forum(forum_id=None):
         forum.name = form.name.data
         forum.identifier = forum.name.lower().replace(' ', '-')
         forum.description = form.description.data
-        if not forum_id:
-            db.session.add(forum)
-            flash("Fórum přidáno.")
+        if form.save.data:
+            if not forum_id:
+                forum.position = len(list(fora))-1
+                db.session.add(forum)
+                flash("Fórum přidáno.")
+            else:
+                flash("Fórum upraveno.")
+            db.session.commit()
+            return redirect("/")
         else:
-            flash("Fórum upraveno.")
-        db.session.commit()
-        return redirect("/")
-    return render_template("index.html", fora=fora, edit_forum=forum, form=form)
+            # moving
+            i = forum.position
+            fora = list(fora)
+            fora.remove(forum)
+            if form.move_up and form.move_up.data:
+                print("moving up", forum.name, i, fora)
+                fora.insert(i-1, forum)
+            elif form.move_down and form.move_down.data:
+                print("moving down", forum.name, i, fora)
+                fora.insert(i+1, forum)
+            for i, f in enumerate(fora):
+                f.position = i
+                db.session.add(f)
+            db.session.commit()
+    if forum.position == 0:
+        del form.move_up
+    if forum.position == len(fora)-1:
+        del form.move_down
+    return render_template("index.html", fora=fora, edit_forum=forum, form=form, new=not bool(forum_id))
 
 class LoginForm(Form):
     name = TextField('Jméno', [validators.required()])
@@ -131,9 +152,10 @@ def logout():
 @app.route("/<int:forum_id>-<forum_identifier>", methods="GET POST".split())
 def forum(forum_id, forum_identifier=None):
     forum = db.session.query(db.Forum).get(forum_id)
+    if not forum: abort(404)
     threads = db.session.query(db.Thread).filter(db.Thread.forum == forum).order_by(db.Thread.laststamp.desc())
     form = ThreadForm(request.form)
-    if request.method == 'POST' and form.validate():
+    if g.user and request.method == 'POST' and form.validate():
         now = datetime.now()
         thread = db.Thread(forum=forum, author=g.user, timestamp=now, laststamp=now,
             name=form.name.data)
@@ -151,8 +173,9 @@ def forum(forum_id, forum_identifier=None):
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>", methods="GET POST".split())
 def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     thread = db.session.query(db.Thread).get(thread_id)
+    if not thread: abort(404)
     form = PostForm(request.form)
-    if request.method == 'POST' and form.validate():
+    if g.user and request.method == 'POST' and form.validate():
         now = datetime.now()
         post = db.Post(thread=thread, author=g.user, timestamp=now,
             text=form.text.data)
@@ -163,6 +186,10 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     
     return render_template("thread.html", thread=thread, forum=thread.forum, form=form, now=datetime.now())
 
+@app.route("/users/<int:user_id>")
+@app.route("/users/<int:user_id>-<name>")
+def user(user_id, name=None):
+    pass
 
 if __name__ == "__main__":
     app.run(host="", port=8080, debug=True, threaded=True)
