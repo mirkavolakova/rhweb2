@@ -3,7 +3,7 @@
 {% block title %}{{ forum.name }}{% endblock %}
 
 {% block content %}
-    {% if g.user and g.user.rights >= 4 %}
+    {% if g.user and g.user.admin %}
         <div class="forum-admin">
             <a href="/edit-forum/{{forum.id}}">Editovat fórum</a>
         </div>

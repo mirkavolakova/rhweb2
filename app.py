@@ -103,22 +103,33 @@ def edit_forum(forum_id=None):
 
 class LoginForm(Form):
     name = TextField('Jméno', [validators.required()])
+    password = PasswordField('Heslo', [validators.required()])
     submit = SubmitField('Přihlásit se')
 
 @app.route("/login", methods="GET POST".split())
 def login():
-    login_form = LoginForm(request.form)
+    form = LoginForm(request.form)
     failed = False
-    if request.method == 'POST' and login_form.validate():
-        g.user = db.session.query(db.User).filter(db.User.name == login_form.name.data).scalar()
-        if not g.user: failed = True
+    if request.method == 'POST' and form.validate():
+        user = db.session.query(db.User).filter(db.User.login == form.name.data.lower()).scalar()
+        if not user: failed = True
         else:
-            session['user_id'] = g.user.id
-            session.permanent = True
-            flash("Jste přihlášeni.")
-            return redirect("/")
+            try:
+                password_matches = user.verify_password(form.password.data)
+            except db.OldHashingMethodException:
+                failed = True
+                password_matches = False
+                flash("Prosím, změňte si heslo na DokuWiki..")
+            if password_matches:
+                g.user = user
+                session['user_id'] = g.user.id
+                session.permanent = True
+                flash("Jste přihlášeni.")
+                return redirect("/")
+            else:
+                failed = True
     
-    return render_template("login.html", login_form=login_form, failed=failed)
+    return render_template("login.html", form=form, failed=failed)
 
 class RegisterForm(Form):
     name = TextField('Jméno', [validators.required()])
@@ -128,6 +139,7 @@ class RegisterForm(Form):
 @app.route("/register", methods="GET POST".split())
 def register():
     form = RegisterForm(request.form)
+    '''
     if request.method == 'POST' and form.validate():
         user = db.User(name=form.name.data, email=form.email.data, timestamp=datetime.now())
         db.session.add(user)
@@ -138,6 +150,7 @@ def register():
         
         flash("Registrace proběhla úspěšně.")
         return redirect("/")
+    '''
     
     return render_template("register.html", form=form)
 
@@ -146,11 +159,12 @@ def logout():
     if 'user_id' in session:
         session.pop('user_id')
         flash("Odhlášení proběhlo úspěšně.")
-        return redirect("/")
+    return redirect("/")
 
 @app.route("/<int:forum_id>", methods="GET POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>", methods="GET POST".split())
 def forum(forum_id, forum_identifier=None):
+    if not g.user: abort(403)
     forum = db.session.query(db.Forum).get(forum_id)
     if not forum: abort(404)
     threads = db.session.query(db.Thread).filter(db.Thread.forum == forum).order_by(db.Thread.laststamp.desc())
@@ -172,6 +186,7 @@ def forum(forum_id, forum_identifier=None):
 @app.route("/<int:forum_id>/<int:topic_id>", methods="GET POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>", methods="GET POST".split())
 def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
+    if not g.user: abort(403)
     thread = db.session.query(db.Thread).get(thread_id)
     if not thread: abort(404)
     form = PostForm(request.form)

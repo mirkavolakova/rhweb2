@@ -4,12 +4,13 @@
 
 {% block content %}
     <h1><a href="/">RHForum</a> » <a href="/login">Login</a></h1>
-    Integrace s dokuwiki prosím?
+    Pro přihlášení použijte své údaje z DokuWiki.
     <form method="POST">
-        {{login_form.name}}
-        {{login_form.submit}}
+        <div>Jméno: {{form.name}}</div>
+        <div>Heslo: {{form.password}}</div>
+        <div>{{form.submit}}</div>
     </form>
     {% if failed %}
-        <p class="fail">Nesprávné uživatelské jméno.  <a href="/register">Registrace</a>
+        <p class="fail">Nesprávné uživatelské jméno nebo heslo.
     {% endif %}
 {% endblock %}
