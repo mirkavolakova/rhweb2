@@ -22,12 +22,12 @@ class User(Base):
     __tablename__ = 'users'
     
     uid = Column(Integer, primary_key=True, nullable=False)
-    login = Column(Unicode(256))
-    pass_ = Column('pass', Unicode(256))
-    fullname = Column(Unicode(256))
-    email = Column(Unicode(256))
-    homepage = Column(Unicode(256))
-    avatar_url = Column(Unicode(256))
+    login = Column(Unicode(20))
+    pass_ = Column('pass', Unicode(60))
+    fullname = Column(Unicode(255))
+    email = Column(Unicode(255))
+    homepage = Column(Unicode(255))
+    avatar_url = Column(Unicode(255))
     timestamp = Column(DateTime)
     laststamp = Column(DateTime)
     profile = Column(UnicodeText)
@@ -61,7 +61,7 @@ class User(Base):
 class Group(Base):
     __tablename__="groups"
     uid = Column(Integer, primary_key=True, nullable=False)
-    name = Column(Unicode(256))
+    name = Column(Unicode(255))
 
 usergroups = Table('usergroups', Base.metadata,
     Column('uid', Integer, ForeignKey('users.uid')),
@@ -72,8 +72,8 @@ class Forum(Base):
     __tablename__ = 'fora'
     
     id = Column(Integer, primary_key=True, nullable=False)
-    identifier = Column(Unicode(256))
-    name = Column(Unicode(256))
+    identifier = Column(Unicode(255))
+    name = Column(Unicode(255))
     description = Column(UnicodeText)
     position = Column(Integer)
     
@@ -90,7 +90,7 @@ class Thread(Base):
     __tablename__ = 'threads'
     
     id = Column(Integer, primary_key=True, nullable=False)
-    name = Column(Unicode(256))
+    name = Column(Unicode(255))
     description = Column(UnicodeText)
     forum_id = Column(Integer, ForeignKey('fora.id'), nullable=False)
     forum = relationship("Forum", backref='threads', order_by="Thread.laststamp")
@@ -109,7 +109,7 @@ class Post(Base):
     __tablename__ = 'posts'
     
     id = Column(Integer, primary_key=True, nullable=False)
-    name = Column(Unicode(256))
+    name = Column(Unicode(255))
     thread_id = Column(Integer, ForeignKey('threads.id'), nullable=False)
     thread = relationship("Thread", backref='posts', order_by="Post.timestamp")
     author_id = Column(Integer, ForeignKey('users.uid'), nullable=False)
