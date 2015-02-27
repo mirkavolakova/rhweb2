@@ -8,7 +8,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker, relationship, backref
 from sqlalchemy.schema import Column, ForeignKey, Table
 from sqlalchemy.types import DateTime, Integer, Unicode, Enum, UnicodeText, Boolean, TypeDecorator
 
-from flask import Flask
+from flask import Flask, url_for
 
 import bcrypt
 
@@ -84,7 +84,7 @@ class Forum(Base):
     
     @property
     def url(self):
-        return "/{}-{}".format(self.id, self.identifier)
+        return url_for('forum', forum_id=self.id, forum_identifier=self.identifier)
         
     @property
     def last_post(self):
@@ -107,7 +107,9 @@ class Thread(Base):
     
     @property
     def url(self):
-        return "/{}-{}/{}-{}".format(self.forum.id, self.forum.identifier, self.id, self.name)
+        return url_for('thread',
+            forum_id=self.forum.id, forum_identifier=self.identifier,
+            thread_id=self.id, thread_name=self.name)
 
 
 class Post(Base):

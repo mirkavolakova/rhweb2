@@ -79,7 +79,7 @@ def edit_forum(forum_id=None):
             else:
                 flash("Fórum upraveno.")
             db.session.commit()
-            return redirect("/")
+            return redirect(url_for('index'))
         else:
             # moving
             i = forum.position
@@ -125,7 +125,7 @@ def login():
                 session['user_id'] = g.user.id
                 session.permanent = True
                 flash("Jste přihlášeni.")
-                return redirect("/")
+                return redirect(url_for('index'))
             else:
                 failed = True
     
@@ -159,7 +159,7 @@ def logout():
     if 'user_id' in session:
         session.pop('user_id')
         flash("Odhlášení proběhlo úspěšně.")
-    return redirect("/")
+    return redirect(url_for('index'))
 
 @app.route("/<int:forum_id>", methods="GET POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>", methods="GET POST".split())

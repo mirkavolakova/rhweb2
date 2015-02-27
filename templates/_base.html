@@ -58,9 +58,11 @@ a.row-text:hover {color: #004 !important;}
 <body>
     <div class="topbar">
         {% if g.user %}
-            Přihlášen/a za <a href="{{g.user.url}}">{{g.user.name}}</a> &bull; <a href="/logout">Odhlásit se</a>
+            Přihlášen/a za <a href="{{g.user.url}}">{{g.user.name}}</a> &bull;
+            <a href="{{url_for('logout')}}">Odhlásit se</a>
         {% else %}
-            <a href="/login">Přihlásit se</a> &bull; <a href="/register">Registrovat</a>
+            <a href="{{url_for('login')}}">Přihlásit se</a> &bull
+            <a href="{{url_for('register')}}">Registrovat</a>
         {% endif %}
     </div>
     {% with messages = get_flashed_messages() %}

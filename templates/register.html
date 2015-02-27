@@ -3,7 +3,7 @@
 {% block title %}register{% endblock %}
 
 {% block content %}
-    <h1><a href="/">RHForum</a> » <a href="/register">Register</a></h1>
+    <h1><a href="{{url_for('index')}}">RHForum</a> » <a href="{{url_for('register')}}">Register</a></h1>
     Pro registraci nových účtů použijte <a href="http://retroherna.cz/wiki/doku.php">DokuWiki</a>.
     <!--<form method="POST">
         Jméno: {{form.name}}<br>
