@@ -8,9 +8,14 @@ from sqlalchemy.orm import scoped_session, sessionmaker, relationship, backref
 from sqlalchemy.schema import Column, ForeignKey, Table
 from sqlalchemy.types import DateTime, Integer, Unicode, Enum, UnicodeText, Boolean, TypeDecorator
 
+from flask import Flask
+
 import bcrypt
 
-engine = create_engine(open("db").read(), encoding=b"utf8")#, pool_size = 100, pool_recycle=4200) # XXX
+app = Flask('rhforum')
+app.config.from_pyfile('config.py')
+
+engine = create_engine(app.config['DB'], encoding=b"utf8")#, pool_size = 100, pool_recycle=4200) # XXX
 # pool_recycle is to prevent "server has gone away"
 session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
