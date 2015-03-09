@@ -57,7 +57,8 @@ class ForumForm(Form):
 @app.route("/")
 def index():
     fora = db.session.query(db.Forum).order_by(db.Forum.position)
-    return render_template("index.html", fora=fora, edit_forum = None)
+    latest_posts = db.session.query(db.Post).order_by(db.Post.timestamp.desc())[0:10]
+    return render_template("index.html", fora=fora, edit_forum = None, latest_posts=latest_posts)
 
 @app.route("/edit-forum/<int:forum_id>", methods="GET POST".split())
 @app.route("/edit-forum/new", methods="GET POST".split())
@@ -208,14 +209,6 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
 @app.route("/users/<int:user_id>-<name>")
 def user(user_id, name=None):
     pass
-
-'''
-
-@app.route("/reload")
-def reload():
-    if g.user and g.user.admin:
-        if request.envion['mod_swgi.process_group
-'''
 
 if not app.debug:
     import logging

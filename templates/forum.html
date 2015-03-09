@@ -18,7 +18,7 @@
                 </div>
                 <a class="row-text" href="{{thread.url}}">
                     <div class="row-name">{{thread.name}} <span class="author" href="#">{{thread.author.name}}</span></div>
-                    <div class="row-description">{{thread.description}}</div>
+                    <div class="row-description">{{thread.description or "&nbsp;"|safe}} </div>
                 </a>
             </div>
         {% endfor %}
