@@ -3,7 +3,7 @@
 {% block title %}{{ forum.name }} » {{ thread.name }}{% endblock %}
 
 {% block content %}
-    <h1><a href="/">RHForum</a> » <a href="{{forum.url}}">{{forum.name}}</a> » <a href="{{thread.url}}">{{thread.name}}</a></h1>
+    <h1><a href="{{url_for('index')}}">RHForum</a> » <a href="{{forum.url}}">{{forum.name}}</a> » <a href="{{thread.url}}">{{thread.name}}</a></h1>
     <div class="posts">
         {% for post in thread.posts %}
             <div class="post">

@@ -1,6 +1,8 @@
 # coding: utf-8
 from __future__ import absolute_import, unicode_literals, print_function
 
+import os
+
 import db
 from sqlalchemy import or_, and_, asc, desc, func
 from datetime import datetime
@@ -11,8 +13,9 @@ from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, session, abort, url_for, make_response, g
 from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, HiddenField, SubmitField, validators, ValidationError, widgets
 
-app = Flask('rhforum')
-app.config.from_pyfile('config.py')
+tmpl_dir = '/data/retroherna.cz/rhforum/templates/' # XXX
+app = Flask('rhforum', template_folder=tmpl_dir)
+app.config.from_pyfile('/data/retroherna.cz/rhforum/config.py') # XXX
 
 
 class PostForm(Form):
@@ -206,8 +209,23 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
 def user(user_id, name=None):
     pass
 
+'''
+
+@app.route("/reload")
+def reload():
+    if g.user and g.user.admin:
+        if request.envion['mod_swgi.process_group
+'''
+
+if not app.debug:
+    import logging
+    from logging import FileHandler
+    file_handler = FileHandler('/data/retroherna.cz/flask.log')
+    file_handler.setLevel(logging.WARNING)
+    app.logger.addHandler(file_handler)
+
 if __name__ == "__main__":
-    app.run(host="", port=8080, debug=True, threaded=True)
+    app.run(host="", port=8082, debug=True, threaded=True)
 
 
 

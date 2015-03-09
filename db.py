@@ -13,9 +13,9 @@ from flask import Flask, url_for
 import bcrypt
 
 app = Flask('rhforum')
-app.config.from_pyfile('config.py')
+app.config.from_pyfile('/data/retroherna.cz/rhforum/config.py') # XXX
 
-engine = create_engine(app.config['DB'], encoding=b"utf8")#, pool_size = 100, pool_recycle=4200) # XXX
+engine = create_engine(app.config['DB'], encoding=b"utf8", pool_size = 100, pool_recycle=4200) # XXX
 # pool_recycle is to prevent "server has gone away"
 session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
@@ -53,10 +53,9 @@ class User(Base):
     
     @property
     def admin(self):
-        return session.query(Group).filter(Group.name=="admin").scalar() in self.groups
+        return True # session.query(Group).filter(Group.name=="admin").scalar() in self.groups
         
     def verify_password(self, password):
-        print (password, self.pass_, bcrypt.hashpw(password.encode('utf-8'), self.pass_.encode('utf-8')))
         if self.pass_.startswith('$2a'):
             return bcrypt.hashpw(password.encode('utf-8'), self.pass_.encode('utf-8')) == self.pass_
         else:
@@ -108,8 +107,8 @@ class Thread(Base):
     @property
     def url(self):
         return url_for('thread',
-            forum_id=self.forum.id, forum_identifier=self.identifier,
-            thread_id=self.id, thread_name=self.name)
+            forum_id=self.forum.id, forum_identifier=self.forum.identifier,
+            thread_id=self.id, thread_identifier=self.name)
 
 
 class Post(Base):
