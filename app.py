@@ -13,9 +13,9 @@ from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, session, abort, url_for, make_response, g
 from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, HiddenField, SubmitField, validators, ValidationError, widgets
 
-tmpl_dir = '/data/retroherna.cz/rhforum/templates/' # XXX
-app = Flask('rhforum', template_folder=tmpl_dir)
-app.config.from_pyfile('/data/retroherna.cz/rhforum/config.py') # XXX
+app_dir = os.path.dirname(os.path.abspath(__file__))
+app = Flask('rhforum', template_folder=app_dir+"/templates")
+app.config.from_pyfile(app_dir+"/config.py") # XXX
 
 
 class PostForm(Form):
@@ -220,12 +220,12 @@ def reload():
 if not app.debug:
     import logging
     from logging import FileHandler
-    file_handler = FileHandler('/data/retroherna.cz/flask.log')
+    file_handler = FileHandler(app_dir+'/flask.log')
     file_handler.setLevel(logging.WARNING)
     app.logger.addHandler(file_handler)
 
 if __name__ == "__main__":
-    app.run(host="", port=8082, debug=True, threaded=True)
+    app.run(host="", port=8080, debug=True, threaded=True)
 
 
 

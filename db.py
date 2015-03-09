@@ -12,11 +12,17 @@ from flask import Flask, url_for
 
 import bcrypt
 
+import os
 app = Flask('rhforum')
-app.config.from_pyfile('/data/retroherna.cz/rhforum/config.py') # XXX
+app_dir = os.path.dirname(os.path.abspath(__file__))
+app.config.from_pyfile(app_dir+"/config.py") # XXX
 
-engine = create_engine(app.config['DB'], encoding=b"utf8", pool_size = 100, pool_recycle=4200) # XXX
-# pool_recycle is to prevent "server has gone away"
+if 'mysql' in app.config['DB']:
+    engine = create_engine(app.config['DB'], encoding=b"utf8", pool_size = 100, pool_recycle=4200) # XXX
+    # pool_recycle is to prevent "server has gone away"
+else:
+    engine = create_engine(app.config['DB'], encoding=b"utf8")
+
 session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
 Base = declarative_base(bind=engine)
