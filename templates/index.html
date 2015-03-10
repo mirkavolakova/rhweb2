@@ -13,7 +13,7 @@
                             <div class="row-total">{{ forum.threads | count }} témat</div>
                             <div class="row-last">
                                 {% if forum.last_post %}
-                                    Nejnovější: <a href="{{forum.last_post.thread.url}}">{{ forum.last_post.thread.name }} od {{ forum.last_post.author.name }}</a>
+                                    Nejnovější: <a href="{{forum.last_post.url}}">{{ forum.last_post.thread.name }} od {{ forum.last_post.author.name }}</a>
                                 {% endif %}
                             </div>
                         </div>

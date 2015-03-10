@@ -21,6 +21,10 @@ app.config.from_pyfile(app_dir+"/config.py") # XXX
 class PostForm(Form):
     text = TextAreaField('Text', [validators.required()])
     submit = SubmitField('Odeslat')
+    
+class EditPostForm(Form):
+    text = TextAreaField('Text', [validators.required()])
+    submit = SubmitField('Upravit')
 
 class ThreadForm(PostForm):
     name = TextField('Nadpis', [validators.required()])
@@ -57,7 +61,7 @@ class ForumForm(Form):
 @app.route("/")
 def index():
     fora = db.session.query(db.Forum).order_by(db.Forum.position)
-    latest_posts = db.session.query(db.Post).order_by(db.Post.timestamp.desc())[0:10]
+    latest_posts = db.session.query(db.Post).filter(db.Post.deleted==False).order_by(db.Post.timestamp.desc())[0:10]
     return render_template("index.html", fora=fora, edit_forum = None, latest_posts=latest_posts)
 
 @app.route("/edit-forum/<int:forum_id>", methods="GET POST".split())
@@ -193,6 +197,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     if not g.user: abort(403)
     thread = db.session.query(db.Thread).get(thread_id)
     if not thread: abort(404)
+    posts = thread.posts.filter(db.Post.deleted==False)
     form = PostForm(request.form)
     if g.user and request.method == 'POST' and form.validate():
         now = datetime.now()
@@ -203,7 +208,31 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
         db.session.commit()
         return redirect(thread.url+"#latest") # TODO id
     
-    return render_template("thread.html", thread=thread, forum=thread.forum, form=form, now=datetime.now())
+    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now())
+
+@app.route("/<int:forum_id>/<int:thread_id>/edit/<int:post_id>", methods="GET POST".split())
+@app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/edit/<int:post_id>", methods="GET POST".split())
+def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identifier=None):
+    if not g.user: abort(403)
+    post = db.session.query(db.Post).get(post_id)
+    thread = db.session.query(db.Thread).get(thread_id)
+    if not post: abort(404)
+    if post.thread != thread: abort(400)
+    if post.author != g.user: abort(403)
+    posts = thread.posts.filter(db.Post.deleted==False)
+    
+    form = EditPostForm(request.form, text=post.text)
+    
+    if request.method == 'POST' and form.validate():
+        now = datetime.now()
+        new_post = db.Post(thread=thread, author=g.user, timestamp=post.timestamp, editstamp=now,
+            text=form.text.data, original=post)
+        db.session.add(new_post)
+        post.deleted=True
+        db.session.commit()
+        return redirect(post.url)
+    
+    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), edit_post=post)
 
 @app.route("/users/<int:user_id>")
 @app.route("/users/<int:user_id>-<name>")

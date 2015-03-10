@@ -55,7 +55,7 @@ class User(Base):
     
     @property
     def num_posts(self):
-        return session.query(Post).filter(Post.author == self).count()
+        return session.query(Post).filter(Post.author == self, Post.deleted==False).count()
     
     @property
     def admin(self):
@@ -110,6 +110,12 @@ class Thread(Base):
     laststamp = Column(DateTime)
     pinned = Column(Boolean)
     
+    posts = relationship("Post", order_by="Post.timestamp", lazy="dynamic")#, viewonly=True, primaryjoin="foreign(Post.deleted)==False")
+    
+    @property
+    def num_posts(self):
+        return session.query(Post).filter(Post.thread == self, Post.deleted==False).count()
+    
     @property
     def url(self):
         return url_for('thread',
@@ -123,11 +129,20 @@ class Post(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(Unicode(255))
     thread_id = Column(Integer, ForeignKey('threads.id'), nullable=False)
-    thread = relationship("Thread", backref='posts', order_by="Post.timestamp")
+    thread = relationship("Thread", order_by="Post.timestamp")
     author_id = Column(Integer, ForeignKey('users.uid'), nullable=False)
     author = relationship("User", backref='posts')
     timestamp = Column(DateTime)
     text = Column(UnicodeText)
+    
+    deleted = Column(Boolean, default=False, nullable=False)
+    editstamp = Column(DateTime)
+    original_id = Column(Integer, ForeignKey('posts.id'))
+    original = relationship("Post", remote_side=id, backref="edits")
+    
+    @property
+    def url(self):
+        return self.thread.url + "#post-{}".format(self.id)
 
 class ThreadRead(Base):
     __tablename__ = 'threads_read'
@@ -141,8 +156,8 @@ class ThreadRead(Base):
 
 
 if __name__ == "__main__":
-    #if raw_input('drop all? ') == 'y':
-    #    Base.metadata.drop_all(bind=engine)
+    if raw_input('drop all? ') == 'y':
+        Base.metadata.drop_all(bind=engine)
     if raw_input('create all? ') == 'y':
         Base.metadata.create_all(bind=engine)
 
