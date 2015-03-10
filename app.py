@@ -94,10 +94,8 @@ def edit_forum(forum_id=None):
             fora = list(fora)
             fora.remove(forum)
             if form.move_up and form.move_up.data:
-                print("moving up", forum.name, i, fora)
                 fora.insert(i-1, forum)
             elif form.move_down and form.move_down.data:
-                print("moving down", forum.name, i, fora)
                 fora.insert(i+1, forum)
             for i, f in enumerate(fora):
                 f.position = i
