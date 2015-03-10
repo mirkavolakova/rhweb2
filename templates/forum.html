@@ -14,7 +14,9 @@
             <div class="row">
                 <div class="row-data">
                     <div class="row-total">{{ thread.num_posts }} příspěvků</div>
-                    <div class="row-last" title="{{thread.laststamp|datetime}}">Nejnovější: <a href="{{thread.posts[-1].url}}"> od {{ thread.posts[-1].author.name }}</a></div>
+                    {% if thread.num_posts %}
+                        <div class="row-last" title="{{thread.laststamp|datetime}}">Nejnovější: <a href="{{thread.last_post.url}}"> od {{ thread.last_post.author.name }}</a></div>
+                    {% endif %}
                 </div>
                 <a class="row-text" href="{{thread.url}}">
                     <div class="row-name">{{thread.name}} <span class="author" href="#">{{thread.author.name}}</span></div>
