@@ -240,7 +240,10 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
         if edit_thread:
            thread.name = form.name.data
         db.session.commit()
-        return redirect(new_post.url)
+        if edit_thread:
+            return redirect(thread.url)
+        else:
+            return redirect(new_post.url)
     
     return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), edit_post=post, edit_thread=edit_thread)
 
