@@ -15,7 +15,7 @@
                 <div class="row-data">
                     <div class="row-total">{{ txt_posts(thread.num_posts) }}</div>
                     {% if thread.num_posts %}
-                        <div class="row-last" title="{{thread.laststamp|datetime}}">Nejnovější: <a href="{{thread.last_post.url}}"> od <i>{{ thread.last_post.author.name }}</i></a></div>
+                        <div class="row-last" title="{{thread.laststamp|datetime}}">{{ago(thread.laststamp)}} <a href="{{thread.last_post.url}}"> od <i>{{ thread.last_post.author.name }}</i></a></div>
                     {% endif %}
                 </div>
                 <a class="row-text" href="{{thread.url}}">

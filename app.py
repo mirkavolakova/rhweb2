@@ -50,6 +50,7 @@ def before_request():
             pass
     else:
         g.user = None
+    g.now = datetime.now()
 
 @app.teardown_request
 def shutdown_session(exception=None):

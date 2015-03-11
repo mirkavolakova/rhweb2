@@ -16,14 +16,14 @@
                         {% if (post.author == g.user) and post != edit_post %}
                             <a href="{{thread.url}}/edit/{{post.id}}#post-{{post.id}}">Upravit</a> &bull;
                         {% endif %}
-                        {{ post.timestamp | datetime }}
+                        {{ ago(post.timestamp) }}
                     </div>
                     <div class="post-text">
                         {% if post != edit_post %}
                             <p>{{ post.text | safe | replace("\n", "\n<p>"|safe) | safe }}
                             {% if post.editstamp %}
                                 <div class="post-edited">
-                                    Naposledy upraveno {{ post.editstamp | datetime }}
+                                    Naposledy upraveno {{ ago(post.editstamp) }}
                                 </div>
                             {% endif %}
                         {% else %}
@@ -47,7 +47,7 @@
                 </div>
                     <div class="post-contents">
                         <div class="post-data">
-                            {{ now | datetime }}
+                            {{ ago(now) }}
                         </div>
                         <div class="post-text">
                             {{ form.text }}

@@ -1,4 +1,4 @@
-# REMEMBER TO ADD AN IMPORT TO _base.html
+## REMEMBER TO ADD AN IMPORT TO _base.html
 {% macro txt(num, rules) %}
     {% if   num == 1 %}            {{num}} {{rules[0]}}
     {% elif num > 1 and num < 5 %} {{num}} {{rules[1]}}
@@ -10,4 +10,25 @@
 {% endmacro %}
 {% macro txt_posts(num) %}
     {{ txt(num, 'příspěvek příspěvky příspěvků'.split()) }}
+{% endmacro %}
+{% macro ago(d) %}
+    <span title="{{d|datetime}}">
+        {% with diff = g.now - d %}
+            {% if diff.days < 0 %}
+                {{d|datetime}}
+            {% elif diff.days == 0 %}
+                {% if   diff.seconds < 10 %}      teď
+                {% elif diff.seconds < 60 %}      před {{diff.seconds}} vteřinama
+                {% elif diff.seconds < 120 %}     před minutou
+                {% elif diff.seconds < 3600 %}    před {{diff.seconds//60}} minutama
+                {% elif diff.seconds < 7200 %}    před hodinou
+                {% elif diff.seconds < 86400 %}   před {{diff.seconds//3600}} hodinama
+                {% endif %}
+            {% else %}
+                {% if   diff.days == 1 %}         včera {{d|datetime("%H:%m")}}
+                {% else %}                        {{d|datetime("%d. %m. %Y %H:%M")}}
+                {% endif %}
+            {% endif %}
+        {% endwith %}
+    </span>
 {% endmacro %}
