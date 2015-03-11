@@ -13,7 +13,7 @@
                 </div>
                 <div class="post-contents">
                     <div class="post-data">
-                        {% if post.author == g.user and post != edit_post %}
+                        {% if (post.author == g.user) and post != edit_post %}
                             <a href="{{thread.url}}/edit/{{post.id}}#post-{{post.id}}">Editovat</a> &bull;
                         {% endif %}
                         {{ post.timestamp | datetime }}

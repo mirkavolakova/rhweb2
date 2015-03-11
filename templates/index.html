@@ -52,8 +52,8 @@
                     <div class="row-data">
                         <div>{{post.timestamp|datetime}}</div>
                     </div>
-                    <a class="row-text" href="{{post.thread.url}}">
-                        <div class="row-description">do {{post.thread.name}} od {{post.author.name}}</span></div>
+                    <a class="row-text" href="{{post.url}}">
+                        <div class="row-description">do <strong>{{post.thread.name}}</strong> od <i>{{post.author.name}}</i></span></div>
                     </a>
                 </div>
             {% endfor %}
