@@ -1,0 +1,13 @@
+# REMEMBER TO ADD AN IMPORT TO _base.html
+{% macro txt(num, rules) %}
+    {% if   num == 1 %}            {{num}} {{rules[0]}}
+    {% elif num > 1 and num < 5 %} {{num}} {{rules[1]}}
+    {% else %}                     {{num}} {{rules[2]}}
+    {% endif %}
+{% endmacro %}
+{% macro txt_threads(num) %}
+    {{ txt(num, 'téma témata témat'.split()) }}
+{% endmacro %}
+{% macro txt_posts(num) %}
+    {{ txt(num, 'příspěvek příspěvky příspěvků'.split()) }}
+{% endmacro %}
