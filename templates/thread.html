@@ -28,6 +28,7 @@
                             {% endif %}
                         {% else %}
                             <form method="POST">
+                                {{ form.name }}
                                 <div>{{ form.text }}</div>
                                 <div>{{ form.submit }}</div>
                             </form>

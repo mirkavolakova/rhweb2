@@ -25,6 +25,11 @@ class PostForm(Form):
 class EditPostForm(Form):
     text = TextAreaField('Text', [validators.required()])
     submit = SubmitField('Upravit')
+    
+class EditThreadForm(Form):
+    name = TextField('Nadpis', [validators.required()])
+    text = TextAreaField('Text', [validators.required()])
+    submit = SubmitField('Upravit')
 
 class ThreadForm(PostForm):
     name = TextField('Nadpis', [validators.required()])
@@ -216,10 +221,15 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     thread = db.session.query(db.Thread).get(thread_id)
     if not post: abort(404)
     if post.thread != thread: abort(400)
-    if post.author != g.user: abort(403)
+    if post.author != g.user and not g.user.admin: abort(403)
     posts = thread.posts.filter(db.Post.deleted==False)
     
-    form = EditPostForm(request.form, text=post.text)
+    if post == posts[0]:
+        form = EditThreadForm(request.form, text=post.text, name=thread.name)
+        edit_thread = True
+    else:
+        form = EditPostForm(request.form, text=post.text)
+        edit_thread = False
     
     if request.method == 'POST' and form.validate():
         now = datetime.now()
@@ -227,10 +237,12 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
             text=form.text.data, original=post.original if post.original else post)
         db.session.add(new_post)
         post.deleted=True
+        if edit_thread:
+           thread.name = form.name.data
         db.session.commit()
         return redirect(new_post.url)
     
-    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), edit_post=post)
+    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), edit_post=post, edit_thread=edit_thread)
 
 @app.route("/users/<int:user_id>")
 @app.route("/users/<int:user_id>-<name>")
