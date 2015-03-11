@@ -114,7 +114,7 @@ class Thread(Base):
     
     @property
     def last_post(self):
-        return session.query(Post).filter(Post.deleted==False).order_by(Post.timestamp.desc()).first()
+        return session.query(Post).filter(Post.thread == self, Post.deleted==False).order_by(Post.timestamp.desc()).first()
     
     @property
     def num_posts(self):
