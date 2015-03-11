@@ -224,11 +224,11 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     if request.method == 'POST' and form.validate():
         now = datetime.now()
         new_post = db.Post(thread=thread, author=g.user, timestamp=post.timestamp, editstamp=now,
-            text=form.text.data, original=post)
+            text=form.text.data, original=post.original if post.original else post)
         db.session.add(new_post)
         post.deleted=True
         db.session.commit()
-        return redirect(post.url)
+        return redirect(new_post.url)
     
     return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), edit_post=post)
 

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>RHforum » {% block title %}{% endblock %}</title></title>
+    <title>RHforum » {% block title %}{% endblock %}</title>
     <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <style>
 
@@ -39,10 +39,11 @@ a.row-text:hover {color: #004 !important;}
 .post-data {border-bottom: 1px solid #ddd; width: 100%; text-align: right; font-size: smaller;}
 .post-text {padding: 4px;}
 .post-text p {text-indent: 4%;}
-.post-text textarea {width: 100%; min-height: 100px; border: none; font-family: 'Ubuntu', sans-serif; background: none; color: #111;}
+.post-text textarea {width: 95%; min-height: 100px; border: none; font-family: 'Ubuntu', sans-serif; background: white; color: #111; box-shadow: inset 0 0 1em #bbb; border-radius: 1em; padding:0.5em;}
+.post-text textarea:focus {box-shadow: inset 0 0 1em #cca;}
 .post-edited {font-size: smaller; text-align: right;}
 
-.post:target, .post:target .post-sidebar {background-color: #ffffe0; background: linear-gradient(to bottom, #ffffc6 0%,#ffffff 100%);}
+.post:target, .post:target .post-sidebar {background-color: #ffffe4; background: linear-gradient(to bottom, #ffffc6 0%,#ffffff 100%);}
 
 .new-thread #name {width: 100%; margin-bottom:6px; font-size: 24px;}
 
