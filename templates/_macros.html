@@ -22,12 +22,13 @@
                 {% elif diff.seconds < 120 %}     před minutou
                 {% elif diff.seconds < 3600 %}    před {{diff.seconds//60}} minutama
                 {% elif diff.seconds < 7200 %}    před hodinou
-                {% elif diff.seconds < 86400 %}   před {{diff.seconds//3600}} hodinama
+                {% elif diff.seconds < 86400 and g.now.day == d.day %}
+                    před {{diff.seconds//3600}} hodinama
+                {% else %}
+                    včera {{d|datetime("%H:%m")}}
                 {% endif %}
             {% else %}
-                {% if   diff.days == 1 %}         včera {{d|datetime("%H:%m")}}
-                {% else %}                        {{d|datetime("%d. %m. %Y %H:%M")}}
-                {% endif %}
+                {{d|datetime("%d. %m. %Y %H:%M")}}
             {% endif %}
         {% endwith %}
     </span>
