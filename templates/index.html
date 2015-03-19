@@ -5,44 +5,66 @@
 {% block content %}
     <h1><a href="{{url_for('index')}}">RHForum</a></h1>
     {% if g.user %}
-        <div class="fora">
-            {% for forum in fora %}
-                {% if forum != edit_forum %}
-                    <div class="row">
-                        <div class="row-data">
-                            <div class="row-total">{{ txt_threads(forum.threads | count) }}</div>
-                            <div class="row-last">
-                                {% if forum.last_post %}
-                                    Nejnovější: <a href="{{forum.last_post.url}}">{{ forum.last_post.thread.name }} od <i>{{ forum.last_post.author.name }}</i></a>
+        {% for category in forum_categories %}
+            <h2 class="category-name">
+                {% if category != editable %}
+                    {% if category %}
+                        {{category.name}}
+                    {% else %}
+                        Nezařazené
+                    {% endif %}
+                {% else %}
+                    {{ form.name }}
+                    {{form.move_up or ""}}
+                    {{form.move_down or ""}}
+                    {{form.save}}
+                {% endif %}
+            </h2>
+            {% if category and g.user and g.user.admin and not edit_forum %}
+                <div class="category-admin">
+                    <a href="{{url_for('edit_category', category_id=category.id)}}">Upravit kategorii</a>
+                </div>
+            {% endif %}
+            <div class="fora">
+                {% for forum in (category.fora if category else uncategorized_fora) %}
+                    {% if forum != edit_forum %}
+                        <div class="row">
+                            <div class="row-data">
+                                <div class="row-total">{{ txt_threads(forum.threads | count) }}</div>
+                                <div class="row-last">
+                                    {% if forum.last_post %}
+                                        Nejnovější: <a href="{{forum.last_post.url}}">{{ forum.last_post.thread.name }} od <i>{{ forum.last_post.author.name }}</i></a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <a class="row-text" href="{{forum.url}}">
+                                <div class="row-name">{{forum.name}}</div>
+                                <div class="row-description">{{forum.description}}</div>
+                            </a>
+                        </div>
+                    {% else %}
+                        <form class="form-edit-forum" method="POST">
+                        <div class="row">
+                            <div class="row-data">
+                                {% if not new %}
+                                    {{form.move_up or ""}}<br>
+                                    {{form.move_down or ""}}
                                 {% endif %}
                             </div>
+                            <div class="row-text">
+                                <div class="row-name">{{form.name}}</div>
+                                <div class="row-description">{{form.description}} {{form.save}}</div>
+                            </div>
                         </div>
-                        <a class="row-text" href="{{forum.url}}">
-                            <div class="row-name">{{forum.name}}</div>
-                            <div class="row-description">{{forum.description}}</div>
-                        </a>
-                    </div>
-                {% else %}
-                    <form class="form-edit-forum" method="POST">
-                    <div class="row">
-                        <div class="row-data">
-                            {% if not new %}
-                                {{form.move_up or ""}}<br>
-                                {{form.move_down or ""}}
-                            {% endif %}
-                        </div>
-                        <div class="row-text">
-                            <div class="row-name">{{form.name}}</div>
-                            <div class="row-description">{{form.description}} {{form.save}}</div>
-                        </div>
-                    </div>
-                    </form>
-                {% endif %}
-            {% endfor %}
-        </div>
+                        </form>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
         {% if g.user and g.user.admin and not edit_forum %}
             <div class="forum-admin">
-                <a href="{{url_for('edit_forum')}}">Přidat fórum</a>
+                <a href="{{url_for('edit_forum')}}">Přidat fórum</a> &bull;
+                <a href="{{url_for('edit_category')}}">Přidat kategorii</a>
             </div>
         {% endif %}
         <h2>Nejnovější příspěvky</h2>

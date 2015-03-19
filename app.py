@@ -64,28 +64,57 @@ class ForumForm(Form):
     move_up = SubmitField('↑')
     move_down = SubmitField('↓')
     save = SubmitField('Uložit')
+class CategoryForm(Form):
+    name = TextField('Jméno', [validators.required()])
+    move_up = SubmitField('↑')
+    move_down = SubmitField('↓')
+    save = SubmitField('Uložit')
 
 @app.route("/")
 def index():
-    fora = db.session.query(db.Forum).order_by(db.Forum.position)
+    forum_categories = db.session.query(db.ForumCategory).order_by(db.ForumCategory.position).all()
+    forum_categories.append(None)
+    uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.forum_category == None).order_by(db.Forum.position)
     latest_posts = db.session.query(db.Post).filter(db.Post.deleted==False).order_by(db.Post.timestamp.desc())[0:10]
-    return render_template("index.html", fora=fora, edit_forum = None, latest_posts=latest_posts)
+    return render_template("index.html", forum_categories=forum_categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts)
 
-@app.route("/edit-forum/<int:forum_id>", methods="GET POST".split())
-@app.route("/edit-forum/new", methods="GET POST".split())
-def edit_forum(forum_id=None):
+@app.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
+@app.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())
+@app.route("/edit-catgory/<int:category_id>", endpoint="edit_category", methods="GET POST".split())
+@app.route("/edit-category/new", endpoint="edit_category", methods="GET POST".split())
+def edit_forum_or_category(forum_id=None, category_id=None):
     if not g.user.admin: abort(403) # TODO minrights decorator
-    fora = db.session.query(db.Forum).order_by(db.Forum.position).all()
-    if forum_id:
-        forum = db.session.query(db.Forum).get(forum_id)
-    else:
-        forum = db.Forum()
-        fora = list(fora) + [forum]
-    form = ForumForm(request.form, forum)
+    forum_categories = db.session.query(db.ForumCategory).order_by(db.ForumCategory.position).all()
+    forum_categories.append(None)
+    uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.forum_category == None).order_by(db.Forum.position)
+    if request.endpoint == 'edit_forum':
+        if forum_id:
+            forum = db.session.query(db.Forum).get(forum_id)
+            forum.last = forum.position == len(forum.category.fora) - 1
+        else:
+            forum = db.Forum()
+            uncategorized_fora = list(uncategorized_fora) + [forum]
+            forum.position = 0
+            forum.last = True
+        form = ForumForm(request.form, forum)
+        editable = forum
+    elif request.endpoint == 'edit_category':
+        if category_id:
+            category = db.session.query(db.ForumCategory).get(category_id)
+            category.last = category.position == len(forum_categories) - 1
+        else:
+            category = db.ForumCategory()
+            forum_categories = list(forum_categories) + [category]
+            category.last = True
+        form = CategoryForm(request.form, category)
+        editable = category
     if request.method == "POST" and form.validate():
-        forum.name = form.name.data
-        forum.identifier = forum.name.lower().replace(' ', '-')
-        forum.description = form.description.data
+        if request.endpoint == 'edit_forum':
+            forum.name = form.name.data
+            forum.identifier = forum.name.lower().replace(' ', '-')
+            forum.description = form.description.data
+        elif request.endpoint == 'edit_category':
+            category.name = form.name.data
         if form.save.data:
             if not forum_id:
                 forum.position = len(list(fora))-1
@@ -108,11 +137,11 @@ def edit_forum(forum_id=None):
                 f.position = i
                 db.session.add(f)
             db.session.commit()
-    if forum.position == 0:
+    if editable.position == 0:
         del form.move_up
-    if forum.position == len(fora)-1:
+    if editable.last: # == len(fora)-1:
         del form.move_down
-    return render_template("index.html", fora=fora, edit_forum=forum, form=form, new=not bool(forum_id))
+    return render_template("index.html", forum_categories=forum_categories, uncategorized_fora=uncategorized_fora, editable=editable, form=form, new=not bool(forum_id))
 
 class LoginForm(Form):
     name = TextField('Jméno', [validators.required()])
