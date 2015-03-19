@@ -29,6 +29,7 @@ class EditPostForm(Form):
 class EditThreadForm(Form):
     name = TextField('Nadpis', [validators.required()])
     text = TextAreaField('Text', [validators.required()])
+    forum_id = SelectField('Fórum', coerce=int)
     submit = SubmitField('Upravit')
 
 class ThreadForm(PostForm):
@@ -226,11 +227,13 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     posts = thread.posts.filter(db.Post.deleted==False)
     
     if post == posts[0]:
-        form = EditThreadForm(request.form, text=post.text, name=thread.name)
         edit_thread = True
+        form = EditThreadForm(request.form, text=post.text, name=thread.name, forum_id=thread.forum_id)
+        forums = db.session.query(db.Forum).order_by(db.Forum.position).all()
+        form.forum_id.choices = [(f.id, f.name) for f in forums]
     else:
-        form = EditPostForm(request.form, text=post.text)
         edit_thread = False
+        form = EditPostForm(request.form, text=post.text)
     
     if request.method == 'POST' and form.validate():
         now = datetime.now()
@@ -240,6 +243,8 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
         post.deleted=True
         if edit_thread:
            thread.name = form.name.data
+           thread.forum_id = form.forum_id.data
+           #forum.fix_laststamp() # TODO
         db.session.commit()
         if edit_thread:
             return redirect(thread.url)

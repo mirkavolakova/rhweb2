@@ -28,7 +28,10 @@
                             {% endif %}
                         {% else %}
                             <form method="POST">
-                                {{ form.name }}
+                                {% if edit_thread %}
+                                    <div>{{ form.name }}</div>
+                                    <div>Fórum: {{ form.forum_id }}</div>
+                                {% endif %}
                                 <div>{{ form.text }}</div>
                                 <div>{{ form.submit }}</div>
                             </form>
