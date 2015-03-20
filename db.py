@@ -95,7 +95,7 @@ class Forum(Base):
     position = Column(Integer)
     
     category_id = Column(Integer, ForeignKey('categories.id'))
-    category = relationship("Category", backref='fora', order_by="Forum.position")
+    category = relationship("Category", backref=backref('fora', order_by=b"Forum.position"))
     
     @property
     def url(self):
