@@ -61,6 +61,7 @@ def shutdown_session(exception=None):
 class ForumForm(Form):
     name = TextField('Jméno', [validators.required()])
     description = TextField('Popisek', [validators.required()])
+    category_id = SelectField('Kategorie', coerce=int)
     move_up = SubmitField('↑')
     move_down = SubmitField('↓')
     save = SubmitField('Uložit')
@@ -72,11 +73,12 @@ class CategoryForm(Form):
 
 @app.route("/")
 def index():
-    forum_categories = db.session.query(db.ForumCategory).order_by(db.ForumCategory.position).all()
-    forum_categories.append(None)
-    uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.forum_category == None).order_by(db.Forum.position)
+    categories = db.session.query(db.Category).order_by(db.Category.position).all()
+    uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.category == None).order_by(db.Forum.position).all()
+    if uncategorized_fora:
+        categories.append(None)
     latest_posts = db.session.query(db.Post).filter(db.Post.deleted==False).order_by(db.Post.timestamp.desc())[0:10]
-    return render_template("index.html", forum_categories=forum_categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts)
+    return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts)
 
 @app.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
 @app.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())
@@ -84,27 +86,29 @@ def index():
 @app.route("/edit-category/new", endpoint="edit_category", methods="GET POST".split())
 def edit_forum_or_category(forum_id=None, category_id=None):
     if not g.user.admin: abort(403) # TODO minrights decorator
-    forum_categories = db.session.query(db.ForumCategory).order_by(db.ForumCategory.position).all()
-    forum_categories.append(None)
-    uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.forum_category == None).order_by(db.Forum.position)
+    categories = db.session.query(db.Category).order_by(db.Category.position).all()
+    uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.category == None).order_by(db.Forum.position)
     if request.endpoint == 'edit_forum':
         if forum_id:
             forum = db.session.query(db.Forum).get(forum_id)
-            forum.last = forum.position == len(forum.category.fora) - 1
+            #forum.last = forum.position == len(forum.category.fora) - 1 if forum.category else True
+            if not forum.category: forum.position = 0
         else:
             forum = db.Forum()
             uncategorized_fora = list(uncategorized_fora) + [forum]
             forum.position = 0
             forum.last = True
         form = ForumForm(request.form, forum)
+        form.category_id.choices = [(0, "-")] + [(c.id, c.name) for c in categories if c]
         editable = forum
     elif request.endpoint == 'edit_category':
         if category_id:
-            category = db.session.query(db.ForumCategory).get(category_id)
-            category.last = category.position == len(forum_categories) - 1
+            category = db.session.query(db.Category).get(category_id)
+            #category.last = category.position == len(categories) - 1
         else:
-            category = db.ForumCategory()
-            forum_categories = list(forum_categories) + [category]
+            category = db.Category()
+            categories = list(categories) + [category]
+            category.position = 0
             category.last = True
         form = CategoryForm(request.form, category)
         editable = category
@@ -113,35 +117,55 @@ def edit_forum_or_category(forum_id=None, category_id=None):
             forum.name = form.name.data
             forum.identifier = forum.name.lower().replace(' ', '-')
             forum.description = form.description.data
+            forum.category_id = form.category_id.data or None
+            forum.category = db.session.query(db.Category).get(form.category_id.data)
         elif request.endpoint == 'edit_category':
             category.name = form.name.data
         if form.save.data:
-            if not forum_id:
-                forum.position = len(list(fora))-1
-                db.session.add(forum)
-                flash("Fórum přidáno.")
-            else:
-                flash("Fórum upraveno.")
+            if request.endpoint == 'edit_forum':
+                if not forum_id:
+                    if forum.category_id:
+                        forum.position = len(forum.category.fora) - 1
+                    db.session.add(forum)
+                    flash("Fórum vytvořeno.")
+                else:
+                    flash("Fórum upraveno.")
+            elif request.endpoint == 'edit_category':
+                if not category_id:
+                    category.position = len(categories) - 1
+                    db.session.add(category)
+                    flash("Kategorie vytvořena.")
+                else:
+                    flash("Kategorie upravena.")
             db.session.commit()
             return redirect(url_for('index'))
         else:
             # moving
-            i = forum.position
-            fora = list(fora)
-            fora.remove(forum)
+            i = editable.position
+            if request.endpoint == 'edit_forum':
+                items = list(forum.category.fora)
+            elif request.endpoint == 'edit_category':
+                items = list(categories)
+            items.remove(editable)
             if form.move_up and form.move_up.data:
-                fora.insert(i-1, forum)
+                items.insert(i-1, editable)
             elif form.move_down and form.move_down.data:
-                fora.insert(i+1, forum)
-            for i, f in enumerate(fora):
-                f.position = i
-                db.session.add(f)
+                items.insert(i+1, editable)
+            for i, x in enumerate(items):
+                x.position = i
+                db.session.add(x)
             db.session.commit()
+            if request.endpoint == 'edit_category':
+                categories = items
     if editable.position == 0:
         del form.move_up
-    if editable.last: # == len(fora)-1:
-        del form.move_down
-    return render_template("index.html", forum_categories=forum_categories, uncategorized_fora=uncategorized_fora, editable=editable, form=form, new=not bool(forum_id))
+    if request.endpoint == 'edit_forum':
+        if not forum.category or forum.position == len(forum.category.fora) - 1:
+            del form.move_down
+    elif request.endpoint == 'edit_category':
+        if not category.id or category.position == len(categories) - 1:
+            del form.move_down
+    return render_template("index.html", categories=categories+[None], uncategorized_fora=uncategorized_fora, editable=editable, form=form, new=not bool(forum_id))
 
 class LoginForm(Form):
     name = TextField('Jméno', [validators.required()])

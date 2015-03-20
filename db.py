@@ -78,8 +78,8 @@ usergroups = Table('usergroups', Base.metadata,
     Column('gid', Integer, ForeignKey('groups.uid'))
 )
 
-class ForumCategory(Base):
-    __tablename__ = 'forum_categories'
+class Category(Base):
+    __tablename__ = 'categories'
     
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(Unicode(255))
@@ -94,8 +94,8 @@ class Forum(Base):
     description = Column(UnicodeText)
     position = Column(Integer)
     
-    forum_category_id = Column(Integer, ForeignKey('forum_categories.id'))
-    forum_category = relationship("ForumCategory", backref='fora', order_by="Forum.position")
+    category_id = Column(Integer, ForeignKey('categories.id'))
+    category = relationship("Category", backref='fora', order_by="Forum.position")
     
     @property
     def url(self):
@@ -176,8 +176,8 @@ if __name__ == "__main__":
         Base.metadata.create_all(bind=engine)
 
     if raw_input('test entries? ') == 'y':
-        fc = ForumCategory(name="Kategorie 1")
-        fc2 = ForumCategory(name="Druhá kategorie")
+        fc = Category(name="Kategorie 1")
+        fc2 = Category(name="Druhá kategorie")
         f = Forum(name="Novinky", identifier="novinky", description="Novinky ve světě RH", position=0)
         session.add(f)
         f2 = Forum(name="Obecné", identifier="obecne", description="Posty o čemkoli", position=1)
