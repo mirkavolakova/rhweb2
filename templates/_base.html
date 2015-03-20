@@ -60,6 +60,8 @@ a.row-text:hover {color: #004 !important;}
 .new-thread #name, .post-contents #name, .category-name #name {width: 100%; margin-bottom:6px; font-size: 24px;}
 .category-name #name {font-weight: bold; width: 50%;}
 
+.delete-button {color: #b00;}
+
 .fail {color: #800;}
 
 @media (max-width: 800px) {
@@ -78,6 +80,20 @@ a.row-text:hover {color: #004 !important;}
     }
 
     </style>
+    <script>
+        window.onload = function(){
+            Array.prototype.forEach.call(document.getElementsByClassName('delete-button'), function(el) {
+                el.addEventListener('click', function(event) {
+                    console.log('click');
+                    if (!this.confirmed) {
+                        this.confirmed = true;
+                        this.value = "Opravdu?";
+                        event.preventDefault()
+                    }
+                });
+            });
+        };
+    </script>
 </head>
 <body>
     <div class="topbar">

@@ -65,11 +65,14 @@ class ForumForm(Form):
     move_up = SubmitField('↑')
     move_down = SubmitField('↓')
     save = SubmitField('Uložit')
+    new_forum_id = SelectField('Nové fórum', coerce=int, default=0)
+    delete = SubmitField('Odstranit')
 class CategoryForm(Form):
     name = TextField('Jméno', [validators.required()])
     move_up = SubmitField('↑')
     move_down = SubmitField('↓')
     save = SubmitField('Uložit')
+    delete = SubmitField('Odstranit')
 
 @app.route("/")
 def index():
@@ -100,6 +103,8 @@ def edit_forum_or_category(forum_id=None, category_id=None):
             forum.last = True
         form = ForumForm(request.form, forum)
         form.category_id.choices = [(0, "-")] + [(c.id, c.name) for c in categories if c]
+        fora = db.session.query(db.Forum).outerjoin(db.Category).order_by(db.Category.position, db.Forum.position).all()
+        form.new_forum_id.choices = [(0, "-")] + [(f.id, f.name) for f in fora]
         editable = forum
     elif request.endpoint == 'edit_category':
         if category_id:
@@ -139,6 +144,31 @@ def edit_forum_or_category(forum_id=None, category_id=None):
                     flash("Kategorie upravena.")
             db.session.commit()
             return redirect(url_for('index'))
+        elif form.delete.data:
+            if request.endpoint == 'edit_forum':
+                if not form.new_forum_id.data and forum.threads:
+                    flash("Je nutno témata někam přesunout.")
+                else:
+                    moved = False
+                    if form.new_forum_id.data:
+                        moved = True
+                        new_forum = db.session.query(db.Forum).get(form.new_forum_id.data)
+                        for thread in forum.threads:
+                            thread.forum = new_forum
+                        else:
+                            moved = False
+                    db.session.delete(forum)
+                    if moved:
+                        flash("Fórum odstraněno a témata přesunuty.")
+                    else:
+                        flash("Fórum odstraněno.")
+                    db.session.commit()
+                    return redirect(url_for('index'))
+            elif request.endpoint == 'edit_category':
+                db.session.delete(category)
+                flash("Kategorie odstraněna.")
+                db.session.commit()
+                return redirect(url_for('index'))
         else:
             # moving
             i = editable.position
@@ -282,7 +312,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     if post == posts[0]:
         edit_thread = True
         form = EditThreadForm(request.form, text=post.text, name=thread.name, forum_id=thread.forum_id)
-        forums = db.session.query(db.Forum).order_by(db.Forum.position).all()
+        forums = db.session.query(db.Forum).outerjoin(db.Category).order_by(db.Category.position, db.Forum.position).all()
         form.forum_id.choices = [(f.id, f.name) for f in forums]
     else:
         edit_thread = False

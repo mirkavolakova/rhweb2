@@ -26,6 +26,7 @@
                             {{form.move_up or ""}}
                             {{form.move_down or ""}}
                             {{form.save}}
+                            {{form.delete(class_="delete-button")}}
                         </h2>
                     </form>
                 {% endif %}
@@ -60,7 +61,15 @@
                                 <div class="row-description">
                                     {{ form.description }}
                                     {{ form.category_id }}
-                                    {{ form.save }}</div>
+                                    {{ form.save }}
+                                    <div>
+                                        {% if forum.threads %}
+                                            Přesunout existující témata do {{form.new_forum_id}} a {{form.delete(class_="delete-button")}}
+                                        {% elif not new %}
+                                            {{form.delete(class_="delete-button")}}
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         </form>
