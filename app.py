@@ -88,8 +88,10 @@ class ForumForm(Form):
     save = SubmitField('Uložit')
     new_forum_id = SelectField('Nové fórum', coerce=int, default=0)
     delete = SubmitField('Odstranit')
+
 class CategoryForm(Form):
     name = TextField('Jméno', [validators.required()])
+    group_id = SelectField('Nutná skupina', coerce=int)
     move_up = SubmitField('↑')
     move_down = SubmitField('↓')
     save = SubmitField('Uložit')
@@ -137,6 +139,7 @@ def edit_forum_or_category(forum_id=None, category_id=None):
             category.position = 0
             category.last = True
         form = CategoryForm(request.form, category)
+        form.group_id.choices = [(0, "-")] + [(group.id, group.name) for group in db.session.query(db.Group)]
         editable = category
     if request.method == "POST" and form.validate():
         if request.endpoint == 'edit_forum':
@@ -147,6 +150,7 @@ def edit_forum_or_category(forum_id=None, category_id=None):
             forum.category = db.session.query(db.Category).get(form.category_id.data)
         elif request.endpoint == 'edit_category':
             category.name = form.name.data
+            category.group_id = form.group_id.data
         if form.save.data:
             if request.endpoint == 'edit_forum':
                 if not forum_id:
@@ -284,6 +288,7 @@ def forum(forum_id, forum_identifier=None):
     if not g.user: abort(403)
     forum = db.session.query(db.Forum).get(forum_id)
     if not forum: abort(404)
+    if forum.category and forum.category.group and forum.category.group not in g.user.groups: abort(403)
     threads = db.session.query(db.Thread).filter(db.Thread.forum == forum).order_by(db.Thread.laststamp.desc())
     form = ThreadForm(request.form)
     if g.user and request.method == 'POST' and form.validate():
@@ -306,6 +311,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     if not g.user: abort(403)
     thread = db.session.query(db.Thread).get(thread_id)
     if not thread: abort(404)
+    if thread.forum.category and thread.forum.category.group and thread.forum.category.group not in g.user.groups: abort(403)
     posts = thread.posts.filter(db.Post.deleted==False)
     form = PostForm(request.form)
     if g.user and request.method == 'POST' and form.validate():
@@ -326,6 +332,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     post = db.session.query(db.Post).get(post_id)
     thread = db.session.query(db.Thread).get(thread_id)
     if not post: abort(404)
+    if thread.forum.category.group and thread.forum.category.group not in g.user.groups: abort(403)
     if post.thread != thread: abort(400)
     if post.author != g.user and not g.user.admin: abort(403)
     posts = thread.posts.filter(db.Post.deleted==False)

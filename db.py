@@ -59,7 +59,7 @@ class User(Base):
     
     @property
     def admin(self):
-        session.query(Group).filter(Group.name=="admin").scalar() in self.groups
+        return session.query(Group).filter(Group.name=="admin").scalar() in self.groups
     
     @property
     def url(self):
@@ -71,6 +71,7 @@ class User(Base):
         else:
             # Old hashing method
             raise OldHashingMethodException
+    
 
 class Group(Base):
     __tablename__="groups"
@@ -92,6 +93,9 @@ class Category(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(Unicode(255))
     position = Column(Integer)
+    
+    group_id = Column(Integer, ForeignKey('groups.gid'))
+    group = relationship("Group", backref='categories')
 
 class Forum(Base):
     __tablename__ = 'fora'
