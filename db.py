@@ -43,7 +43,7 @@ class User(Base):
     laststamp = Column(DateTime)
     profile = Column(UnicodeText)
     
-    groups = relationship("Group", secondary='usergroups')
+    groups = relationship("Group", secondary='usergroup')
     
     @property
     def name(self):
@@ -82,7 +82,7 @@ class Group(Base):
     def id(self):
         return self.gid
 
-usergroups = Table('usergroups', Base.metadata,
+usergroup = Table('usergroup', Base.metadata,
     Column('uid', Integer, ForeignKey('users.uid')),
     Column('gid', Integer, ForeignKey('groups.gid'))
 )
