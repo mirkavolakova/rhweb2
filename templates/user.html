@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+
+{% block title %}{{ user.name }}{% endblock %}
+
+{% block content %}
+    <h1><a href="{{url_for('index')}}">RHForum</a> » <a href="{{user.url}}">{{user.name}}</a></h1>
+    <div class="card">
+        <div class="card-image">Sem přijde avatar, nějaké zašedlé logo RH pokud žádný nemá :)</div>
+        <div class="card-user">
+            <h2>{{user.name}}</h2>
+            <dl>
+                <dt>Email</dt>
+                <dd>{{ user.email.replace('@', ' zavináč ') if user.email else "-" }}<dd>
+                <dt>Homepage</dt>
+                <dd>{{ user.homepage or "-" }}<dd>
+                <dt>Poslední návštěva</dt>
+                <dd>{{ ago(user.laststamp) if user.laststamp else "-" }}<dd>
+        </div>
+        <div class="card-threads">
+        </div>
+    </div>
+{% endblock %}
