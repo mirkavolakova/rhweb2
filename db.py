@@ -59,7 +59,7 @@ class User(Base):
     
     @property
     def admin(self):
-        return True # session.query(Group).filter(Group.name=="admin").scalar() in self.groups
+        session.query(Group).filter(Group.name=="admin").scalar() in self.groups
     
     @property
     def url(self):
@@ -74,12 +74,16 @@ class User(Base):
 
 class Group(Base):
     __tablename__="groups"
-    uid = Column(Integer, primary_key=True, nullable=False)
+    gid = Column(Integer, primary_key=True, nullable=False)
     name = Column(Unicode(255))
+    
+    @property
+    def id(self):
+        return self.gid
 
 usergroups = Table('usergroups', Base.metadata,
     Column('uid', Integer, ForeignKey('users.uid')),
-    Column('gid', Integer, ForeignKey('groups.uid'))
+    Column('gid', Integer, ForeignKey('groups.gid'))
 )
 
 class Category(Base):

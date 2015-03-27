@@ -13,6 +13,16 @@ from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, session, abort, url_for, make_response, g
 from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, HiddenField, SubmitField, validators, ValidationError, widgets
 
+class MultiCheckboxField(SelectMultipleField):
+    """
+    A multiple-select, except displays a list of checkboxes.
+    Iterating the field will produce subfields, allowing custom rendering of
+    the enclosed checkbox fields.
+    Shamelessly stolen from WTForms FAQ.
+    """
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
 app_dir = os.path.dirname(os.path.abspath(__file__))
 app = Flask('rhforum', template_folder=app_dir+"/templates")
 app.config.from_pyfile(app_dir+"/config.py") # XXX
@@ -35,6 +45,16 @@ class EditThreadForm(Form):
 class ThreadForm(PostForm):
     name = TextField('Nadpis', [validators.required()])
 
+class UserForm(Form):
+    fullname = TextField('Nadpis', [validators.required()])
+    email = TextField('Email', [validators.required()])
+    homepage = TextField('Homepage')
+    avatar_url = TextField('URL avataru')
+    profile = TextAreaField('Profil')
+    submit = SubmitField('Upravit')
+
+class AdminUserForm(UserForm):
+    group_ids = MultiCheckboxField('Skupiny', coerce=int)
 
 @app.template_filter('datetime')
 def datetime_format(value, format='%d. %m. %Y %H:%M:%S'):
@@ -344,6 +364,38 @@ def user(user_id, name=None):
     user = db.session.query(db.User).get(user_id)
     if not user: abort(404)
     return render_template("user.html", user=user)
+
+@app.route("/users/<int:user_id>/edit", methods="GET POST".split())
+@app.route("/users/<int:user_id>-<name>/edit", methods="GET POST".split())
+def edit_user(user_id, name=None):
+    if not g.user: abort(403)
+    user = db.session.query(db.User).get(user_id)
+    if not user: abort(404)
+    if user != g.user and not user.admin: abort(403)
+    
+    if g.user.admin:
+        form = AdminUserForm(request.form, user)
+        form.group_ids.choices = []
+        for group in db.session.query(db.Group):
+            form.group_ids.choices.append((group.id, group.name))
+        if form.group_ids.data == None:
+            form.group_ids.data = [group.id for group in user.groups]
+    else:
+        form = UserForm(request.form, user)
+        
+        
+    if request.method == 'POST' and form.validate():
+        user.fullname = form.fullname.data
+        user.email = form.email.data
+        user.homepage = form.homepage.data
+        user.groups = []
+        for group_id in form.group_ids.data:
+            user.groups.append(db.session.query(db.Group).get(group_id))
+        db.session.commit()
+        flash("Uživatel upraven.")
+        return redirect(user.url)
+    
+    return render_template("user.html", user=user, edit=True, form=form)
 
 if not app.debug:
     import logging
