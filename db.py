@@ -60,7 +60,11 @@ class User(Base):
     @property
     def admin(self):
         return True # session.query(Group).filter(Group.name=="admin").scalar() in self.groups
-        
+    
+    @property
+    def url(self):
+        return url_for('user', user_id=self.id, name=self.login)
+    
     def verify_password(self, password):
         if self.pass_.startswith('$2a'):
             return bcrypt.hashpw(password.encode('utf-8'), self.pass_.encode('utf-8')) == self.pass_
@@ -192,7 +196,7 @@ if __name__ == "__main__":
         u2 = User(login="uzivatel", fullname="Uživatel", pass_=bcrypt.hashpw(b"test", bcrypt.gensalt(rounds=9)), groups=[])
         session.add(u2)
 
-        t = Thread(name="První téma na fóru", description="Yay!", timestamp=datetime.now(), laststamp=datetime.now(), forum=f, author=u)
+        t = Thread(name="První téma na fóru", description="", timestamp=datetime.now(), laststamp=datetime.now(), forum=f, author=u)
         session.add(t)
 
         p = Post(thread=t, author=u, text="First post!  <b>Test</b>!", timestamp=datetime.now())

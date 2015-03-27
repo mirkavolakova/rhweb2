@@ -49,6 +49,7 @@ def before_request():
         if not g.user:
             # TODO
             pass
+        g.user.laststamp = datetime.now()
     else:
         g.user = None
     g.now = datetime.now()
@@ -339,7 +340,10 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
 @app.route("/users/<int:user_id>")
 @app.route("/users/<int:user_id>-<name>")
 def user(user_id, name=None):
-    pass
+    if not g.user: abort(403)
+    user = db.session.query(db.User).get(user_id)
+    if not user: abort(404)
+    return render_template("user.html", user=user)
 
 if not app.debug:
     import logging

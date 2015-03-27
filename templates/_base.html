@@ -73,6 +73,14 @@ a.row-text:hover {color: #004 !important;}
 
 .fail {color: #800;}
 
+.card {margin: auto; width: 90%; max-width: 600px; min-height: 200px;
+    border: 1px solid #555; border-radius: 8px;
+    padding: 12px;}
+.card-image {width: 250px; height: 250px; border: 1px solid #555; border-radius: 8px;
+    float: left; margin-right: 12px; text-align: center;}
+.card-user {display: inline-block;} 
+.card-threads {clear: both;}
+
 @media (max-width: 800px) {
     .container {width: 90%; margin: auto; padding: 8px; margin-top: 18px;}
     .row {position: relative;}
@@ -83,10 +91,12 @@ a.row-text:hover {color: #004 !important;}
     .post-contents {margin-left: 0;}
     .post-sidebar {float: left; position: inherit; height: auto; border-bottom: 1px solid #ddd; margin-right: 4px;
         width: 150px; background: white;}
+        
 }
 @media (max-width: 600px) {
     .post-sidebar {width: 125px;}
-    }
+    .card-image {width: 150px; height: 150px;}
+}
 
     </style>
     <script>
