@@ -4,19 +4,28 @@
 <head>
     <meta charset="utf-8">
     <title>RHforum » {% block title %}{% endblock %}</title>
-    <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <!--<link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
 
-* {box-sizing: border-box;}
+* {box-sizing: content-box;} /* border-box */
 
-body {width: 75%; margin: auto; font-family: 'Ubuntu', sans-serif; padding-bottom: 64px;
+body {font-family: 'Ubuntu', sans-serif;  margin: 0; padding: 0; padding-bottom: 32px;}
+    
+.container {width: 75%; margin: auto; padding: 8px; padding-bottom: 16px;
     margin-top: 8px;}
 
 a {color: #006;}
 a:hover {color: #339;}
 
-.topbar {text-align: right;}
+.topbar { width: auto; position: fixed; top: 0; background: #eee; width: 100%;
+    border-bottom: 1px solid #ccc; z-index: 10;}
+.topbar-contents { padding: 4px 32px 4px 32px; }
+.topbar a {text-decoration: none;}
+.topbar a:hover {text-decoration: underline;}
+.topbar-links {display: inline-block; }
+.rh-link {font-weight: bold;}
+.topbar-user {float: right; display: inline-block; padding-left: 8px;}
 
 .flash {border: 1px solid rgb(197, 188, 16); background: rgb(248, 241, 190);
     border-radius:8px; padding: 8px; margin: 6px 12px 0px 12px;}
@@ -65,7 +74,7 @@ a.row-text:hover {color: #004 !important;}
 .fail {color: #800;}
 
 @media (max-width: 800px) {
-    body {width: 90%;}
+    .container {width: 90%; margin: auto; padding: 8px; margin-top: 18px;}
     .row {position: relative;}
     .row a.row-text {min-height: 62px;}
     .latest-posts .row a.row-text {min-height: 32px;}
@@ -97,21 +106,32 @@ a.row-text:hover {color: #004 !important;}
 </head>
 <body>
     <div class="topbar">
-        {% if g.user %}
-            Přihlášen/a za <a href="{{g.user.url}}">{{g.user.name}}</a> &bull;
-            <a href="{{url_for('logout')}}">Odhlásit se</a>
-        {% else %}
-            <a href="{{url_for('login')}}">Přihlásit se</a> &bull;
-            <a href="{{url_for('register')}}">Registrovat</a>
-        {% endif %}
+        <div class="topbar-contents">
+            <div class="topbar-links">
+                <a href="http://retroherna.cz" class="rh-link">RetroHerna</a> &bull;
+                <a href="http://retroherna.cz/wiki/">Wiki</a> &bull;
+                <a href="http://retroherna.cz/forum/">Fórum</a>
+            </div>
+            <div class="topbar-user">
+                {% if g.user %}
+                    Přihlášen/a za <a href="{{g.user.url}}">{{g.user.name}}</a> &bull;
+                    <a href="{{url_for('logout')}}">Odhlásit se</a>
+                {% else %}
+                    <a href="{{url_for('login')}}">Přihlásit se</a> &bull;
+                    <a href="{{url_for('register')}}">Registrovat</a>
+                {% endif %}
+            </div>
+        </div>
     </div>
-    {% with messages = get_flashed_messages() %}
-        {% for message in messages %}
-            <div class="flash">{{ message }}</div>
-        {% endfor %}
-    {% endwith %}
-    
-    {% block content %}
-    {% endblock %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+        
+        {% block content %}
+        {% endblock %}
+    </div>
 </body>
 </html>
