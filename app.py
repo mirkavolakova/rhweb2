@@ -395,9 +395,10 @@ def edit_user(user_id, name=None):
         user.fullname = form.fullname.data
         user.email = form.email.data
         user.homepage = form.homepage.data
-        user.groups = []
-        for group_id in form.group_ids.data:
-            user.groups.append(db.session.query(db.Group).get(group_id))
+        if g.user.admin:
+            user.groups = []
+            for group_id in form.group_ids.data:
+                user.groups.append(db.session.query(db.Group).get(group_id))
         db.session.commit()
         flash("Uživatel upraven.")
         return redirect(user.url)
