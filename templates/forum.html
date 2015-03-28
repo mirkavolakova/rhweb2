@@ -23,6 +23,8 @@
                     <div class="row-description">{{thread.description or "&nbsp;"|safe}} </div>
                 </a>
             </div>
+        {% else %}
+            Ještě tu žádná témata nejsou.
         {% endfor %}
     </div>
     {% if g.user %}
