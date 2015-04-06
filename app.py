@@ -5,7 +5,7 @@ from __future__ import absolute_import, unicode_literals, print_function
 import os
 
 import db
-from sqlalchemy import or_, and_, asc, desc, func
+from sqlalchemy import or_, and_, not_, asc, desc, func
 from datetime import datetime
 from functools import wraps # We need this to make Flask understand decorated routes.
 import hashlib
@@ -72,7 +72,7 @@ def before_request():
             pass
         g.user.laststamp = datetime.now()
     else:
-        g.user = None
+        g.user = db.Guest()
     g.now = datetime.now()
 
 @app.teardown_request
@@ -104,7 +104,10 @@ def index():
     uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.category == None).order_by(db.Forum.position).all()
     if uncategorized_fora:
         categories.append(None)
-    latest_posts = db.session.query(db.Post).filter(db.Post.deleted==False).order_by(db.Post.timestamp.desc())[0:10]
+    latest_posts = db.session.query(db.Post).join(db.Thread).join(db.Forum).outerjoin(db.Category)\
+        .filter(or_(db.Forum.category_id==None, db.Category.group_id.in_([None, 0]), db.Category.group_id.in_(group.id for group in g.user.groups)))\
+        .filter(db.Post.deleted==False).order_by(db.Post.timestamp.desc())[0:10]
+    
     return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts)
 
 @app.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
@@ -254,25 +257,37 @@ def login():
     return render_template("login.html", form=form, failed=failed)
 
 class RegisterForm(Form):
-    name = TextField('Jméno', [validators.required()])
+    login = TextField('Login', [validators.required()])
+    fullname = TextField('Jméno', [validators.required()])
+    password = PasswordField('Heslo', [
+        validators.Required(),
+        validators.EqualTo('confirm_password', message='Hesla se musí schodovat')
+    ])
+    confirm_password = PasswordField('Heslo znovu')
     email = TextField('Email', [validators.required()])
-    submit = SubmitField('Zaregistrovat')
+    submit = SubmitField('Zaregistrovat se')
 
 @app.route("/register", methods="GET POST".split())
 def register():
-    form = RegisterForm(request.form)
-    '''
-    if request.method == 'POST' and form.validate():
-        user = db.User(name=form.name.data, email=form.email.data, timestamp=datetime.now())
-        db.session.add(user)
-        db.session.commit()
-        g.user = user
-        session['user_id'] = g.user.id
-        session.permanent = True
-        
-        flash("Registrace proběhla úspěšně.")
+    if g.user:
+        if g.user.admin:
+            flash("Pro ruční registraci účtů ostatním použijte prosím DokuWiki.")
         return redirect("/")
-    '''
+    form = RegisterForm(request.form)
+    if request.method == 'POST' and form.validate():
+        if db.session.query(db.User).filter(db.User.login == form.login.data.lower()).scalar():
+            flash("Tento login je už zabraný, vyberte si prosím jiný.")
+        else:
+            user = db.User(login=form.login.data.lower(), fullname=form.fullname.data, email=form.email.data, timestamp=datetime.now())
+            user.set_password(form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            g.user = user
+            session['user_id'] = g.user.id
+            session.permanent = True
+            
+            flash("Registrace proběhla úspěšně.")
+            return redirect("/")
     
     return render_template("register.html", form=form)
 
@@ -286,7 +301,6 @@ def logout():
 @app.route("/<int:forum_id>", methods="GET POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>", methods="GET POST".split())
 def forum(forum_id, forum_identifier=None):
-    if not g.user: abort(403)
     forum = db.session.query(db.Forum).get(forum_id)
     if not forum: abort(404)
     if forum.category and forum.category.group and forum.category.group not in g.user.groups: abort(403)
@@ -309,7 +323,6 @@ def forum(forum_id, forum_identifier=None):
 @app.route("/<int:forum_id>/<int:topic_id>", methods="GET POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>", methods="GET POST".split())
 def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
-    if not g.user: abort(403)
     thread = db.session.query(db.Thread).get(thread_id)
     if not thread: abort(404)
     if thread.forum.category and thread.forum.category.group and thread.forum.category.group not in g.user.groups: abort(403)
@@ -329,7 +342,6 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
 @app.route("/<int:forum_id>/<int:thread_id>/edit/<int:post_id>", methods="GET POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/edit/<int:post_id>", methods="GET POST".split())
 def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identifier=None):
-    if not g.user: abort(403)
     post = db.session.query(db.Post).get(post_id)
     thread = db.session.query(db.Thread).get(thread_id)
     if not post: abort(404)
@@ -368,7 +380,6 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
 @app.route("/users/<int:user_id>")
 @app.route("/users/<int:user_id>-<name>")
 def user(user_id, name=None):
-    if not g.user: abort(403)
     user = db.session.query(db.User).get(user_id)
     if not user: abort(404)
     return render_template("user.html", user=user)
@@ -376,7 +387,6 @@ def user(user_id, name=None):
 @app.route("/users/<int:user_id>/edit", methods="GET POST".split())
 @app.route("/users/<int:user_id>-<name>/edit", methods="GET POST".split())
 def edit_user(user_id, name=None):
-    if not g.user: abort(403)
     user = db.session.query(db.User).get(user_id)
     if not user: abort(404)
     if user != g.user and not user.admin: abort(403)

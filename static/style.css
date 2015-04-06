@@ -1,6 +1,6 @@
-
-
 * {box-sizing: content-box;} /* border-box */
+
+.clear {clear: both;}
 
 body {font-family: 'Ubuntu', sans-serif;  margin: 0; padding: 0; padding-bottom: 32px;}
     

@@ -73,6 +73,12 @@ class User(Base):
             # Old hashing method
             raise OldHashingMethodException
     
+    def set_password(self, password):
+        self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+class Guest(User):
+    def __nonzero__(self): # hi yes I'm a responsible programmer
+        return False
 
 class Group(Base):
     __tablename__="groups"
