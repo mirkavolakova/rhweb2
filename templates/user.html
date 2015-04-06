@@ -11,7 +11,11 @@
                         <a href="{{ user.url }}/edit">Upravit</a>
                     {% endif %}
                 </div>
-                <div class="card-image">Sem přijde avatar, nějaké zašedlé logo RH pokud žádný nemá :)</div>
+                <div class="card-image">
+                    {% if user.avatar_url %}
+                        <img src="{{user.avatar_url}}" class="avatar">
+                    {% endif %}
+                </div>
                 <div class="card-user">
                         <h2>{{user.name}}</h2>
                         <dl>

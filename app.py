@@ -395,6 +395,7 @@ def edit_user(user_id, name=None):
         user.fullname = form.fullname.data
         user.email = form.email.data
         user.homepage = form.homepage.data
+        user.avatar_url = form.avatar_url.data
         if g.user.admin:
             user.groups = []
             for group_id in form.group_ids.data:

@@ -38,6 +38,7 @@ class User(Base):
     fullname = Column(Unicode(255))
     email = Column(Unicode(255))
     homepage = Column(Unicode(255))
+    minipic_url = Column(Unicode(255))
     avatar_url = Column(Unicode(255))
     timestamp = Column(DateTime)
     laststamp = Column(DateTime)
