@@ -332,7 +332,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     post = db.session.query(db.Post).get(post_id)
     thread = db.session.query(db.Thread).get(thread_id)
     if not post: abort(404)
-    if thread.forum.category.group and thread.forum.category.group not in g.user.groups: abort(403)
+    if thread.forum.category and thread.forum.category.group and thread.forum.category.group not in g.user.groups: abort(403)
     if post.thread != thread: abort(400)
     if post.author != g.user and not g.user.admin: abort(403)
     posts = thread.posts.filter(db.Post.deleted==False)

@@ -29,7 +29,10 @@
                 </div>
         {% else %}
             <form method="POST">
-                <div class="card-image card-image-editing">URL avataru: {{ form.avatar_url }}</div>
+                <div class="card-image card-image-editing">
+                    URL avataru: {{ form.avatar_url }}<br>
+                    Avatar bude u příspěvků max. 100x100px.
+                </div>
                 <div class="card-user">
                     <h2>{{ form.fullname }}</h2>
                     <dl>

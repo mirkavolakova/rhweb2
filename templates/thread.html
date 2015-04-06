@@ -56,6 +56,11 @@
             <div class="post">
                 <div class="post-sidebar">
                     <div><a href="{{ g.user.url }}">{{ g.user.name }}</a></div>
+                    <div class="post-avatar">
+                        {% if g.user.avatar_url %}
+                            <img src="{{g.user.avatar_url}}" class="avatar">
+                        {% endif %}
+                    </div>
                 </div>
                     <div class="post-contents">
                         <div class="post-data">
@@ -64,7 +69,7 @@
                         <div class="post-text">
                             {{ form.text }}
                         </div>
-                        <div class="newpost-controls">
+                        <div class="new-post-controls">
                             {{ form.submit }}
                         </div>
                     </div>
