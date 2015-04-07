@@ -74,7 +74,7 @@ class User(Base):
             raise OldHashingMethodException
     
     def set_password(self, password):
-        self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        self.pass_ = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
 class Guest(User):
     def __nonzero__(self): # hi yes I'm a responsible programmer
