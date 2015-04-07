@@ -278,7 +278,7 @@ def register():
         if db.session.query(db.User).filter(db.User.login == form.login.data.lower()).scalar():
             flash("Tento login je už zabraný, vyberte si prosím jiný.")
         else:
-            user = db.User(login=form.login.data.lower(), fullname=form.fullname.data, email=form.email.data, timestamp=datetime.now())
+            user = db.User(login=form.login.data.lower(), fullname=form.fullname.data, email=form.email.data, timestamp=datetime.now(), laststamp=datetime.now())
             user.set_password(form.password.data)
             db.session.add(user)
             db.session.commit()
