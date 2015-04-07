@@ -37,12 +37,12 @@ class User(Base):
     pass_ = Column('pass', Unicode(60))
     fullname = Column(Unicode(255))
     email = Column(Unicode(255))
-    homepage = Column(Unicode(255))
-    minipic_url = Column(Unicode(255))
-    avatar_url = Column(Unicode(255))
+    homepage = Column(Unicode(255), default='')
+    minipic_url = Column(Unicode(255), default='')
+    avatar_url = Column(Unicode(255), default='')
     timestamp = Column(DateTime)
     laststamp = Column(DateTime)
-    profile = Column(UnicodeText)
+    profile = Column(UnicodeText, default='')
     
     groups = relationship("Group", secondary='usergroup')
     
