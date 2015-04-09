@@ -272,7 +272,7 @@ def register():
     if g.user:
         if g.user.admin:
             flash("Pro ruční registraci účtů ostatním použijte prosím DokuWiki.")
-        return redirect("/")
+        return redirect(url_for("index"))
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
         if db.session.query(db.User).filter(db.User.login == form.login.data.lower()).scalar():
@@ -287,7 +287,7 @@ def register():
             session.permanent = True
             
             flash("Registrace proběhla úspěšně.")
-            return redirect("/")
+            return redirect(url_for("index"))
     
     return render_template("register.html", form=form)
 
@@ -347,6 +347,9 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     if not post: abort(404)
     if thread.forum.category and thread.forum.category.group and thread.forum.category.group not in g.user.groups: abort(403)
     if post.thread != thread: abort(400)
+    if post.deleted:
+        # The user probably hit edit multiple times.  Let's just be helpful.
+        return redirect(thread.url)
     if post.author != g.user and not g.user.admin: abort(403)
     posts = thread.posts.filter(db.Post.deleted==False)
     
