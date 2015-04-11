@@ -25,10 +25,14 @@
                 {% elif diff.seconds < 86400 and g.now.day == d.day %}
                     před {{diff.seconds//3600}} hodinama
                 {% else %}
-                    včera {{d|datetime("%H:%m")}}
+                    včera {{d|datetime("%H:%M")}}
                 {% endif %}
             {% else %}
-                {{d|datetime("%d. %m. %Y %H:%M")}}
+                {% if diff.seconds < 86400*2 and g.yesterday.day == d.day %}
+                    včera {{d|datetime("%H:%M")}}
+                {% else %}
+                    {{d|datetime("%d. %m. %Y %H:%M")}}
+                {% endif %}
             {% endif %}
         {% endwith %}
     </span>

@@ -6,7 +6,7 @@ import os
 
 import db
 from sqlalchemy import or_, and_, not_, asc, desc, func
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps # We need this to make Flask understand decorated routes.
 import hashlib
 
@@ -74,6 +74,7 @@ def before_request():
     else:
         g.user = db.Guest()
     g.now = datetime.now()
+    g.yesterday = g.now - timedelta(days=1)
 
 @app.teardown_request
 def shutdown_session(exception=None):
