@@ -20,7 +20,7 @@
                 {% if   diff.seconds < 10 %}      teď
                 {% elif diff.seconds < 60 %}      před {{diff.seconds}} vteřinama
                 {% elif diff.seconds < 120 %}     před minutou
-                {% elif diff.seconds < 3600 %}    před {{diff.seconds//60}} minutama
+                {% elif diff.seconds < 3600 %}    před {{diff.seconds//60}} minutami
                 {% elif diff.seconds < 7200 %}    před hodinou
                 {% elif diff.seconds < 86400 and g.now.day == d.day %}
                     před {{diff.seconds//3600}} hodinama

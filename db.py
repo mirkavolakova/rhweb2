@@ -116,6 +116,8 @@ class Forum(Base):
     category_id = Column(Integer, ForeignKey('categories.id'))
     category = relationship("Category", backref=backref('fora', order_by=b"Forum.position"))
     
+    trash = Column(Boolean, nullable=False, default=False)
+    
     @property
     def url(self):
         return url_for('forum', forum_id=self.id, forum_identifier=self.identifier)
@@ -164,7 +166,7 @@ class Post(Base):
     thread_id = Column(Integer, ForeignKey('threads.id'), nullable=False)
     thread = relationship("Thread", order_by="Post.timestamp")
     author_id = Column(Integer, ForeignKey('users.uid'), nullable=False)
-    author = relationship("User", backref='posts')
+    author = relationship("User", foreign_keys=[author_id], backref='posts')
     timestamp = Column(DateTime)
     text = Column(UnicodeText)
     
@@ -172,6 +174,8 @@ class Post(Base):
     editstamp = Column(DateTime)
     original_id = Column(Integer, ForeignKey('posts.id'))
     original = relationship("Post", remote_side=id, backref="edits")
+    editor_id = Column(Integer, ForeignKey('users.uid'))
+    editor = relationship("User", foreign_keys=[editor_id])
     
     @property
     def url(self):
@@ -187,6 +191,7 @@ class ThreadRead(Base):
     user = relationship("User", backref='threads_read')
     last_post = Column(Integer)
 
+# XXX Watch out!  Code below main!
 
 if __name__ == "__main__":
     if raw_input('drop all? ') == 'y':
@@ -222,5 +227,10 @@ if __name__ == "__main__":
         session.commit()
 
 
+if not session.query(Forum).filter(Forum.trash == True).scalar():
+    print("No trash forum detected, making one")
+    f = Forum(name="Koš", identifier="kos", description="Smazané posty.", trash=True, position=255)
+    session.add(f)
+    session.commit()
 
 

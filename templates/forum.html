@@ -27,7 +27,7 @@
             Ještě tu žádná témata nejsou.
         {% endfor %}
     </div>
-    {% if g.user %}
+    {% if g.user and form %}
         <h2>Nové téma</h2>
         <form method="POST" class="new-thread">
             {{ form.name(tabindex=1) }}

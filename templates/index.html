@@ -36,47 +36,49 @@
             {% endif %}
             <div class="fora">
                 {% for forum in (category.fora if category else uncategorized_fora) %}
-                    {% if forum != editable %}
-                        <div class="row">
-                            <div class="row-data">
-                                <div class="row-total">{{ txt_threads(forum.threads | count) }}</div>
-                                <div class="row-last">
-                                    {% if forum.last_post %}
-                                        Nejnovější: <a href="{{forum.last_post.url}}">{{ forum.last_post.thread.name }} od <i>{{ forum.last_post.author.name }}</i></a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <a class="row-text" href="{{forum.url}}">
-                                <div class="row-name">{{forum.name}}</div>
-                                <div class="row-description">{{forum.description}}</div>
-                            </a>
-                        </div>
-                    {% else %}
-                        <form class="form-edit-forum" method="POST">
-                        <div class="row">
-                            <div class="row-data">
-                                {% if not new %}
-                                    {{form.move_up or ""}}<br>
-                                    {{form.move_down or ""}}<br>
-                                {% endif %}
-                            </div>
-                            <div class="row-text">
-                                <div class="row-name">{{form.name}}</div>
-                                <div class="row-description">
-                                    {{ form.description }}
-                                    {{ form.category_id }}
-                                    {{ form.save }}
-                                    <div>
-                                        {% if forum.threads %}
-                                            Přesunout existující témata do {{form.new_forum_id}} a {{form.delete(class_="delete-button")}}
-                                        {% elif not new %}
-                                            {{form.delete(class_="delete-button")}}
+                    {% if not forum.trash %}
+                        {% if forum != editable %}
+                            <div class="row">
+                                <div class="row-data">
+                                    <div class="row-total">{{ txt_threads(forum.threads | count) }}</div>
+                                    <div class="row-last">
+                                        {% if forum.last_post %}
+                                            Nejnovější: <a href="{{forum.last_post.url}}">{{ forum.last_post.thread.name }} od <i>{{ forum.last_post.author.name }}</i></a>
                                         {% endif %}
                                     </div>
                                 </div>
+                                <a class="row-text" href="{{forum.url}}">
+                                    <div class="row-name">{{forum.name}}</div>
+                                    <div class="row-description">{{forum.description}}</div>
+                                </a>
                             </div>
-                        </div>
-                        </form>
+                        {% else %}
+                            <form class="form-edit-forum" method="POST">
+                            <div class="row">
+                                <div class="row-data">
+                                    {% if not new %}
+                                        {{form.move_up or ""}}<br>
+                                        {{form.move_down or ""}}<br>
+                                    {% endif %}
+                                </div>
+                                <div class="row-text">
+                                    <div class="row-name">{{form.name}}</div>
+                                    <div class="row-description">
+                                        {{ form.description }}
+                                        {{ form.category_id }}
+                                        {{ form.save }}
+                                        <div>
+                                            {% if forum.threads %}
+                                                Přesunout existující témata do {{form.new_forum_id}} a {{form.delete(class_="delete-button")}}
+                                            {% elif not new %}
+                                                {{form.delete(class_="delete-button")}}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             </div>
@@ -86,6 +88,8 @@
         <div class="index-admin">
             <a href="{{url_for('edit_forum')}}">Přidat fórum</a> &bull;
             <a href="{{url_for('edit_category')}}">Přidat kategorii</a>
+            <br>
+            <a href="{{trash.url}}">Koš</a>
         </div>
     {% endif %}
     {% if latest_posts %}

@@ -36,12 +36,14 @@ class PostForm(Form):
 class EditPostForm(Form):
     text = TextAreaField('Text', [validators.required()])
     submit = SubmitField('Upravit')
+    delete = SubmitField('Smazat')
     
 class EditThreadForm(Form):
     name = TextField('Nadpis', [validators.required()])
     text = TextAreaField('Text', [validators.required()])
     forum_id = SelectField('Fórum', coerce=int)
     submit = SubmitField('Upravit')
+    delete = SubmitField('Smazat')
 
 class ThreadForm(PostForm):
     name = TextField('Nadpis', [validators.required()])
@@ -103,13 +105,15 @@ class CategoryForm(Form):
 def index():
     categories = db.session.query(db.Category).order_by(db.Category.position).all()
     uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.category == None).order_by(db.Forum.position).all()
+    trash = db.session.query(db.Forum).filter(db.Forum.trash == True).scalar()
     if uncategorized_fora:
         categories.append(None)
     latest_posts = db.session.query(db.Post).join(db.Thread).join(db.Forum).outerjoin(db.Category)\
         .filter(or_(db.Forum.category_id==None, db.Category.group_id.in_([None, 0]), db.Category.group_id.in_(group.id for group in g.user.groups)))\
+        .filter(db.Forum.trash == False) \
         .filter(db.Post.deleted==False).order_by(db.Post.timestamp.desc())[0:10]
     
-    return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts)
+    return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts, trash=trash)
 
 @app.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
 @app.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())
@@ -119,6 +123,7 @@ def edit_forum_or_category(forum_id=None, category_id=None):
     if not g.user.admin: abort(403) # TODO minrights decorator
     categories = db.session.query(db.Category).order_by(db.Category.position).all()
     uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.category == None).order_by(db.Forum.position)
+    trash = db.session.query(db.Forum).filter(db.Forum.trash == True).scalar()
     if request.endpoint == 'edit_forum':
         if forum_id:
             forum = db.session.query(db.Forum).get(forum_id)
@@ -225,7 +230,7 @@ def edit_forum_or_category(forum_id=None, category_id=None):
     elif request.endpoint == 'edit_category':
         if not category.id or category.position == len(categories) - 1:
             del form.move_down
-    return render_template("index.html", categories=categories+[None], uncategorized_fora=uncategorized_fora, editable=editable, form=form, new=not bool(forum_id))
+    return render_template("index.html", categories=categories+[None], uncategorized_fora=uncategorized_fora, editable=editable, form=form, new=not bool(forum_id), trash=trash)
 
 class LoginForm(Form):
     name = TextField('Jméno', [validators.required()])
@@ -305,18 +310,21 @@ def forum(forum_id, forum_identifier=None):
     forum = db.session.query(db.Forum).get(forum_id)
     if not forum: abort(404)
     if forum.category and forum.category.group and forum.category.group not in g.user.groups: abort(403)
+    if forum.trash and not g.user.admin: abort(403)
     threads = db.session.query(db.Thread).filter(db.Thread.forum == forum).order_by(db.Thread.laststamp.desc())
-    form = ThreadForm(request.form)
-    if g.user and request.method == 'POST' and form.validate():
-        now = datetime.now()
-        thread = db.Thread(forum=forum, author=g.user, timestamp=now, laststamp=now,
-            name=form.name.data)
-        db.session.add(thread)
-        post = db.Post(thread=thread, author=g.user, timestamp=now,
-            text=form.text.data)
-        db.session.add(post)
-        db.session.commit()
-        return redirect(thread.url)
+    form = None
+    if not forum.trash:
+        form = ThreadForm(request.form)
+        if g.user and request.method == 'POST' and form.validate():
+            now = datetime.now()
+            thread = db.Thread(forum=forum, author=g.user, timestamp=now, laststamp=now,
+                name=form.name.data)
+            db.session.add(thread)
+            post = db.Post(thread=thread, author=g.user, timestamp=now,
+                text=form.text.data)
+            db.session.add(post)
+            db.session.commit()
+            return redirect(thread.url)
     return render_template("forum.html", forum=forum, threads=threads, form=form)
 
 
@@ -327,16 +335,19 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     thread = db.session.query(db.Thread).get(thread_id)
     if not thread: abort(404)
     if thread.forum.category and thread.forum.category.group and thread.forum.category.group not in g.user.groups: abort(403)
+    if thread.forum.trash and not g.user.admin: abort(403)
     posts = thread.posts.filter(db.Post.deleted==False)
-    form = PostForm(request.form)
-    if g.user and request.method == 'POST' and form.validate():
-        now = datetime.now()
-        post = db.Post(thread=thread, author=g.user, timestamp=now,
-            text=form.text.data)
-        db.session.add(post)
-        thread.laststamp = now
-        db.session.commit()
-        return redirect(thread.url+"#latest") # TODO id
+    form = None
+    if not thread.forum.trash:
+        form = PostForm(request.form)
+        if g.user and request.method == 'POST' and form.validate():
+            now = datetime.now()
+            post = db.Post(thread=thread, author=g.user, timestamp=now,
+                text=form.text.data)
+            db.session.add(post)
+            thread.laststamp = now
+            db.session.commit()
+            return redirect(thread.url+"#latest") # TODO id
     
     return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now())
 
@@ -352,6 +363,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
         # The user probably hit edit multiple times.  Let's just be helpful.
         return redirect(thread.url)
     if post.author != g.user and not g.user.admin: abort(403)
+    if post.thread.forum.trash and not g.user.admin: abort(403)
     posts = thread.posts.filter(db.Post.deleted==False)
     
     if post == posts[0]:
@@ -364,20 +376,25 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
         form = EditPostForm(request.form, text=post.text)
     
     if request.method == 'POST' and form.validate():
-        now = datetime.now()
-        new_post = db.Post(thread=thread, author=g.user, timestamp=post.timestamp, editstamp=now,
-            text=form.text.data, original=post.original if post.original else post)
-        db.session.add(new_post)
-        post.deleted=True
-        if edit_thread:
-           thread.name = form.name.data
-           thread.forum_id = form.forum_id.data
-           #forum.fix_laststamp() # TODO
-        db.session.commit()
-        if edit_thread:
+        if form.submit.data:
+            now = datetime.now()
+            new_post = db.Post(thread=thread, author=post.author, timestamp=post.timestamp, editstamp=now,
+                text=form.text.data, original=post.original if post.original else post, editor=g.user)
+            db.session.add(new_post)
+            post.deleted=True
+            if edit_thread:
+               thread.name = form.name.data
+               thread.forum_id = form.forum_id.data
+               #forum.fix_laststamp() # TODO
+            db.session.commit()
+            if edit_thread:
+                return redirect(thread.url)
+            else:
+                return redirect(new_post.url)
+        elif form.delete.data:
+            post.deleted = True
+            db.session.commit()
             return redirect(thread.url)
-        else:
-            return redirect(new_post.url)
     
     return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), edit_post=post, edit_thread=edit_thread)
 

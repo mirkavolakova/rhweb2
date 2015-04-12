@@ -12,7 +12,7 @@
                     <div id="post-{{post.id}}" class="post-fragment"></div>
                 {% endif %}
                 <div class="post-sidebar">
-                    <div><a href="{{post.author.url}}">{{ post.author.name }}</a></div>
+                    <div class="post-author"><a href="{{post.author.url}}">{{ post.author.name }}</a></div>
                     <div>{{ txt_posts(post.author.num_posts) }}</div>
                     <div class="post-avatar">
                         {% if post.author.avatar_url %}
@@ -22,7 +22,7 @@
                 </div>
                 <div class="post-contents">
                     <div class="post-data">
-                        {% if (post.author == g.user) and post != edit_post %}
+                        {% if ((post.author == g.user) or g.user.admin) and post != edit_post %}
                             <a href="{{thread.url}}/edit/{{post.id}}#post-{{post.id}}">Upravit</a> &bull;
                         {% endif %}
                         <a href="{{post.url}}" class="permalink">{{ ago(post.timestamp) }}</a>
@@ -42,7 +42,13 @@
                                     <div>Fórum: {{ form.forum_id }}</div>
                                 {% endif %}
                                 <div>{{ form.text }}</div>
-                                <div>{{ form.submit }}</div>
+                                <div>
+                                    {{ form.submit }}
+                                    {{ form.delete(class_="delete-button") }}
+                                    {% if edit_thread %}
+                                        (pro smazání celého tématu přesuňte do koše)
+                                    {% endif %}    
+                                </div>
                             </form>
                         {% endif %}
                     </div>
@@ -51,12 +57,12 @@
         {% endfor %}
     </div>
     <div class="clear"></div>
-    {% if g.user and not edit_post %}
+    {% if g.user and not edit_post and form %}
         <h2>Nový příspěvek</h2>
         <form method="POST">
             <div class="post">
                 <div class="post-sidebar">
-                    <div><a href="{{ g.user.url }}">{{ g.user.name }}</a></div>
+                    <div class="post-author"><a href="{{ g.user.url }}">{{ g.user.name }}</a></div>
                     <div class="post-avatar">
                         {% if g.user.avatar_url %}
                             <img src="{{g.user.avatar_url}}" class="avatar">
