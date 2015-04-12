@@ -104,7 +104,7 @@ class CategoryForm(Form):
 @app.route("/")
 def index():
     categories = db.session.query(db.Category).order_by(db.Category.position).all()
-    uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.category == None).order_by(db.Forum.position).all()
+    uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.category == None, db.Forum.trash == False).order_by(db.Forum.position).all()
     trash = db.session.query(db.Forum).filter(db.Forum.trash == True).scalar()
     if uncategorized_fora:
         categories.append(None)
@@ -122,7 +122,7 @@ def index():
 def edit_forum_or_category(forum_id=None, category_id=None):
     if not g.user.admin: abort(403) # TODO minrights decorator
     categories = db.session.query(db.Category).order_by(db.Category.position).all()
-    uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.category == None).order_by(db.Forum.position)
+    uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.category == None, db.Forum.trash == False).order_by(db.Forum.position)
     trash = db.session.query(db.Forum).filter(db.Forum.trash == True).scalar()
     if request.endpoint == 'edit_forum':
         if forum_id:
