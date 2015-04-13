@@ -10,6 +10,8 @@ from datetime import datetime, timedelta
 from functools import wraps # We need this to make Flask understand decorated routes.
 import hashlib
 
+from lxml.html.clean import Cleaner
+
 from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, session, abort, url_for, make_response, g
 from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, HiddenField, SubmitField, validators, ValidationError, widgets
@@ -64,6 +66,12 @@ def datetime_format(value, format='%d. %m. %Y %H:%M:%S'):
     if not value: return "-"
     if isinstance(value, unicode): return value
     return value.strftime(format)
+
+cleaner = Cleaner(comments=False, style=False, embedded=False, annoying_tags=False)
+
+@app.template_filter('clean')
+def clean(value):
+    return cleaner.clean_html(value)
 
 @app.before_request
 def before_request():
