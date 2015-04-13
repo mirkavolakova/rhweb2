@@ -2,6 +2,8 @@
 from __future__ import absolute_import, unicode_literals, print_function
 from datetime import datetime
 
+from unidecode import unidecode
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship, backref
@@ -64,7 +66,7 @@ class User(Base):
     
     @property
     def url(self):
-        return url_for('user', user_id=self.id, name=self.login)
+        return url_for('user', user_id=self.id, name=unidecode(self.login))
     
     def verify_password(self, password):
         if self.pass_.startswith('$2a'):
@@ -155,7 +157,7 @@ class Thread(Base):
     def url(self):
         return url_for('thread',
             forum_id=self.forum.id, forum_identifier=self.forum.identifier,
-            thread_id=self.id, thread_identifier=self.name)
+            thread_id=self.id, thread_identifier=unidecode(self.name).replace(' ', '-'))
 
 
 class Post(Base):

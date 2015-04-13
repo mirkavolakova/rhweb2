@@ -11,6 +11,7 @@ from functools import wraps # We need this to make Flask understand decorated ro
 import hashlib
 
 from lxml.html.clean import Cleaner
+from lxml.etree import ParserError
 
 from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, session, abort, url_for, make_response, g
@@ -71,7 +72,10 @@ cleaner = Cleaner(comments=False, style=False, embedded=False, annoying_tags=Fal
 
 @app.template_filter('clean')
 def clean(value):
-    return cleaner.clean_html(value)
+    try:
+        return cleaner.clean_html(value)
+    except ParserError:
+        return ""
 
 @app.before_request
 def before_request():
