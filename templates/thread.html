@@ -44,10 +44,12 @@
                                 <div>{{ form.text }}</div>
                                 <div>
                                     {{ form.submit }}
-                                    {{ form.delete(class_="delete-button") }}
-                                    {% if edit_thread %}
-                                        (pro smazání celého tématu přesuňte do koše)
-                                    {% endif %}    
+                                    {% if form.delete %}
+                                        {{ form.delete(class_="delete-button") }}
+                                        {% if edit_thread %}
+                                            (pro smazání celého tématu přesuňte do koše)
+                                        {% endif %}
+                                    {% endif %}
                                 </div>
                             </form>
                         {% endif %}

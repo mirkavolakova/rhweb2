@@ -374,7 +374,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     if post.thread.forum.trash and not g.user.admin: abort(403)
     posts = thread.posts.filter(db.Post.deleted==False)
     
-    if post == posts[0]:
+    if post == posts[0] and g.user.admin:
         edit_thread = True
         form = EditThreadForm(request.form, text=post.text, name=thread.name, forum_id=thread.forum_id)
         forums = db.session.query(db.Forum).outerjoin(db.Category).order_by(db.Category.position, db.Forum.position).all()
@@ -382,6 +382,8 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     else:
         edit_thread = False
         form = EditPostForm(request.form, text=post.text)
+    
+    if not g.user.admin: del form.delete
     
     if request.method == 'POST' and form.validate():
         if form.submit.data:
