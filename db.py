@@ -235,37 +235,42 @@ class ThreadRead(Base):
 # XXX Watch out!  Code below main!
 
 if __name__ == "__main__":
-    if raw_input('drop all? ') == 'y':
-        Base.metadata.drop_all(bind=engine)
-    if raw_input('create all? ') == 'y':
-        Base.metadata.create_all(bind=engine)
+    print('this is db.py.  make sure you know where you are.')
+    if raw_input('mark everything as read for everybody? ') == 'y':
+        for user in session.query(User):
+            user.read_all()
+    if raw_input('do dangerous stuff?  type yes. ') == 'yes':
+        if raw_input('drop all? ') == 'y':
+            Base.metadata.drop_all(bind=engine)
+        if raw_input('create all? ') == 'y':
+            Base.metadata.create_all(bind=engine)
 
-    if raw_input('test entries? ') == 'y':
-        fc = Category(name="Kategorie 1")
-        fc2 = Category(name="Druhá kategorie")
-        f = Forum(name="Novinky", identifier="novinky", description="Novinky ve světě RH", position=0)
-        session.add(f)
-        f2 = Forum(name="Obecné", identifier="obecne", description="Posty o čemkoli", position=1)
-        session.add(f2)
-        f3 = Forum(name="Ostatní", identifier="ostatni", description="Popisek", position=2)
-        session.add(f3)
+        if raw_input('test entries? ') == 'y':
+            fc = Category(name="Kategorie 1")
+            fc2 = Category(name="Druhá kategorie")
+            f = Forum(name="Novinky", identifier="novinky", description="Novinky ve světě RH", position=0)
+            session.add(f)
+            f2 = Forum(name="Obecné", identifier="obecne", description="Posty o čemkoli", position=1)
+            session.add(f2)
+            f3 = Forum(name="Ostatní", identifier="ostatni", description="Popisek", position=2)
+            session.add(f3)
 
-        g = Group(name="admin")
-        session.add(g)
-        u = User(login="admin", fullname="Admin", pass_=bcrypt.hashpw(b"test", bcrypt.gensalt(rounds=9)), groups=[g])
-        session.add(u)
-        u2 = User(login="uzivatel", fullname="Uživatel", pass_=bcrypt.hashpw(b"test", bcrypt.gensalt(rounds=9)), groups=[])
-        session.add(u2)
+            g = Group(name="admin")
+            session.add(g)
+            u = User(login="admin", fullname="Admin", pass_=bcrypt.hashpw(b"test", bcrypt.gensalt(rounds=9)), groups=[g])
+            session.add(u)
+            u2 = User(login="uzivatel", fullname="Uživatel", pass_=bcrypt.hashpw(b"test", bcrypt.gensalt(rounds=9)), groups=[])
+            session.add(u2)
 
-        t = Thread(name="První téma na fóru", description="", timestamp=datetime.now(), laststamp=datetime.now(), forum=f, author=u)
-        session.add(t)
+            t = Thread(name="První téma na fóru", description="", timestamp=datetime.now(), laststamp=datetime.now(), forum=f, author=u)
+            session.add(t)
 
-        p = Post(thread=t, author=u, text="First post!  <b>Test</b>!", timestamp=datetime.now())
-        session.add(t)
-        p = Post(thread=t, author=u, text="Test ", timestamp=datetime.now())
-        session.add(t)
+            p = Post(thread=t, author=u, text="First post!  <b>Test</b>!", timestamp=datetime.now())
+            session.add(t)
+            p = Post(thread=t, author=u, text="Test ", timestamp=datetime.now())
+            session.add(t)
 
-        session.commit()
+            session.commit()
 
 
 if not session.query(Forum).filter(Forum.trash == True).scalar():
