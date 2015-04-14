@@ -8,8 +8,11 @@
         {% for post in posts %}
             <div class="post">
                 <div id="post-{{post.id}}" class="post-fragment"></div>
+                {% if post.original_id %}
+                    <div id="post-{{post.original_id}}" class="post-fragment"></div>
+                {% endif %}
                 {% if loop.last %}
-                    <div id="post-{{post.id}}" class="post-fragment"></div>
+                    <div id="post-latest" class="post-fragment"></div>
                 {% endif %}
                 <div class="post-sidebar">
                     <div class="post-author"><a href="{{post.author.url}}">{{ post.author.name }}</a></div>

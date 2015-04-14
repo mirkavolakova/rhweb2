@@ -9,11 +9,19 @@
         </div>
     {% endif %}
     <h1><a href="{{url_for('index')}}">RHForum</a> » <a href="{{forum.url}}">{{forum.name}}</a></h1>
+    <div class="forum-desc">
+        {{ forum.description }}
+    </div>
     <div class="threads">
         {% for thread in threads %}
             <div class="row">
                 <div class="row-data">
-                    <div class="row-total">{{ txt_posts(thread.num_posts) }}</div>
+                    <div class="row-total">
+                        {{ txt_posts(thread.num_posts) }}
+                        {% if g.user.unread(thread) != thread.last_post %}
+                            <a class="new-icon" href="{{g.user.unread(thread).url}}">NEW</a>
+                        {% endif %}
+                    </div>
                     {% if thread.num_posts %}
                         <div class="row-last" title="{{thread.last_post.timestamp|datetime}}">{{ago(thread.laststamp)}} <a href="{{thread.last_post.url}}"> od <i>{{ thread.last_post.author.name }}</i></a></div>
                     {% endif %}

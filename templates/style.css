@@ -5,7 +5,7 @@
 body {font-family: 'Ubuntu', sans-serif;  margin: 0; padding: 0; padding-bottom: 32px;}
     
 .container {width: 75%; margin: auto; padding: 8px; padding-bottom: 16px;
-    margin-top: 8px;}
+    margin-top: 28px;}
 
 a {color: #006;}
 a:hover {color: #339;}
@@ -22,19 +22,23 @@ a:hover {color: #339;}
 .flash {border: 1px solid rgb(197, 188, 16); background: rgb(248, 241, 190);
     border-radius:8px; padding: 8px; margin: 6px 12px 0px 12px;}
 
-h1 {font-weight: normal;}
+h1 {font-weight: normal; margin: 0; margin-bottom: 6px;}
 h1 a:first-child {font-weight: bold;}
 
 .category-name {font-size: 26px; margin-bottom: 2px; border-bottom: 1px solid #999; border-left: 1px solid #999; border-radius: 8px; padding-left: 4px;
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #eee 100%);}
 .category-group {font-size: 14px; font-weight: normal;}
 
+.forum-desc {font-style: italic; margin-bottom: 2px; padding-left: 16px;
+    border-bottom: 1px solid #bbb; padding-bottom: 6px;}
 .threads {margin-bottom:48px;}
 .row {border-bottom: 1px solid #ddd; display: block; clear: both; padding: 3px;
     transition: background-color 0.15s ease;}
 .row:hover {background: rgba(186, 186, 255, 0.5); transition-delay: 0.1s;}
 .row-name {font-size: 24px;}
 .row-data {float: right; text-align: right; }
+.rownew { background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(255, 255, 255, 0) 48px); }
+.rownew:hover {background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(186, 186, 255, 0.5) 48px); transition-delay: 0.1s;}
 a.row-text {display: block; text-decoration: none; color: black;}
 a.row-text:hover {color: #004 !important;}
 
@@ -108,6 +112,12 @@ a.permalink:hover {text-decoration: underline;}
 
 .edit-groups {max-height: 400px; border: 1px solid #555; overflow-y: scroll; padding: 8px; margin-bottom: 4px;}
 .edit-groups ul {list-style: none; padding: 0; margin: 0;}
+
+.new-icon {display: inline-block; font-size: 8px; color: black; background-color: yellow;
+    border-radius: 6px; vertical-align: middle; padding: 1px 3px 1px 3px;
+    text-decoration: none; margin-bottom: 3px;
+    }
+.new-icon:hover {color: black;}
 
 input[type="text"], input[type="password"] { border: 1px solid #555; background: white; padding: 2px; margin: 1px; border-radius: 3.5px; color: #111; }
 input[type="text"]:focus, input[type="password"]:focus { box-shadow: inset 0 0 3px #ff0; }

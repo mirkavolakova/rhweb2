@@ -68,6 +68,22 @@ class User(Base):
     def url(self):
         return url_for('user', user_id=self.id, name=unidecode(self.login))
     
+    def unread(self, thread):
+        thread_read = session.query(ThreadRead).filter(ThreadRead.user==self, ThreadRead.thread==thread).scalar()
+        if not thread_read:
+            if thread.posts:
+                return thread.posts[0].current
+        return thread_read.last_post.current
+    
+    def read(self, post):
+        thread_read = session.query(ThreadRead).filter(ThreadRead.user==self, ThreadRead.thread==post.thread).scalar()
+        if not thread_read:
+            thread_read = ThreadRead(user=self, thread=post.thread, last_post_id=post.original.id)
+        else:
+            thread_read.last_post_id=post.id # XXX why no post?
+        session.add(thread_read)
+        session.commit()
+    
     def verify_password(self, password):
         if self.pass_.startswith('$2a'):
             return bcrypt.hashpw(password.encode('utf-8'), self.pass_.encode('utf-8')) == self.pass_
@@ -182,6 +198,10 @@ class Post(Base):
     @property
     def url(self):
         return self.thread.url + "#post-{}".format(self.id)
+    
+    @property
+    def current(self):
+        return session.query(Post).filter(Post.original == self).order_by(Post.editstamp.desc()).first() or self
 
 class ThreadRead(Base):
     __tablename__ = 'threads_read'
@@ -191,7 +211,8 @@ class ThreadRead(Base):
     thread = relationship("Thread")
     user_id = Column(Integer, ForeignKey('users.uid'), nullable=False)
     user = relationship("User", backref='threads_read')
-    last_post = Column(Integer)
+    last_post_id = Column(Integer, ForeignKey('posts.id'))
+    last_post = relationship("Post")
 
 # XXX Watch out!  Code below main!
 

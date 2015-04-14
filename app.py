@@ -361,6 +361,8 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             db.session.commit()
             return redirect(thread.url+"#latest") # TODO id
     
+    g.user.read(thread.last_post)
+    
     return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now())
 
 @app.route("/<int:forum_id>/<int:thread_id>/edit/<int:post_id>", methods="GET POST".split())

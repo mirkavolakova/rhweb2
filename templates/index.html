@@ -39,7 +39,10 @@
                     {% if forum != editable %}
                         <div class="row">
                             <div class="row-data">
-                                <div class="row-total">{{ txt_threads(forum.threads | count) }}</div>
+                                <div class="row-total">
+                                    {{ txt_threads(forum.threads | count) }}
+                                </div>
+                                
                                 <div class="row-last">
                                     {% if forum.last_post %}
                                         Nejnovější: <a href="{{forum.last_post.url}}">{{ forum.last_post.thread.name }} od <i>{{ forum.last_post.author.name }}</i></a>
