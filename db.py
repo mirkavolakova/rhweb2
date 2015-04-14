@@ -69,16 +69,29 @@ class User(Base):
         return url_for('user', user_id=self.id, name=unidecode(self.login))
     
     def unread(self, thread):
+        if not self.id: return False
         thread_read = session.query(ThreadRead).filter(ThreadRead.user==self, ThreadRead.thread==thread).scalar()
         if not thread_read:
-            if thread.posts:
-                return thread.posts[0].current
+            return thread
+        if thread_read.last_post.current == thread.last_post:
+            return False
         return thread_read.last_post.current
     
-    def read(self, post):
+    def unread_post(self, post):
+        if not self.id: return False
         thread_read = session.query(ThreadRead).filter(ThreadRead.user==self, ThreadRead.thread==post.thread).scalar()
         if not thread_read:
-            thread_read = ThreadRead(user=self, thread=post.thread, last_post_id=post.original.id)
+            return post.thread
+        if thread_read.last_post.current.timestamp >= post.timestamp:
+            return False
+        return post
+        
+        
+    def read(self, post):
+        if not self.id: return
+        thread_read = session.query(ThreadRead).filter(ThreadRead.user==self, ThreadRead.thread==post.thread).scalar()
+        if not thread_read:
+            thread_read = ThreadRead(user=self, thread=post.thread, last_post_id=post.original.id if post.original else post.id)
         else:
             thread_read.last_post_id=post.id # XXX why no post?
         session.add(thread_read)
@@ -90,6 +103,11 @@ class User(Base):
         else:
             # Old hashing method
             raise OldHashingMethodException
+    
+    def read_all(self):
+        # Kinda heavy, I suppose...
+        for thread in session.query(Thread):
+            self.read(thread.last_post) # XXX each does a commit..
     
     def set_password(self, password):
         self.pass_ = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())

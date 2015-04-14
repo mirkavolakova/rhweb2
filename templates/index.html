@@ -45,7 +45,11 @@
                                 
                                 <div class="row-last">
                                     {% if forum.last_post %}
-                                        Nejnovější: <a href="{{forum.last_post.url}}">{{ forum.last_post.thread.name }} od <i>{{ forum.last_post.author.name }}</i></a>
+                                        <a href="{{forum.last_post.url}}">{{ forum.last_post.thread.name }} od <i>{{ forum.last_post.author.name }}</i>
+                                        </a>
+                                        {% if g.user.unread(forum.last_post.thread) %}
+                                            <a class="new-icon" href="{{g.user.unread(forum.last_post.thread).url}}">NEW</a>
+                                        {% endif %}
                                     {% endif %}
                                 </div>
                             </div>
@@ -99,13 +103,23 @@
             {% for post in latest_posts %}
                 <div class="row">
                     <div class="row-data">
-                        <div>{{ago(post.timestamp)}}</div>
+                        {{ago(post.timestamp)}}
+                        {% if g.user.unread_post(post) %}
+                            <a class="new-icon" href="{{g.user.unread_post(post).url}}">NEW</a>
+                        {% endif %}
                     </div>
                     <a class="row-text" href="{{post.url}}">
                         <div class="row-description">do <strong>{{post.thread.name}}</strong> od <i>{{post.author.name}}</i></span></div>
                     </a>
                 </div>
             {% endfor %}
+        </div>
+    {% endif %}
+    {% if g.user %}
+        <div class="forum-controls">
+            <form method="POST">
+                {{form.mark_read}}
+            </form>
         </div>
     {% endif %}
 {% endblock %}

@@ -18,7 +18,7 @@
                 <div class="row-data">
                     <div class="row-total">
                         {{ txt_posts(thread.num_posts) }}
-                        {% if g.user.unread(thread) != thread.last_post %}
+                        {% if g.user.unread(thread) %}
                             <a class="new-icon" href="{{g.user.unread(thread).url}}">NEW</a>
                         {% endif %}
                     </div>

@@ -113,8 +113,18 @@ class CategoryForm(Form):
     save = SubmitField('Uložit')
     delete = SubmitField('Odstranit')
 
-@app.route("/")
+class ForumControlsForm(PostForm):
+    mark_read = SubmitField('Označit fórum za přečtené')
+
+@app.route("/", methods="GET POST".split())
 def index():
+    form = None
+    if g.user:
+        form = ForumControlsForm(request.form)
+        if request.method == "POST":# and form.validate():
+            if form.mark_read.data:
+                g.user.read_all()
+    
     categories = db.session.query(db.Category).order_by(db.Category.position).all()
     uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.category == None, db.Forum.trash == False).order_by(db.Forum.position).all()
     trash = db.session.query(db.Forum).filter(db.Forum.trash == True).scalar()
@@ -125,7 +135,7 @@ def index():
         .filter(db.Forum.trash == False) \
         .filter(db.Post.deleted==False).order_by(db.Post.timestamp.desc())[0:10]
     
-    return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts, trash=trash)
+    return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts, trash=trash, form=form)
 
 @app.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
 @app.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())
@@ -299,6 +309,7 @@ def register():
             user = db.User(login=form.login.data.lower(), fullname=form.fullname.data, email=form.email.data, timestamp=datetime.now(), laststamp=datetime.now())
             user.set_password(form.password.data)
             db.session.add(user)
+            g.user.read_all()
             db.session.commit()
             g.user = user
             session['user_id'] = g.user.id
