@@ -29,6 +29,9 @@
                             <a href="{{thread.url}}/edit/{{post.id}}#post-{{post.id}}">Upravit</a> &bull;
                         {% endif %}
                         <a href="{{post.url}}" class="permalink">{{ ago(post.timestamp) }}</a>
+                        {% if not last_read_timestamp or last_read_timestamp < post.timestamp %}
+                            <div class="new-icon">NEW</div>
+                        {% endif %}
                     </div>
                     <div class="post-text">
                         {% if post != edit_post %}

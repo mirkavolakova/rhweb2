@@ -372,9 +372,17 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             db.session.commit()
             return redirect(thread.url+"#latest") # TODO id
     
-    g.user.read(thread.last_post)
+    if g.user:
+        thread_read = db.session.query(db.ThreadRead).filter(db.ThreadRead.user==g.user, db.ThreadRead.thread==thread).scalar()
+        if not thread_read:
+            last_read_timestamp = None
+        else:
+            last_read_timestamp = thread_read.last_post.timestamp
+        g.user.read(thread.last_post)
+    else:
+        last_read_timestamp = g.now
     
-    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now())
+    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), last_read_timestamp=last_read_timestamp)
 
 @app.route("/<int:forum_id>/<int:thread_id>/edit/<int:post_id>", methods="GET POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/edit/<int:post_id>", methods="GET POST".split())
