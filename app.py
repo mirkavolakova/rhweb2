@@ -445,7 +445,7 @@ def user(user_id, name=None):
 def edit_user(user_id, name=None):
     user = db.session.query(db.User).get(user_id)
     if not user: abort(404)
-    if user != g.user and not user.admin: abort(403)
+    if user != g.user and not g.user.admin: abort(403)
     
     if g.user.admin:
         form = AdminUserForm(request.form, user)
