@@ -431,7 +431,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
             db.session.commit()
             return redirect(thread.url)
     
-    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), edit_post=post, edit_thread=edit_thread)
+    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), edit_post=post, edit_thread=edit_thread, last_read_timestamp=g.now)
 
 @app.route("/users/<int:user_id>")
 @app.route("/users/<int:user_id>-<name>")
