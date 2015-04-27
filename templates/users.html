@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+
+{% block title %}Uživatelé{% endblock %}
+
+{% block content %}
+    <h1><a href="{{url_for('index')}}">RHForum</a> » <a href="{{url_for('users')}}">Uživatelé</a></h1>
+    <div class="users">
+        {% for user in users %}
+            <div class="row">
+                <div class="row-data">
+                    <div class="row-total">
+                        {{ txt_posts(user.num_posts) }}
+                    </div>
+                </div>
+                <a class="row-text" href="{{user.url}}">
+                    <div class="row-name">
+                        <div class="row-avatar">
+                            {% if user.avatar_url %}
+                                <img src="{{user.avatar_url}}" class="avatar">
+                            {% endif %}
+                        </div>
+                        {{user.name}}
+                    </div>
+                    <div class="row-description"></div>
+                </a>
+            </div>
+        {% else %}
+            Ještě tu žádná témata nejsou.
+        {% endfor %}
+    </div>
+{% endblock %}

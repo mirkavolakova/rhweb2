@@ -7,8 +7,8 @@ body {font-family: 'Ubuntu', sans-serif;  margin: 0; padding: 0; padding-bottom:
 .container {width: 75%; margin: auto; padding: 8px; padding-bottom: 16px;
     margin-top: 28px;}
 
-a {color: #006;}
-a:hover {color: #339;}
+a {color: #006; transition: 0.4s ease-out;}
+a:hover {color: #339; transition: 0.1s ease;}
 
 .topbar { width: auto; position: fixed; top: 0; background: #eee; width: 100%;
     border-bottom: 1px solid #ccc; z-index: 10;}
@@ -33,8 +33,8 @@ h1 a:first-child {font-weight: bold;}
     border-bottom: 1px solid #bbb; padding-bottom: 6px;}
 .threads {margin-bottom:48px;}
 .row {border-bottom: 1px solid #ddd; display: block; clear: both; padding: 3px;
-    transition: background-color 0.15s ease;}
-.row:hover {background: rgba(186, 186, 255, 0.5); transition-delay: 0.1s;}
+    transition: 0.4s ease-out;}
+.row:hover {background: rgba(186, 186, 255, 0.5); transition: 0s ease 0s; border-bottom: 1px solid #aad;}
 .row-name {font-size: 24px;}
 .row-data {float: right; text-align: right; }
 .rownew { background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(255, 255, 255, 0) 48px); }
@@ -84,10 +84,10 @@ a.permalink:hover {text-decoration: underline;}
 
 .fail {color: #800;}
 
-.card {margin: auto; width: 90%; max-width: 600px; min-height: 200px;
-    border: 1px solid #555; border-radius: 8px;
-    padding: 12px; box-shadow:  0 0 1em #aaa;}
-.card-image {width: 250px; height: 250px; border: 1px solid #555; border-radius: 8px;
+.card {margin: auto; margin-top: 32px; width: 90%; max-width: 600px; min-height: 200px;
+    border: 1px solid #666; border-radius: 8px;
+    padding: 12px; box-shadow:  0 0 1em #bbb;}
+.card-image {width: 250px; height: 250px; border: 1px solid #999; border-radius: 8px;
     float: left; margin-right: 12px; text-align: center;
     position: relative;}
 .card-edit {float: right;}
@@ -102,6 +102,11 @@ a.permalink:hover {text-decoration: underline;}
     position: absolute;
     top: 50%; left: 50%; transform: translate(-50%, -50%);
 }
+
+.users .avatar {
+    max-height: 32px; display: inline-block;
+}
+.row-avatar {width: 32px; height: 32px; display: inline-block; vertical-align: middle;}
 
 .post-avatar {  }
 .post-avatar .avatar {
@@ -135,9 +140,11 @@ input[type="submit"]:focus, select:focus {  box-shadow: inset -0px -0px 6px 0px 
 input.delete-button {box-shadow: inset -2px -2px 6px 0px #caa; color: #b00;}
 
 @media (max-width: 800px) {
-    .container {width: 90%; margin: auto; padding: 8px; margin-top: 18px;}
+    
+    .container {width: 90%; margin: auto; padding: 8px; margin-top: 34px;}
     .row {position: relative;}
     .row a.row-text {min-height: 62px;}
+    .users .row a.row-text {min-height: inherit;}
     .latest-posts .row a.row-text {min-height: 32px;}
     .row-data {font-size: 12px; position: absolute; bottom: 0; right: 0; margin-top: 64px;}
     

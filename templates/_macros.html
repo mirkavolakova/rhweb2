@@ -18,7 +18,7 @@
                 {{d|datetime}}
             {% elif diff.days == 0 %}
                 {% if   diff.seconds < 10 %}      teď
-                {% elif diff.seconds < 60 %}      před {{diff.seconds}} vteřinama
+                {% elif diff.seconds < 60 %}      před {{diff.seconds}} vteřinami
                 {% elif diff.seconds < 120 %}     před minutou
                 {% elif diff.seconds < 3600 %}    před {{diff.seconds//60}} minutami
                 {% elif diff.seconds < 7200 %}    před hodinou
