@@ -7,11 +7,11 @@ body {font-family: 'Ubuntu', sans-serif;  margin: 0; padding: 0; padding-bottom:
 .container {width: 75%; margin: auto; padding: 8px; padding-bottom: 16px;
     margin-top: 28px;}
 
-a {color: #006; transition: 0.4s ease-out;}
-a:hover {color: #339; transition: 0.1s ease;}
+a {color: #4a0629; transition: 0.4s ease-out;}
+a:hover {color: #800a46; transition: 0.1s ease;}
 
-.topbar { width: auto; position: fixed; top: 0; background: #eee; width: 100%;
-    border-bottom: 1px solid #ccc; z-index: 10;}
+.topbar { width: auto; position: fixed; top: 0; background: #f5eef2; width: 100%;
+    border-bottom: 1px solid #e2cad7; z-index: 10;}
 .topbar-contents { padding: 4px 32px 4px 32px; }
 .topbar a {text-decoration: none;}
 .topbar a:hover {text-decoration: underline;}
@@ -25,8 +25,9 @@ a:hover {color: #339; transition: 0.1s ease;}
 h1 {font-weight: normal; margin: 0; margin-bottom: 6px;}
 h1 a:first-child {font-weight: bold;}
 
-.category-name {font-size: 26px; margin-bottom: 2px; border-bottom: 1px solid #999; border-left: 1px solid #999; border-radius: 8px; padding-left: 4px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #eee 100%);}
+.category-name {font-size: 26px; margin-bottom: 2px;
+    border-bottom: 1px solid #763556; border-left: 1px solid #763556; border-radius: 8px; padding-left: 4px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ebd9e3 100%);}
 .category-group {font-size: 14px; font-weight: normal;}
 
 .forum-desc {font-style: italic; margin-bottom: 2px; padding-left: 16px;
@@ -34,13 +35,13 @@ h1 a:first-child {font-weight: bold;}
 .threads {margin-bottom:48px;}
 .row {border-bottom: 1px solid #ddd; display: block; clear: both; padding: 3px;
     transition: 0.4s ease-out;}
-.row:hover {background: rgba(186, 186, 255, 0.5); transition: 0s ease 0s; border-bottom: 1px solid #aad;}
+.row:hover {background: #e2cad7; transition: 0s ease 0s; border-bottom: 1px solid #cd96b2;}
 .row-name {font-size: 24px;}
 .row-data {float: right; text-align: right; }
 .rownew { background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(255, 255, 255, 0) 48px); }
 .rownew:hover {background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(186, 186, 255, 0.5) 48px); transition-delay: 0.1s;}
 a.row-text {display: block; text-decoration: none; color: black;}
-a.row-text:hover {color: #004 !important;}
+a.row-text:hover {color: #4a0629;}
 
 .row-name .author {font-size: 16px; margin-left: 12px; font-style:italic;}
 .row-name .author::before {content: '—';}
