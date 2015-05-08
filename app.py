@@ -15,7 +15,7 @@ from lxml.etree import ParserError
 
 from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, session, abort, url_for, make_response, g
-from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, HiddenField, SubmitField, validators, ValidationError, widgets
+from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, DateTimeField, HiddenField, SubmitField, validators, ValidationError, widgets
 
 class MultiCheckboxField(SelectMultipleField):
     """
@@ -113,8 +113,15 @@ class CategoryForm(Form):
     save = SubmitField('Uložit')
     delete = SubmitField('Odstranit')
 
-class ForumControlsForm(PostForm):
+class ForumControlsForm(Form):
     mark_read = SubmitField('Označit fórum za přečtené')
+
+class TaskForm(Form):
+    type = SelectField(choices=(('task', 'úkol'), ('announcement', 'oznámení')))
+    datetime = DateTimeField()
+    text = TextField()
+    submit = SubmitField("Přidat")
+    
 
 @app.route("/", methods="GET POST".split())
 def index():
@@ -135,7 +142,9 @@ def index():
         .filter(db.Forum.trash == False) \
         .filter(db.Post.deleted==False).order_by(db.Post.timestamp.desc())[0:10]
     
-    return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts, trash=trash, form=form)
+    task_form = TaskForm(request.form)
+    
+    return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts, trash=trash, form=form, task_form=task_form)
 
 @app.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
 @app.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())

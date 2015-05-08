@@ -6,6 +6,19 @@ body {font-family: 'Ubuntu', sans-serif;  margin: 0; padding: 0; padding-bottom:
     
 .container {width: 75%; margin: auto; padding: 8px; padding-bottom: 16px;
     margin-top: 28px;}
+    
+
+input[type="text"], input[type="password"] { border: 1px solid #555; background: white; padding: 2px; margin: 1px; border-radius: 3.5px; color: #111; }
+input[type="text"]:focus, input[type="password"]:focus { box-shadow: inset 0 0 3px #ff0; }
+input[type="submit"], select { border: 1px solid #777; border-top: 1px solid #999;
+    background: linear-gradient(to bottom, #fff 0%, #eee 35%);
+    padding: 3px; margin: 2px; border-radius: 3.5px;
+    box-shadow: inset -2px -2px 6px 0px #bbb;
+    color: #111;
+    font-size: 15px;
+    }
+input[type="submit"]:focus, select:focus {  box-shadow: inset -0px -0px 6px 0px #bbb; }
+input.delete-button {box-shadow: inset -2px -2px 6px 0px #caa; color: #b00;}
 
 a {color: #4a0629; transition: 0.4s ease-out;}
 a:hover {color: #800a46; transition: 0.1s ease;}
@@ -24,6 +37,22 @@ a:hover {color: #800a46; transition: 0.1s ease;}
 
 h1 {font-weight: normal; margin: 0; margin-bottom: 6px;}
 h1 a:first-child {font-weight: bold;}
+
+.tasks-container { width: 80%; margin: auto;}
+.tasks-container h2 {margin: 0;}
+.tasks { border: 1px solid #763556; height: 8em; overflow-y: scroll; font-size: 14px; }
+.tasks-add-button {margin: auto; display: inline-block; float: left; margin: 2px 1px 0 0;}
+.task {padding: 2px 4px 1px 2px; clear: both;}
+.task:nth-child(even) {background: #eee;}
+.task-controls {display: inline-block; width: 120px; float: left;}
+.task-time {font-weight: bold;}
+.task-time-soon {color: red;}
+.task-check {width: 18px; height: 18px;  vertical-align: middle; padding: 0; margin: 0;  background: none; border: 0;}
+.task-check:hover {}
+.task-check > div {width: 14px; height: 14px; background: white; border: 1px solid #888; border-radius: 3px;
+    font-size: 20px; margin: -2px 0 0 -2px;}
+.dask-check > div:hover {box-shadow: inset 0px 0px 2px 0px #aaa;}
+.task-check > div > div {margin-top: -5px;}
 
 .category-name {font-size: 26px; margin-bottom: 2px;
     border-bottom: 1px solid #763556; border-left: 1px solid #763556; border-radius: 8px; padding-left: 4px;
@@ -128,21 +157,12 @@ a.permalink:hover {text-decoration: underline;}
 
 .forum-controls {text-align: center;}
 
-input[type="text"], input[type="password"] { border: 1px solid #555; background: white; padding: 2px; margin: 1px; border-radius: 3.5px; color: #111; }
-input[type="text"]:focus, input[type="password"]:focus { box-shadow: inset 0 0 3px #ff0; }
-input[type="submit"], select { border: 1px solid #777; border-top: 1px solid #999;
-    background: linear-gradient(to bottom, #fff 0%, #eee 35%);
-    padding: 3px; margin: 2px; border-radius: 3.5px;
-    box-shadow: inset -2px -2px 6px 0px #bbb;
-    color: #111;
-    font-size: 15px;
-    }
-input[type="submit"]:focus, select:focus {  box-shadow: inset -0px -0px 6px 0px #bbb; }
-input.delete-button {box-shadow: inset -2px -2px 6px 0px #caa; color: #b00;}
-
 @media (max-width: 800px) {
     
     .container {width: 90%; margin: auto; padding: 8px; margin-top: 34px;}
+    
+    .tasks-container {width: 85%;}
+    
     .row {position: relative;}
     .row a.row-text {min-height: 62px;}
     .users .row a.row-text {min-height: inherit;}
@@ -157,6 +177,9 @@ input.delete-button {box-shadow: inset -2px -2px 6px 0px #caa; color: #b00;}
         
 }
 @media (max-width: 600px) {
+    .tasks-container {width: 95%;}
+    .tasks {font-size: 12px;}
+    .task-controls {width: 100px;}
     .post-sidebar {width: 125px;}
     .card-image {width: 150px; height: 150px;}
 }

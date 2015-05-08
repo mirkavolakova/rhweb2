@@ -85,7 +85,11 @@ class User(Base):
         if thread_read.last_post.current.timestamp >= post.timestamp:
             return False
         return post
-        
+    
+    def in_group(self, group_name):
+        group = session.query(Group).filter(Group.name==group_name).scalar()
+        if not group: return False
+        return group in self.groups
         
     def read(self, post):
         if not post: return
@@ -233,6 +237,20 @@ class ThreadRead(Base):
     last_post_id = Column(Integer, ForeignKey('posts.id'))
     last_post = relationship("Post")
 
+class Task(Base):
+    __tablename__ = 'tasks'
+    
+    id = Column(Integer, primary_key=True, nullable=False)
+    
+    text = Column(UnicodeText)
+    created_time = Column(DateTime)
+    due_time = Column(DateTime)
+    status = Column(Enum("todo", "inprogress", "done"), nullable=True)
+    
+    user_id = Column(Integer, ForeignKey('users.uid'))
+    user = relationship("User", backref='tasks')
+    
+
 # XXX Watch out!  Code below main!
 
 if __name__ == "__main__":
@@ -258,9 +276,11 @@ if __name__ == "__main__":
 
             g = Group(name="admin")
             session.add(g)
-            u = User(login="admin", fullname="Admin", pass_=bcrypt.hashpw(b"test", bcrypt.gensalt(rounds=9)), groups=[g])
+            g2 = Group(name="retroherna")
+            session.add(g2)
+            u = User(login="admin", fullname="Admin", pass_=bcrypt.hashpw(b"test", bcrypt.gensalt(rounds=9)), groups=[g, g2])
             session.add(u)
-            u2 = User(login="uzivatel", fullname="Uživatel", pass_=bcrypt.hashpw(b"test", bcrypt.gensalt(rounds=9)), groups=[])
+            u2 = User(login="uzivatel", fullname="Uživatel", pass_=bcrypt.hashpw(b"test", bcrypt.gensalt(rounds=9)), groups=[g2])
             session.add(u2)
 
             t = Thread(name="První téma na fóru", description="", timestamp=datetime.now(), laststamp=datetime.now(), forum=f, author=u)

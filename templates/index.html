@@ -4,6 +4,35 @@
 
 {% block content %}
     <h1><a href="{{url_for('index')}}">RHForum</a></h1>
+    {% if g.user.in_group('retroherna') %}
+        <div class="tasks-container">
+            <button class="tasks-add-button">+</button>
+            <div class="tasks">
+                <div class="task new-task">
+                    {{ task_form.type }} {{ task_form.datetime }} {{ task_form.text }} {{ task_form.submit }}
+                </div>
+                {% for name, task in (("Arlette", "Ve čtvrtek je schůzka kdesi od 18:00"), ("Morx", "Potřebujeme 2 lidi přes víkend na NěcoFest, viz téma."), ("Behold3r", "Aukce o Sega Genesis."), ("BlackChar", "Zabezpečil jsem nábytek"), ("BlackChar", "Zabezpečil jsem nábytek"), ("BlackChar", "Zabezpečil jsem nábytek"), ("BlackChar", "Zabezpečil jsem nábytek"), ("BlackChar", "Zabezpečil jsem nábytek.")) %}
+                    <div class="task">
+                        <div class="task-controls">
+                            {% if loop.index == 2 %}
+                                <button class="task-check task-check-done"><div><div>✓</div></div></button>
+                            {% else %}
+                                <button class="task-check"><div></div></button>
+                            {% endif %}
+                            
+                            {% if loop.first %}
+                                <span class="task-time task-time-soon">Za 20 minut</span>
+                            {% else %}
+                                <span class="task-time">Středa 16:00</span>
+                            {% endif %}
+                        </div>
+                        <strong>{{name}}:</strong> {{task}}
+                        <div class="clear"></div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
     {% for category in categories %}
         {% if not category.group or category.group in g.user.groups %}
             {% if category != editable %}
