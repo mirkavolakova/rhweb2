@@ -40,7 +40,8 @@ h1 a:first-child {font-weight: bold;}
 
 .tasks-container { width: 80%; margin: auto;}
 .tasks-container h2 {margin: 0;}
-.tasks { border: 1px solid #763556; height: 8em; overflow-y: scroll; font-size: 14px; }
+.tasks { border: 1px solid #763556; max-height: 8em; overflow-y: scroll; font-size: 14px; }
+.tasks-full {max-height: auto;}
 .tasks-add-button {margin: auto; display: inline-block; float: left; margin: 2px 1px 0 0;}
 .task {padding: 2px 4px 1px 2px; clear: both;}
 .task:nth-child(even) {background: #eee;}
@@ -53,6 +54,10 @@ h1 a:first-child {font-weight: bold;}
     font-size: 20px; margin: -2px 0 0 -2px;}
 .dask-check > div:hover {box-shadow: inset 0px 0px 2px 0px #aaa;}
 .task-check > div > div {margin-top: -5px;}
+.task-free {text-align: center; margin-top: 6px;}
+.task-list-link {float: right; margin: 2px;}
+.new-task {padding-bottom: 16px; width: 80%; margin: auto; text-align: center;}
+.new-task #text {width: 100%;}
 
 .category-name {font-size: 26px; margin-bottom: 2px;
     border-bottom: 1px solid #763556; border-left: 1px solid #763556; border-radius: 8px; padding-left: 4px;

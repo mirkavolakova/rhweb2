@@ -118,9 +118,10 @@ class ForumControlsForm(Form):
 
 class TaskForm(Form):
     type = SelectField(choices=(('task', 'úkol'), ('announcement', 'oznámení')))
-    datetime = DateTimeField()
-    text = TextField()
-    submit = SubmitField("Přidat")
+    datetime = DateTimeField('Čas')
+    text = TextField('Text', [validators.required()])
+    user_id = SelectField('Uživatel', coerce=int)
+    submit = SubmitField("Zadat")
     
 
 @app.route("/", methods="GET POST".split())
@@ -142,9 +143,9 @@ def index():
         .filter(db.Forum.trash == False) \
         .filter(db.Post.deleted==False).order_by(db.Post.timestamp.desc())[0:10]
     
-    task_form = TaskForm(request.form)
+    tasks = db.session.query(db.Task).filter(db.Task.user_id.in_([g.user.id, None, 0]))
     
-    return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts, trash=trash, form=form, task_form=task_form)
+    return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts, trash=trash, form=form, tasks=tasks)
 
 @app.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
 @app.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())
@@ -486,6 +487,38 @@ def edit_user(user_id, name=None):
         return redirect(user.url)
     
     return render_template("user.html", user=user, edit=True, form=form)
+
+@app.route("/tasks", methods="GET POST".split())
+def tasks():
+    tasks = db.session.query(db.Task)
+    form = TaskForm(request.form)
+    form.user_id.choices = [(0, '-')]
+    for user in db.session.query(db.User):
+        form.user_id.choices.append((user.id, user.name))
+        
+    if request.method == 'POST':
+        has_datetime = True
+        if form.datetime.data == None:
+            del form.datetime
+            has_datetime = False
+    
+    if request.method == 'POST' and form.validate():
+        task = db.Task()
+        task.text = form.text.data
+        if has_datetime:
+            task.due_date = form.datetime.data
+        if form.type == "task":
+            form.status = "todo"
+        task.created_time = datetime.now()
+        task.author = g.user
+        task.user_id = form.user_id.data
+        
+        db.session.add(task)
+        db.session.commit()
+        flash("Úkol přidán.")
+        return redirect(url_for('tasks'))
+    
+    return render_template("tasks.html", tasks=tasks, form=form)
 
 if not app.debug:
     import logging

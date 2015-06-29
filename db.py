@@ -244,11 +244,17 @@ class Task(Base):
     
     text = Column(UnicodeText)
     created_time = Column(DateTime)
-    due_time = Column(DateTime)
+    due_time = Column(DateTime, nullable=True)
     status = Column(Enum("todo", "inprogress", "done"), nullable=True)
     
+    author_id = Column(Integer, ForeignKey('users.uid'))
+    author = relationship("User", foreign_keys=[author_id])
+    
     user_id = Column(Integer, ForeignKey('users.uid'))
-    user = relationship("User", backref='tasks')
+    user = relationship("User", backref='tasks', foreign_keys=[user_id])
+    
+    thread_id = Column(Integer, ForeignKey('threads.id'))
+    thread = relationship("Thread")
     
 
 # XXX Watch out!  Code below main!
@@ -259,12 +265,21 @@ if __name__ == "__main__":
         for user in session.query(User):
             user.read_all()
     if raw_input('do dangerous stuff?  type yes. ') == 'yes':
+        #which = raw_input('drop which? ')
+        #db.Base.metadata.drop_all(tables=[db.Task.__table__])
+        #if which:
+        #    print("... DROP TABLE "+which)
+        #    session.query("DROP TABLE "+which)
+        #    session.commit()
         if raw_input('drop all? ') == 'y':
+            print("... drop all")
             Base.metadata.drop_all(bind=engine)
         if raw_input('create all? ') == 'y':
+            print("... create all")
             Base.metadata.create_all(bind=engine)
 
         if raw_input('test entries? ') == 'y':
+            print("... test entries")
             fc = Category(name="Kategorie 1")
             fc2 = Category(name="Druhá kategorie")
             f = Forum(name="Novinky", identifier="novinky", description="Novinky ve světě RH", position=0)

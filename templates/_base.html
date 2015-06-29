@@ -1,4 +1,4 @@
-{% from '_macros.html' import txt, txt_threads, txt_posts, ago with context -%}
+{% from '_macros.html' import txt, txt_threads, txt_posts, ago, errors with context -%}
 <!doctype html>
 <html>
 <head>
@@ -23,12 +23,12 @@
                 });
             });
             
-            document.querySelector(".new-task").style.display = "none";
+            /*document.querySelector(".new-task").style.display = "none";
             document.querySelector(".tasks-add-button").onClick = function() {
                 console.log('hi')
                 document.querySelector(".new-task").style.display = "block";
                 document.querySelector(".tasks-add-button").style.visibility = "hidden";
-            }
+            }*/
         };
     </script>
 </head>

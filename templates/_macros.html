@@ -37,3 +37,12 @@
         {% endwith %}
     </span>
 {% endmacro %}
+{% macro errors(errors) %}
+    <ul class="errors">
+        {% for name, texts in errors.items() %}
+            {% for text in texts %}
+                <li> <b>{{name}}</b>: {{text}}
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endmacro %}
