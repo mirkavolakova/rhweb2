@@ -89,11 +89,38 @@ def before_request():
         g.user = db.Guest()
     g.now = datetime.now()
     g.yesterday = g.now - timedelta(days=1)
+    g.tomorrow = g.now + timedelta(days=1)
 
 @app.teardown_request
 def shutdown_session(exception=None):
     db.session.close()
     db.session.remove()
+
+def sort_tasks(tasks):
+    now = g.now
+    
+    def cmp_tasks(task0, task1):
+        # sort order:
+        # 0. unspecified announcements and tasks
+        # 1. upcoming announcements and all unfinished tasks
+        # 2. past announcements and tasks ("everything else")
+        # 3. finished unspecified tasks
+        def get_task_priority(task):
+            if not task.due_time and not task.status: return 0
+            if not task.due_time and task.status == "todo": return 0
+            if not task.status and task.due_time and task.due_time > now: return 1
+            if task.status == "todo": return 1
+            if not task.due_time and task.status == "done": return 3
+            return 2
+        task0_pri = get_task_priority(task0)
+        task1_pri = get_task_priority(task1)
+        if task0_pri < task1_pri: return -1
+        if task0_pri > task1_pri: return 1
+        if not task0.due_time: return 1;
+        if not task1.due_time: return 1;
+        return 1 if abs(now - task0.due_time) > abs(now - task1.due_time) else -1
+    
+    tasks.sort(cmp_tasks)
 
 class ForumForm(Form):
     name = TextField('Jméno', [validators.required()])
@@ -143,7 +170,8 @@ def index():
         .filter(db.Forum.trash == False) \
         .filter(db.Post.deleted==False).order_by(db.Post.timestamp.desc())[0:10]
     
-    tasks = db.session.query(db.Task).filter(db.Task.user_id.in_([g.user.id, None, 0]))
+    tasks = db.session.query(db.Task).filter(db.Task.user_id.in_([g.user.id, None, 0])).all()
+    sort_tasks(tasks)
     
     return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts, trash=trash, form=form, tasks=tasks)
 
@@ -490,7 +518,6 @@ def edit_user(user_id, name=None):
 
 @app.route("/tasks", methods="GET POST".split())
 def tasks():
-    tasks = db.session.query(db.Task)
     form = TaskForm(request.form)
     form.user_id.choices = [(0, '-')]
     for user in db.session.query(db.User):
@@ -498,7 +525,7 @@ def tasks():
         
     if request.method == 'POST':
         has_datetime = True
-        if form.datetime.data == None:
+        if not form.datetime.raw_data[0].strip():
             del form.datetime
             has_datetime = False
     
@@ -506,9 +533,9 @@ def tasks():
         task = db.Task()
         task.text = form.text.data
         if has_datetime:
-            task.due_date = form.datetime.data
-        if form.type == "task":
-            form.status = "todo"
+            task.due_time = form.datetime.data
+        if form.type.data == "task":
+            task.status = "todo"
         task.created_time = datetime.now()
         task.author = g.user
         task.user_id = form.user_id.data
@@ -518,7 +545,21 @@ def tasks():
         flash("Úkol přidán.")
         return redirect(url_for('tasks'))
     
+    tasks = db.session.query(db.Task).all()#.order_by(func.abs(func.now() - db.Task.due_time))
+    sort_tasks(tasks)
+    
     return render_template("tasks.html", tasks=tasks, form=form)
+
+@app.route("/tasks/<int:task_id>", methods=["POST"])
+def task(task_id):
+    task = db.session.query(db.Task).get(task_id)
+    if not task: error(404)
+    if request.form["status"] == "todo":
+        task.status = "todo"
+    elif request.form["status"] == "done":
+        task.status = "done"
+    db.session.commit()
+    return redirect(url_for("tasks"))
 
 if not app.debug:
     import logging

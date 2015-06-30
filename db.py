@@ -19,11 +19,13 @@ app = Flask('rhforum')
 app_dir = os.path.dirname(os.path.abspath(__file__))
 app.config.from_pyfile(app_dir+"/config.py") # XXX
 
+debug = app.config.get("DEBUG", False)
+
 if 'mysql' in app.config['DB']:
-    engine = create_engine(app.config['DB'], encoding=b"utf8", pool_size = 100, pool_recycle=4200) # XXX
+    engine = create_engine(app.config['DB'], encoding=b"utf8", pool_size = 100, pool_recycle=4200, echo=debug) # XXX
     # pool_recycle is to prevent "server has gone away"
 else:
-    engine = create_engine(app.config['DB'], encoding=b"utf8")
+    engine = create_engine(app.config['DB'], encoding=b"utf8", echo=debug)
 
 session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 

@@ -41,11 +41,11 @@ h1 a:first-child {font-weight: bold;}
 .tasks-container { width: 80%; margin: auto;}
 .tasks-container h2 {margin: 0;}
 .tasks { border: 1px solid #763556; max-height: 8em; overflow-y: scroll; font-size: 14px; }
-.tasks-full {max-height: auto;}
+.tasks-full {max-height: 100%; height: auto; overflow-y: hidden;}
 .tasks-add-button {margin: auto; display: inline-block; float: left; margin: 2px 1px 0 0;}
 .task {padding: 2px 4px 1px 2px; clear: both;}
 .task:nth-child(even) {background: #eee;}
-.task-controls {display: inline-block; width: 120px; float: left;}
+.task-controls {display: inline-block; width: 30%; float: left;}
 .task-time {font-weight: bold;}
 .task-time-soon {color: red;}
 .task-check {width: 18px; height: 18px;  vertical-align: middle; padding: 0; margin: 0;  background: none; border: 0;}
@@ -161,6 +161,8 @@ a.permalink:hover {text-decoration: underline;}
 .new-icon:hover {color: black; box-shadow: 0 0 6px yellow;}
 
 .forum-controls {text-align: center;}
+
+.inline {display: inline;}
 
 @media (max-width: 800px) {
     

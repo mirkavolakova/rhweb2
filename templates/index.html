@@ -8,40 +8,7 @@
         <div class="tasks-container">
             <!--<button class="tasks-add-button">+</button>-->
             <div class="tasks">
-                <!--<div class="task new-task">
-                    { task_form.type }} { task_form.datetime }} { task_form.text }} { task_form.submit }}
-                </div>-->
-                {% for task in tasks %}
-                    <div class="task">
-                        <div class="task-controls">
-                            {% if task.status == "done" %}
-                                <button class="task-check task-check-done"><div><div>✓</div></div></button>
-                            {% elif task.status == "todo" %}
-                                <button class="task-check"><div></div></button>
-                            {% endif %}
-                            
-                            {% if False %}
-                                <span class="task-time task-time-soon">Brzy</span>
-                            {% else %}
-                                <span class="task-time">
-                                    {% if task.due_time %}
-                                        {{ task.due_time }}
-                                    {% endif %}
-                                    &nbsp;
-                                </span>
-                            {% endif %}
-                        </div>
-                            {% if task.user.name %}
-                                <strong>({{ task.user.name }})</strong>
-                            {% endif %}
-                            {{ task.text }}
-                        <div class="clear"></div>
-                    </div>
-                {% else %}
-                    <div class="task-free">
-                        Žádné úkoly, dobrá práce!
-                    </div>
-                {% endfor %}
+                {{ task_list(tasks) }}
             </div>
             <a href="{{url_for('tasks')}}" class="task-list-link">Úkolník...</a>
         </div>
