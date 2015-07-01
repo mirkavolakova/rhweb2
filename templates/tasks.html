@@ -1,0 +1,24 @@
+{% extends "_base.html" %}
+
+{% block title %}Úkolník{% endblock %}
+
+{% block content %}
+    <h1><a href="{{url_for('index')}}">RHForum</a> » <a href="{{url_for('tasks')}}">Úkolník</a></h1>
+    <div class="tasks-container">
+        <!--<button class="tasks-add-button">+</button>-->
+        {% if not task_id %}
+            <div class="task new-task">
+                <form method="POST">
+                    <h2>Nový úkol</h2>
+                    {{ form.text }}
+                    {{ form.type }} {{ form.user_id }} {{ form.due_time }} {{ form.submit }}
+                    {{ errors(form.errors) }}
+                </form>
+            </div>
+        {% endif %}
+        <div class="tasks tasks-full">
+            {{ task_list(tasks, editable=True, task_id=task_id) }}
+        </div>
+    </div>
+    <div class="clear"></div>
+{% endblock %}
