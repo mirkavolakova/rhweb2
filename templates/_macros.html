@@ -54,42 +54,65 @@
     </span>
 {% endmacro %}
 {% macro errors(errors) %}
-    <ul class="errors">
-        {% for name, texts in errors.items() %}
-            {% for text in texts %}
-                <li> <b>{{name}}</b>: {{text}}
+    {% if errors %}
+        <ul class="errors">
+            {% for name, texts in errors.items() %}
+                {% for text in texts %}
+                    <li> <b>{{name}}</b>: {{text}}
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-    </ul>
+        </ul>
+    {% endif %}
 {% endmacro %}
-{% macro task_list(tasks) %}
+{% macro task_list(tasks, editable=False, task_id=None) %}
     {% for task in tasks %}
-        <div class="task">
-            <div class="task-controls">
-                <form method="POST" action="{{url_for("task", task_id=task.id)}}" class="inline">
-                    {% if task.status == "done" %}
-                        <input type="hidden" name="status" value="todo">
-                        <button class="task-check task-check-done" type="submit"><div><div>✓</div></div></button>
-                    {% elif task.status == "todo" %}
-                        <input type="hidden" name="status" value="done">
-                        <button class="task-check" type="submit"><div></div></button>
-                    {% endif %}
+        {% if task.id == task_id %}
+            <div class="task">
+                <form method="POST">
+                    <div class="task-controls">
+                        {{ form.due_time }}
+                    </div>
+                    {{ form.user_id }}
+                    {{ form.text }}
+                    {{ form.submit }}
+                    {{ errors(form.errors) }}
                 </form>
-                
-                {% if task.due_time and (g.now-task.due_time).seconds < 60*60*2 %}
-                    <span class="task-time task-time-soon"> {{ ago(task.due_time) }} </span>
-                {% elif task.due_time %}
-                    <span class="task-time"> {{ ago(task.due_time) }} </span>
-                {% else %}
-                    <span class="task-time"> &nbsp; </span>
+            </div>
+        {% else %}
+            <div class="task">
+                <div class="task-controls">
+                    <form method="POST" action="{{url_for('change_task_status', task_id=task.id)}}" class="inline">
+                        {% if task.status == "done" %}
+                            <input type="hidden" name="status" value="todo">
+                            <button class="task-check task-check-done" type="submit"><div><div>✓</div></div></button>
+                        {% elif task.status == "todo" %}
+                            <input type="hidden" name="status" value="done">
+                            <button class="task-check" type="submit"><div></div></button>
+                        {% else %}
+                            <div class="task-check"></div>
+                        {% endif %}
+                    </form>
+                    
+                    {% if task.due_time and (g.now-task.due_time).seconds < 60*60*2 %}
+                        <span class="task-time task-time-soon"> {{ ago(task.due_time) }} </span>
+                    {% elif task.due_time %}
+                        <span class="task-time"> {{ ago(task.due_time) }} </span>
+                    {% else %}
+                        <span class="task-time"> &nbsp; </span>
+                    {% endif %}
+                </div>
+                    {% if task.user.name %}
+                        <strong>({{ task.user.name }})</strong>
+                    {% endif %}
+                    {{ task.text }}
+                {% if editable %}
+                    <div class="task-edit">
+                        <a href="{{ url_for('tasks', task_id=task.id) }}">✎</a>
+                    </div>
+                    <div class="clear"></div>
                 {% endif %}
             </div>
-                {% if task.user.name %}
-                    <strong>({{ task.user.name }})</strong>
-                {% endif %}
-                {{ task.text }}
-            <div class="clear"></div>
-        </div>
+        {% endif %}
     {% else %}
         <div class="task-free">
             Žádné úkoly, dobrá práce!

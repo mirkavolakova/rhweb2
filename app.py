@@ -144,8 +144,8 @@ class ForumControlsForm(Form):
     mark_read = SubmitField('Označit fórum za přečtené')
 
 class TaskForm(Form):
-    type = SelectField(choices=(('task', 'úkol'), ('announcement', 'oznámení')))
-    datetime = DateTimeField('Čas')
+    type = SelectField("Typ", [validators.optional()], choices=(('task', 'úkol'), ('announcement', 'oznámení')))
+    due_time = DateTimeField('Čas', [validators.optional()])
     text = TextField('Text', [validators.required()])
     user_id = SelectField('Uživatel', coerce=int)
     submit = SubmitField("Zadat")
@@ -517,41 +517,50 @@ def edit_user(user_id, name=None):
     return render_template("user.html", user=user, edit=True, form=form)
 
 @app.route("/tasks", methods="GET POST".split())
-def tasks():
-    form = TaskForm(request.form)
+@app.route("/tasks/<int:task_id>", methods=["GET", "POST"])
+def tasks(task_id=None):
+    if not g.user.in_group("retroherna"): error(403)
+    task = None
+    if task_id:
+        task = db.session.query(db.Task).get(task_id)
+        if not task: error(404)
+    
+    form = TaskForm(request.form, task)
     form.user_id.choices = [(0, '-')]
     for user in db.session.query(db.User):
         form.user_id.choices.append((user.id, user.name))
-        
-    if request.method == 'POST':
-        has_datetime = True
-        if not form.datetime.raw_data[0].strip():
-            del form.datetime
-            has_datetime = False
     
     if request.method == 'POST' and form.validate():
-        task = db.Task()
-        task.text = form.text.data
-        if has_datetime:
-            task.due_time = form.datetime.data
-        if form.type.data == "task":
-            task.status = "todo"
-        task.created_time = datetime.now()
-        task.author = g.user
-        task.user_id = form.user_id.data
-        
-        db.session.add(task)
-        db.session.commit()
-        flash("Úkol přidán.")
-        return redirect(url_for('tasks'))
+        if not form.due_time.data and (form.type.data == "announcement" or (task and not task.status)):
+            flash("Nelze vytvořit oznámení bez konečného času.")
+        else:
+            if not task_id:
+                task = db.Task()
+                task.created_time = datetime.now()
+                task.author = g.user
+            task.text = form.text.data
+            task.due_time = form.due_time.data
+            if form.type.data == "task":
+                task.status = "todo"
+            task.user_id = form.user_id.data
+            
+            if not task_id:
+                db.session.add(task)
+            db.session.commit()
+            if not task_id:
+                flash("Úkol přidán.")
+            else:
+                flash("Úkol upraven.")
+            return redirect(url_for('tasks'))
     
     tasks = db.session.query(db.Task).all()#.order_by(func.abs(func.now() - db.Task.due_time))
     sort_tasks(tasks)
     
-    return render_template("tasks.html", tasks=tasks, form=form)
+    return render_template("tasks.html", tasks=tasks, form=form, task_id=task_id)
 
-@app.route("/tasks/<int:task_id>", methods=["POST"])
-def task(task_id):
+@app.route("/tasks/<int:task_id>/status", methods=["POST"])
+def change_task_status(task_id):
+    if not g.user.in_group("retroherna"): error(403)
     task = db.session.query(db.Task).get(task_id)
     if not task: error(404)
     if request.form["status"] == "todo":

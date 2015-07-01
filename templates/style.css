@@ -44,11 +44,12 @@ h1 a:first-child {font-weight: bold;}
 .tasks-full {max-height: 100%; height: auto; overflow-y: hidden;}
 .tasks-add-button {margin: auto; display: inline-block; float: left; margin: 2px 1px 0 0;}
 .task {padding: 2px 4px 1px 2px; clear: both;}
-.task:nth-child(even) {background: #eee;}
+.task:nth-child(even) {background: #ddd;}
 .task-controls {display: inline-block; width: 30%; float: left;}
+.task-controls input {max-width: 90%;}
 .task-time {font-weight: bold;}
 .task-time-soon {color: red;}
-.task-check {width: 18px; height: 18px;  vertical-align: middle; padding: 0; margin: 0;  background: none; border: 0;}
+.task-check {width: 18px; height: 18px;  vertical-align: middle; padding: 0; margin: 0;  background: none; border: 0; display: inline-block;}
 .task-check:hover {}
 .task-check > div {width: 14px; height: 14px; background: white; border: 1px solid #888; border-radius: 3px;
     font-size: 20px; margin: -2px 0 0 -2px;}
@@ -56,6 +57,8 @@ h1 a:first-child {font-weight: bold;}
 .task-check > div > div {margin-top: -5px;}
 .task-free {text-align: center; margin-top: 6px;}
 .task-list-link {float: right; margin: 2px;}
+.task-edit {float: right;}
+.task-edit a {text-decoration: none;}
 .new-task {padding-bottom: 16px; width: 80%; margin: auto; text-align: center;}
 .new-task #text {width: 100%;}
 
