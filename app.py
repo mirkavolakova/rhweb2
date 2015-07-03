@@ -15,7 +15,8 @@ from lxml.etree import ParserError
 
 from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, session, abort, url_for, make_response, g
-from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, DateTimeField, HiddenField, SubmitField, validators, ValidationError, widgets
+from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, HiddenField, SubmitField, validators, ValidationError, widgets
+from wtforms.fields.html5 import DateTimeLocalField
 
 class MultiCheckboxField(SelectMultipleField):
     """
@@ -145,7 +146,7 @@ class ForumControlsForm(Form):
 
 class TaskForm(Form):
     type = SelectField("Typ", [validators.optional()], choices=(('task', 'úkol'), ('announcement', 'oznámení')))
-    due_time = DateTimeField('Čas', [validators.optional()])
+    due_time = DateTimeLocalField('Čas', [validators.optional()])
     text = TextField('Text', [validators.required()])
     user_id = SelectField('Uživatel', coerce=int)
     submit = SubmitField("Zadat")
