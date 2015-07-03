@@ -146,7 +146,7 @@ class ForumControlsForm(Form):
 
 class TaskForm(Form):
     type = SelectField("Typ", [validators.optional()], choices=(('task', 'úkol'), ('announcement', 'oznámení')))
-    due_time = DateTimeLocalField('Čas', [validators.optional()])
+    due_time = DateTimeLocalField('Čas', [validators.optional()], format="%Y-%m-%dT%H:%M")
     text = TextField('Text', [validators.required()])
     user_id = SelectField('Uživatel', coerce=int)
     submit = SubmitField("Zadat")
