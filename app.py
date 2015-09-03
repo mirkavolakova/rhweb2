@@ -373,7 +373,7 @@ def forum(forum_id, forum_identifier=None):
     if not forum: abort(404)
     if forum.category and forum.category.group and forum.category.group not in g.user.groups: abort(403)
     if forum.trash and not g.user.admin: abort(403)
-    threads = db.session.query(db.Thread).filter(db.Thread.forum == forum).order_by(db.Thread.laststamp.desc())
+    threads = db.session.query(db.Thread).filter(db.Thread.forum == forum).order_by(db.Thread.pinned.desc(), db.Thread.laststamp.desc())
     form = None
     if not forum.trash:
         form = ThreadForm(request.form)
@@ -430,9 +430,9 @@ def thread_set(forum_id, thread_id, forum_identifier=None, thread_identifier=Non
     thread = db.session.query(db.Thread).get(thread_id)
     if not thread: abort(404)
     
-    if request.form["pin"]:
+    if request.form.get("pin"):
         thread.pinned = True
-    elif request.form["unpin"]:
+    elif request.form.get("unpin"):
         thread.pinned = False
     db.session.commit()
     

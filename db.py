@@ -182,7 +182,7 @@ class Thread(Base):
     author = relationship("User", backref='threads')
     timestamp = Column(DateTime)
     laststamp = Column(DateTime)
-    pinned = Column(Boolean)
+    pinned = Column(Boolean, default=False, nullable=False)
     
     posts = relationship("Post", order_by="Post.timestamp", lazy="dynamic")#, viewonly=True, primaryjoin="foreign(Post.deleted)==False")
     
@@ -263,9 +263,14 @@ class Task(Base):
 
 if __name__ == "__main__":
     print('this is db.py.  make sure you know where you are.')
-    if raw_input('mark everything as read for everybody? ') == 'y':
-        for user in session.query(User):
-            user.read_all()
+    if raw_input('fix thread.pinned = NULL? ') == 'y':
+        for thread in session.query(Thread):
+            if thread.pinned == None:
+                thread.pinned = False
+        session.commit()
+    #if raw_input('mark everything as read for everybody? ') == 'y':
+    #    for user in session.query(User):
+    #        user.read_all()
     if raw_input('do dangerous stuff?  type yes. ') == 'yes':
         #which = raw_input('drop which? ')
         #db.Base.metadata.drop_all(tables=[db.Task.__table__])
