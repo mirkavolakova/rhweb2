@@ -4,6 +4,17 @@
 
 {% block content %}
     <h1><a href="{{url_for('index')}}">RHForum</a> » <a href="{{forum.url}}">{{forum.name}}</a> » <a href="{{thread.url}}">{{thread.name}}</a></h1>
+    {% if g.user.admin %}
+        <div class="thread-controls">
+            <form action="{{thread.url}}/set" method="POST">
+                {% if not thread.pinned %}
+                    <input type="submit" name="pin" value="Přišpendlit">
+                {% else %}
+                    <input type="submit" name="pin" value="Odšpendlit">
+                {% endif %}
+            </form>
+        </div>
+    {% endif %}
     <div class="posts">
         {% for post in posts %}
             <div class="post">

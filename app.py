@@ -423,6 +423,21 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     
     return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), last_read_timestamp=last_read_timestamp)
 
+@app.route("/<int:forum_id>/<int:topic_id>/set", methods="POST".split())
+@app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/set", methods="POST".split())
+def thread_set(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
+    if not g.user.admin: abort(403)
+    thread = db.session.query(db.Thread).get(thread_id)
+    if not thread: abort(404)
+    
+    if request.form["pin"]:
+        thread.pinned = True
+    elif request.form["unpin"]:
+        thread.pinned = False
+    db.session.commit()
+    
+    return redirect(thread.url)
+
 @app.route("/<int:forum_id>/<int:thread_id>/edit/<int:post_id>", methods="GET POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/edit/<int:post_id>", methods="GET POST".split())
 def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identifier=None):
