@@ -12,7 +12,7 @@
                         {{ txt_posts(user.num_posts) }}
                     </div>
                     <ul class="inline-list row-user-groups">
-                        {% for group in g.user.groups %}
+                        {% for group in user.groups %}
                            <li> {{ group.name }} 
                         {% endfor %}
                     </ul>
