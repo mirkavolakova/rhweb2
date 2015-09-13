@@ -38,6 +38,10 @@ a:hover {color: #800a46; transition: 0.1s ease;}
 h1 {font-weight: normal; margin: 0; margin-bottom: 6px;}
 h1 a:first-child {font-weight: bold;}
 
+.inline-list {margin: 0; padding: 0; list-style: none;}
+.inline-list li {margin: 0; padding: 0; display: inline;}
+.inline-list li:before {content: '•';}
+
 .tasks-container { width: 80%; margin: auto;}
 .tasks-container h2 {margin: 0;}
 .tasks { border: 1px solid #763556; max-height: 8em; overflow-y: scroll; font-size: 14px; }
@@ -77,6 +81,7 @@ h1 a:first-child {font-weight: bold;}
 .row:hover {background: #e2cad7; transition: 0s ease 0s; border-bottom: 1px solid #cd96b2;}
 .row-name {font-size: 24px;}
 .row-data {float: right; text-align: right; }
+.row-user-groups {font-size: 12px;}
 .rownew { background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(255, 255, 255, 0) 48px); }
 .rownew:hover {background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(186, 186, 255, 0.5) 48px); transition-delay: 0.1s;}
 a.row-text {display: block; text-decoration: none; color: black;}
@@ -148,6 +153,7 @@ a.permalink:hover {text-decoration: underline;}
     max-height: 32px; display: inline-block;
 }
 .row-avatar {width: 32px; height: 32px; display: inline-block; vertical-align: middle;}
+.row-avatar .avatar {max-width: 32px;}
 
 .post-avatar {  }
 .post-avatar .avatar {

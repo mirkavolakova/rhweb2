@@ -489,6 +489,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
 
 @app.route("/users/")
 def users():
+    if not g.user.admin: abort(403)
     users = db.session.query(db.User).order_by(db.User.fullname)
     return render_template("users.html", users=users)
 

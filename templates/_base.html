@@ -44,9 +44,14 @@
     <div class="topbar">
         <div class="topbar-contents">
             <div class="topbar-links">
-                <a href="http://retroherna.cz" class="rh-link">RetroHerna</a> &bull;
-                <a href="http://retroherna.cz/wiki/">Wiki</a> &bull;
-                <a href="http://retroherna.cz/forum/">Fórum</a>
+                <a href="http://retroherna.cz" class="rh-link">RetroHerna</a>
+                {% if g.user.in_group("retroherna") %}
+                    &bull; <a href="http://retroherna.cz/wiki/">Wiki</a>
+                {% endif %}
+                &bull; <a href="http://retroherna.cz/forum/">Fórum</a>
+                {% if g.user.admin %}
+                &bull; <a href="{{url_for('users')}}">Uživatelé</a>
+                {% endif %}
             </div>
             <div class="topbar-user">
                 {% if g.user %}
