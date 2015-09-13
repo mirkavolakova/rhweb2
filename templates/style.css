@@ -121,6 +121,8 @@ a.row-text:hover {color: #4a0629;}
 a.permalink {text-decoration: inherit; color: inherit;}
 a.permalink:hover {text-decoration: underline;}
 
+.locked-text {text-align: center; font-size: 17px; margin: 4px;}
+
 .post:target, .post:target .post-sidebar {background-color: #ffffe4;
     background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0) 50%);}
 

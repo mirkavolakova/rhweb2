@@ -12,6 +12,11 @@
                 {% else %}
                     <input type="submit" name="unpin" value="Odšpendlit">
                 {% endif %}
+                {% if not thread.locked %}
+                    <input type="submit" name="lock" value="Zamknout">
+                {% else %}
+                    <input type="submit" name="unlock" value="Odemknout">
+                {% endif %}
             </form>
         </div>
     {% endif %}
@@ -78,6 +83,11 @@
     <div class="clear"></div>
     {% if g.user and not edit_post and form %}
         <h2>Nový příspěvek</h2>
+        {% if thread.locked %}
+            <div class="locked-text">
+                Téma je zamčené pro běžné uživatele.
+            </div>
+        {% endif %}
         <form method="POST">
             <div class="post">
                 <div class="post-sidebar">
@@ -102,5 +112,10 @@
                 </div>
             </div>
         </form>
+    {% endif %}
+    {% if thread.locked and not g.user.admin %}
+        <div class="locked-text">
+            Téma je zamčené.
+        </div>
     {% endif %}
 {% endblock %}

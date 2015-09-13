@@ -403,7 +403,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     if thread.forum.trash and not g.user.admin: abort(403)
     posts = thread.posts.filter(db.Post.deleted==False)
     form = None
-    if not thread.forum.trash:
+    if not thread.forum.trash or not (thread.locked and not g.user.admin):
         form = PostForm(request.form)
         if g.user and request.method == 'POST' and form.validate():
             now = datetime.now()
@@ -437,6 +437,10 @@ def thread_set(forum_id, thread_id, forum_identifier=None, thread_identifier=Non
         thread.pinned = True
     elif request.form.get("unpin"):
         thread.pinned = False
+    elif request.form.get("lock"):
+        thread.locked = True
+    elif request.form.get("unlock"):
+        thread.locked = False
     db.session.commit()
     
     return redirect(thread.url)
