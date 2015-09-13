@@ -347,10 +347,13 @@ def register():
         else:
             user = db.User(login=form.login.data.lower(), fullname=form.fullname.data, email=form.email.data, timestamp=datetime.now(), laststamp=datetime.now())
             user.set_password(form.password.data)
+            user_group = db.session.query(db.Group).filter(db.Group.name=="user").scalar()
+            if user_group:
+                user.groups.append(user_group)
             db.session.add(user)
-            g.user.read_all()
             db.session.commit()
             g.user = user
+            g.user.read_all()
             session['user_id'] = g.user.id
             session.permanent = True
             
