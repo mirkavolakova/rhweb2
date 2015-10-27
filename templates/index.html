@@ -4,14 +4,16 @@
 
 {% block content %}
     <h1><a href="{{url_for('index')}}">RHForum</a></h1>
-    {% if g.user.in_group('retroherna') and tasks %}
-        <div class="tasks-container">
-            <!--<button class="tasks-add-button">+</button>-->
-            <div class="tasks">
-                {{ task_list(tasks) }}
+    {% if false %}
+        {% if g.user.in_group('retroherna') and tasks %}
+            <div class="tasks-container">
+                <!--<button class="tasks-add-button">+</button>-->
+                <div class="tasks">
+                    {{ task_list(tasks) }}
+                </div>
+                <a href="{{url_for('tasks')}}" class="task-list-link">Úkolník...</a>
             </div>
-            <a href="{{url_for('tasks')}}" class="task-list-link">Úkolník...</a>
-        </div>
+        {% endif %}
     {% endif %}
     <div class="clear"></div>
     {% for category in categories %}
