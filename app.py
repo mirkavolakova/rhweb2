@@ -18,6 +18,8 @@ from flask import Flask, render_template, request, flash, redirect, session, abo
 from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, HiddenField, SubmitField, validators, ValidationError, widgets
 from wtforms.fields.html5 import DateTimeLocalField
 
+import requests
+
 class MultiCheckboxField(SelectMultipleField):
     """
     A multiple-select, except displays a list of checkboxes.
@@ -31,6 +33,7 @@ class MultiCheckboxField(SelectMultipleField):
 app_dir = os.path.dirname(os.path.abspath(__file__))
 app = Flask('rhforum', template_folder=app_dir+"/templates")
 app.config.from_pyfile(app_dir+"/config.py") # XXX
+BASE_URL = app.config.get("BASE_URL", "")
 
 
 class PostForm(Form):
@@ -80,6 +83,8 @@ def clean(value):
 
 @app.before_request
 def before_request():
+    if not hasattr(g, 'reporting_messages'):
+        g.reporting_messages = []
     if 'user_id' in session:
         g.user = db.session.query(db.User).get(session['user_id'])
         if not g.user:
@@ -91,6 +96,20 @@ def before_request():
     g.now = datetime.now()
     g.yesterday = g.now - timedelta(days=1)
     g.tomorrow = g.now + timedelta(days=1)
+
+
+def telegram_post(method, **params):
+    return requests.post("https://api.telegram.org/bot{}/{}".format(app.config['TELEGRAM_TOKEN'], method), data=params).json()
+
+@app.after_request
+def after_request(response):
+    while g.reporting_messages:
+        message = g.reporting_messages.pop(0)
+        if "TELEGRAM_TOKEN" in app.config:
+            telegram_post("sendMessage", chat_id=app.config['TELEGRAM_CHAT_ID'], text=message,
+                parse_mode="Markdown", disable_web_page_preview=True)
+        
+    return response
 
 @app.teardown_request
 def shutdown_session(exception=None):
@@ -352,6 +371,10 @@ def register():
                 user.groups.append(user_group)
             db.session.add(user)
             db.session.commit()
+            
+            g.reporting_messages.append("Nová registrace: *{}* (login *{}*, email {}): {}".format(
+                user.fullname, user.login, user.email, BASE_URL+user.url))
+            
             g.user = user
             g.user.read_all()
             session['user_id'] = g.user.id
@@ -389,6 +412,8 @@ def forum(forum_id, forum_identifier=None):
                 text=form.text.data)
             db.session.add(post)
             db.session.commit()
+            g.reporting_messages.append("Nové téma od *{}*: *{}*: {}".format(
+                thread.author.name, thread.name, BASE_URL+thread.url))
             return redirect(thread.url)
     return render_template("forum.html", forum=forum, threads=threads, form=form)
 
@@ -412,6 +437,8 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             db.session.add(post)
             thread.laststamp = now
             db.session.commit()
+            g.reporting_messages.append("Nový příspěvek od *{}* do *{}*: {}".format(
+                post.author.name, post.thread.name, BASE_URL+post.url))
             return redirect(thread.url+"#latest") # TODO id
     
     if g.user:
