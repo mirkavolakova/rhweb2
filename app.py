@@ -99,7 +99,10 @@ def before_request():
 
 
 def telegram_post(method, **params):
-    return requests.post("https://api.telegram.org/bot{}/{}".format(app.config['TELEGRAM_TOKEN'], method), data=params).json()
+    try:
+        return requests.post("https://api.telegram.org/bot{}/{}".format(app.config['TELEGRAM_TOKEN'], method), data=params).json()
+    except ConnectionError:
+        return None
 
 @app.after_request
 def after_request(response):
