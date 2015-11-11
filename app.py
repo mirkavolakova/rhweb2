@@ -3,6 +3,7 @@
 from __future__ import absolute_import, unicode_literals, print_function
 
 import os
+import time
 
 import db
 from sqlalchemy import or_, and_, not_, asc, desc, func
@@ -99,20 +100,19 @@ def before_request():
 
 
 def telegram_post(method, **params):
-    try:
-        return requests.post("https://api.telegram.org/bot{}/{}".format(app.config['TELEGRAM_TOKEN'], method), data=params).json()
-    except Exception: # XXX ConnectionError
-        return None
+    for i in range(3):
+        try:
+            return requests.post("https://api.telegram.org/bot{}/{}".format(app.config['TELEGRAM_TOKEN'], method), data=params).json()
+        except Exception as ex:
+            time.sleep(1)
 
-@app.after_request
-def after_request(response):
+@app.teardown_request
+def teardown_request(exception=None):
     while g.reporting_messages:
         message = g.reporting_messages.pop(0)
         if "TELEGRAM_TOKEN" in app.config:
             telegram_post("sendMessage", chat_id=app.config['TELEGRAM_CHAT_ID'], text=message,
                 parse_mode="Markdown", disable_web_page_preview=True)
-        
-    return response
 
 @app.teardown_request
 def shutdown_session(exception=None):
@@ -629,6 +629,8 @@ if not app.debug:
     from logging import FileHandler
     file_handler = FileHandler(app_dir+'/flask.log')
     file_handler.setLevel(logging.WARNING)
+    formatter = logging.Formatter('%(asctime)s - %(message)s')
+    file_handler.setFormatter(formatter)
     app.logger.addHandler(file_handler)
 
 if __name__ == "__main__":
