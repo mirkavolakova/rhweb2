@@ -14,6 +14,7 @@
 {% macro ago(d) %}
     <span title="{{d|datetime}}">
         {% with diff = g.now - d %}
+            <!-- diff: {{diff}}, diff.days: {{diff.days}}, diff.seconds: {{diff.seconds}} -->
             {% if diff.days < 0 %}
                 {% if diff.days < -6 %}
                     {{d|datetime}}
