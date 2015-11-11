@@ -205,3 +205,10 @@ a.permalink:hover {text-decoration: underline;}
     .card-image {width: 150px; height: 150px;}
 }
 
+@media (max-width: 400px) {
+    .topbar-contents {
+        padding: 4px 16px;}
+    }
+    .topbar-links {width: 100%; overflow-x: scroll; white-space: nowrap;}
+}
+
