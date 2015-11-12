@@ -209,6 +209,6 @@ a.permalink:hover {text-decoration: underline;}
     .topbar-contents {
         padding: 4px 16px;}
     }
-    .topbar-links {width: 100%; overflow-x: scroll; white-space: nowrap;}
+    /*.topbar-links {width: 100%; overflow-x: scroll; white-space: nowrap;}*/
 }
 
