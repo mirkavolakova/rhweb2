@@ -183,6 +183,7 @@ class Thread(Base):
     forum = relationship("Forum", backref='threads', order_by="Thread.laststamp")
     author_id = Column(Integer, ForeignKey('users.uid'), nullable=False)
     author = relationship("User", backref='threads')
+    wiki_article = Column(Unicode(255))
     timestamp = Column(DateTime)
     laststamp = Column(DateTime)
     pinned = Column(Boolean, default=False, nullable=False)

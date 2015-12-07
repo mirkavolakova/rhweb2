@@ -73,6 +73,7 @@ h1 a:first-child {font-weight: bold;}
 
 .forum-desc {font-style: italic; margin-bottom: 2px; padding-left: 16px;
     border-bottom: 1px solid #bbb; padding-bottom: 6px;}
+    
 .threads {margin-bottom:48px;}
 .row {border-bottom: 1px solid #ddd; display: block; clear: both; padding: 3px;
     transition: 0.4s ease-out;}
@@ -96,6 +97,13 @@ a.row-text:hover {color: #4a0629;}
 .category-admin {float: right; font-size: 14px; font-weight: normal;}
 
 .thread-controls {float: right;}
+.thread-desc {font-style: italic; margin-bottom: 2px; padding-left: 16px;
+    border-bottom: 1px solid #bbb; padding-bottom: 6px;}
+.thread-article {padding: 4px 0 4px 0;
+    border-bottom: 1px solid #ddd; margin: 4px auto 8px auto;}
+.thread-article-text {width: 90%; margin: auto;}
+.thread-article-text p {text-indent: 4%; text-align: justify;}
+.article-error {color: #f00;}
 
 /*.post:before { content: ''; display: block; position: relative; width: 0; height: 5em; margin-top: -5em; background: none !important; }*/ /* For anchor */ 
 .post {min-height: 100px; margin-bottom: 14px; position: relative;

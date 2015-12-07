@@ -28,7 +28,14 @@
                 </div>
                 <a class="row-text" href="{{thread.url}}">
                     <div class="row-name">{{thread.name}} <span class="author" href="#">{{thread.author.name}}</span></div>
-                    <div class="row-description">{{thread.description or "&nbsp;"|safe}} </div>
+                    <div class="row-description">
+                        {% if thread.description %}
+                            {{thread.description}}
+                        {% elif thread.wiki_article %}
+                            Diskuze k wiki článku {{thread.wiki_article}}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}</div>
                 </a>
             </div>
         {% else %}

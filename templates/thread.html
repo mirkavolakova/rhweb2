@@ -20,6 +20,22 @@
             </form>
         </div>
     {% endif %}
+    {% if thread.wiki_article %}
+        <div class="thread-article">
+            <div class="thread-desc">
+                Diskuze k wiki článku <a href="htp://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}">{{thread.wiki_article}}</a>
+            </div>
+            <div class="thread-article-text">
+                {% if article %}
+                    {{ article | safe }}
+                {% elif doku_error %}
+                    <div class="article-error">
+                        Selhalo získávání článku z DokuWiki: {{doku_error}}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
     <div class="posts">
         {% for post in posts %}
             <div class="post">
@@ -54,7 +70,7 @@
                             <p>{{ post.text | clean | safe | replace("\n", "\n<p>"|safe) | safe | urlize }}
                             {% if post.editstamp %}
                                 <div class="post-edited">
-                                    Naposledy upraveno {{ ago(post.editstamp) }}
+                                    Naposledy upraveno {% if post.editor != post.user and post.editor.admin %}moderátorem{% endif %} {{ ago(post.editstamp) }} {% if g.user.admin %}({{post.editor.name}}){% endif %}
                                 </div>
                             {% endif %}
                         {% else %}
@@ -64,6 +80,11 @@
                                     <div>Fórum: {{ form.forum_id }}</div>
                                 {% endif %}
                                 <div>{{ form.text }}</div>
+                                {% if form.wiki_article %}
+                                    <div>
+                                        Wiki článek: {{ form.wiki_article }}
+                                    </div>
+                                {% endif %}
                                 <div>
                                     {{ form.submit }}
                                     {% if form.delete %}

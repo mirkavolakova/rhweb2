@@ -36,6 +36,11 @@ app = Flask('rhforum', template_folder=app_dir+"/templates")
 app.config.from_pyfile(app_dir+"/config.py") # XXX
 BASE_URL = app.config.get("BASE_URL", "")
 
+doku = None
+if app.config.get("DOKU_URL", ""):
+    from dokuwiki import DokuWiki
+    doku = DokuWiki(app.config['DOKU_URL'], app.config['DOKU_USER'], app.config['DOKU_PASS'])
+
 
 class PostForm(Form):
     text = TextAreaField('Text', [validators.required()])
@@ -50,6 +55,7 @@ class EditThreadForm(Form):
     name = TextField('Nadpis', [validators.required()])
     text = TextAreaField('Text', [validators.required()])
     forum_id = SelectField('Fórum', coerce=int)
+    wiki_article = TextField('Wiki článek')
     submit = SubmitField('Upravit')
     delete = SubmitField('Smazat')
 
@@ -453,8 +459,16 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
         g.user.read(thread.last_post)
     else:
         last_read_timestamp = g.now
+        
+    article = None
+    doku_error = None
+    if thread.wiki_article and doku:
+        try:
+            article = doku.pages.html(thread.wiki_article)
+        except Exception as ex:
+            doku_error = ex
     
-    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), last_read_timestamp=last_read_timestamp)
+    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), last_read_timestamp=last_read_timestamp, article=article, doku_error=doku_error)
 
 @app.route("/<int:forum_id>/<int:topic_id>/set", methods="POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/set", methods="POST".split())
@@ -511,6 +525,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
             if edit_thread:
                thread.name = form.name.data
                thread.forum_id = form.forum_id.data
+               thread.wiki_article = form.wiki_article.data
                #forum.fix_laststamp() # TODO
             db.session.commit()
             if edit_thread:
