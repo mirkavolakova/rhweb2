@@ -51,7 +51,7 @@
                     </div>
                     <div class="post-text">
                         {% if post != edit_post %}
-                            <p>{{ post.text | clean | safe | replace("\n", "\n<p>"|safe) | safe }}
+                            <p>{{ post.text | clean | safe | replace("\n", "\n<p>"|safe) | safe | urlize }}
                             {% if post.editstamp %}
                                 <div class="post-edited">
                                     Naposledy upraveno {{ ago(post.editstamp) }}

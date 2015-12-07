@@ -21,6 +21,9 @@ app.config.from_pyfile(app_dir+"/config.py") # XXX
 
 debug = app.config.get("DEBUG", False)
 
+def url_friendly(string):
+    return unidecode(string).lower().replace(' ', '-').replace('/', '-')
+
 if 'mysql' in app.config['DB']:
     engine = create_engine(app.config['DB'], encoding=b"utf8", pool_size = 100, pool_recycle=4200, echo=debug) # XXX
     # pool_recycle is to prevent "server has gone away"
@@ -199,7 +202,7 @@ class Thread(Base):
     def url(self):
         return url_for('thread',
             forum_id=self.forum.id, forum_identifier=self.forum.identifier,
-            thread_id=self.id, thread_identifier=unidecode(self.name).replace(' ', '-'))
+            thread_id=self.id, thread_identifier=url_friendly(self.name))
 
 
 class Post(Base):
