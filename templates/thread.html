@@ -23,7 +23,16 @@
     {% if thread.wiki_article %}
         <div class="thread-article">
             <div class="thread-desc">
-                Diskuze k wiki článku <a href="htp://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}">{{thread.wiki_article}}</a>
+                <div>
+                    Diskuze k wiki článku <a href="htp://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}">{{thread.wiki_article}}</a>
+                </div>
+                <div>
+                    Poslední revize {{article_info['author']}}, {{article_info['lastModified']}}
+                </div>
+                <div>
+                    <a href="htp://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}?do=edit">Editovat</a> &bull;
+                    <a href="htp://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}?do=revisions">Historie</a>
+                </div>
             </div>
             <div class="thread-article-text">
                 {% if article %}

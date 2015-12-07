@@ -461,14 +461,20 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
         last_read_timestamp = g.now
         
     article = None
+    article_revisions = []
+    article_info = None
     doku_error = None
     if thread.wiki_article and doku:
         try:
             article = doku.pages.html(thread.wiki_article)
+            #article_revisions = doku.send("wiki.getPageVersions", thread.wiki_article)
+            article_info = doku.send("wiki.getPageInfo", thread.wiki_article)
+            print(article_info, 'xxx')
         except Exception as ex:
+            print(ex)
             doku_error = ex
     
-    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), last_read_timestamp=last_read_timestamp, article=article, doku_error=doku_error)
+    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), last_read_timestamp=last_read_timestamp, article=article, article_revisions=article_revisions, article_info=article_info, doku_error=doku_error)
 
 @app.route("/<int:forum_id>/<int:topic_id>/set", methods="POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/set", methods="POST".split())
