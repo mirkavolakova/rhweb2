@@ -26,9 +26,11 @@
                 <div>
                     Diskuze k wiki článku <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}">{{thread.wiki_article}}</a>
                 </div>
-                <div>
-                    Poslední revize {{article_info['author']}}, {{article_info['lastModified']}}
-                </div>
+                {% if article_info %}
+                    <div>
+                        Poslední revize {{article_info['author']}}, {{article_info['lastModified']}}
+                    </div>
+                {% endif %}
                 <div>
                     <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}&do=edit">Editovat</a> &bull;
                     <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}&do=revisions">Historie</a>
