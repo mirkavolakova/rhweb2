@@ -2,38 +2,47 @@
 
 .clear {clear: both;}
 
-body {font-family: 'Ubuntu', sans-serif;  margin: 0; padding: 0; padding-bottom: 32px;}
+body {background: #111; color: white; 
+    font-family: 'Ubuntu', sans-serif;  margin: 0; padding: 0; padding-bottom: 32px;}
     
 .container {width: 75%; margin: auto; padding: 8px; padding-bottom: 16px;
     margin-top: 28px;}
     
+.logo {text-align: center;}
+.logolink {display: block; text-decoration: none;}
+.inner {display: inline-block; margin: auto; max-width: 100%;}
+.rhlogo { margin-right: 8px; width: 80px; height: 80px;}
+.logo .rhlogo {vertical-align:auto;}
+.rhlogotext {width: 420px;}
+    
 
-input[type="text"], input[type="password"] { border: 1px solid #555; background: white; padding: 2px; margin: 1px; border-radius: 3.5px; color: #111; }
+input[type="text"], input[type="password"] { border: 2px solid #840B49; background: black; padding: 2px; margin: 1px; border-radius: 3.5px; color: white; box-shadow: 0 0 4px #111;}
 input[type="text"]:focus, input[type="password"]:focus { box-shadow: inset 0 0 3px #ff0; }
-input[type="submit"], select { border: 1px solid #777; border-top: 1px solid #999;
-    background: linear-gradient(to bottom, #fff 0%, #eee 35%);
-    padding: 3px; margin: 2px; border-radius: 3.5px;
-    box-shadow: inset -2px -2px 6px 0px #bbb;
-    color: #111;
-    font-size: 15px;
+input[type="submit"], select { border: 2px solid #840B49;
+    background: linear-gradient(to bottom, #000 0%, #222 35%);
+    padding: 3px; margin: 2px 2px 2px 2px; border-radius: 3.5px;
+    box-shadow: inset -2px -2px 6px 0px #000;
+    color: #ffffff;
+    font-size: 15px; box-shadow: 0 0 4px #111;
     }
-input[type="submit"]:focus, select:focus {  box-shadow: inset -0px -0px 6px 0px #bbb; }
-input.delete-button {box-shadow: inset -2px -2px 6px 0px #caa; color: #b00;}
+input[type="submit"]:focus, select:focus {  box-shadow: inset -0px -0px 6px 0px #333333; 
+    border-color: rgb(224, 17, 123);}
+input.delete-button {box-shadow: inset -2px -2px 6px 0px #a00, 0 0 4px #111; color: #fee; }
 
-a {color: #4a0629; transition: 0.4s ease-out;}
-a:hover {color: #800a46; transition: 0.1s ease;}
+a {color: rgb(255, 151, 204); transition: 0.4s ease-out;}
+a:hover {color: rgb(255, 202, 229);  transition: 0.1s ease;}
 
-.topbar { width: auto; position: fixed; top: 0; background: #f5eef2; width: 100%;
-    border-bottom: 1px solid #e2cad7; z-index: 10;}
+.topbar { width: auto; position: fixed; top: 0; background: #840B49; width: 100%;
+    border-bottom: 1px solid #33071f; z-index: 10;}
 .topbar-contents { padding: 4px 32px 4px 32px; }
-.topbar a {text-decoration: none;}
+.topbar a {text-decoration: none; color: rgb(255, 202, 229);}
 .topbar a:hover {text-decoration: underline;}
 .topbar-links {display: inline-block; }
 .rh-link {font-weight: bold;}
 .topbar-user {float: right; display: inline-block; padding-left: 8px;}
 
 .flash {border: 1px solid rgb(197, 188, 16); background: rgb(248, 241, 190);
-    border-radius:8px; padding: 8px; margin: 6px 12px 0px 12px;}
+    border-radius:8px; padding: 8px; margin: 6px 12px 0px 12px; color: black;}
 
 h1 {font-weight: normal; margin: 0; margin-bottom: 6px;}
 h1 a:first-child {font-weight: bold;}
@@ -44,11 +53,11 @@ h1 a:first-child {font-weight: bold;}
 
 .tasks-container { width: 80%; margin: auto;}
 .tasks-container h2 {margin: 0;}
-.tasks { border: 1px solid #763556; max-height: 8em; overflow-y: scroll; font-size: 14px; }
+.tasks { border: 1px solid #c76899; max-height: 8em; overflow-y: scroll; font-size: 14px; }
 .tasks-full {max-height: 100%; height: auto; overflow-y: hidden;}
 .tasks-add-button {margin: auto; display: inline-block; float: left; margin: 2px 1px 0 0;}
 .task {padding: 2px 4px 1px 2px; clear: both;}
-.task:nth-child(even) {background: #ddd;}
+.task:nth-child(even) {background: #222222;}
 .task-controls {display: inline-block; width: 30%; float: left;}
 .task-controls input {max-width: 90%;}
 .task-time {font-weight: bold;}
@@ -57,7 +66,7 @@ h1 a:first-child {font-weight: bold;}
 .task-check:hover {}
 .task-check > div {width: 14px; height: 14px; background: white; border: 1px solid #888; border-radius: 3px;
     font-size: 20px; margin: -2px 0 0 -2px;}
-.dask-check > div:hover {box-shadow: inset 0px 0px 2px 0px #aaa;}
+.dask-check > div:hover {box-shadow: inset 0px 0px 2px 0px #666666;}
 .task-check > div > div {margin-top: -5px;}
 .task-free {text-align: center; margin-top: 6px;}
 .task-list-link {float: right; margin: 2px;}
@@ -66,42 +75,46 @@ h1 a:first-child {font-weight: bold;}
 .new-task {padding-bottom: 16px; width: 80%; margin: auto; text-align: center;}
 .new-task #text {width: 100%;}
 
-.category-name {font-size: 26px; margin-bottom: 2px;
-    border-bottom: 1px solid #763556; border-left: 1px solid #763556; border-radius: 8px; padding-left: 4px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ebd9e3 100%);}
+h2 {font-size: 26px; margin-bottom: 2px; background: #840B49;
+    border-bottom: 2px solid #840B49; border-left: 2px solid #840B49; border-radius: 0 0 0 8px; padding: 4px 4px 2px 6px;
+    /*background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #1a0210 100%);*/}
+h2 > a {color: white; text-decoration: none;}
+h2 > a:hover {text-decoration: underline;}
 .category-group {font-size: 14px; font-weight: normal;}
 
 .forum-desc {font-style: italic; margin-bottom: 2px; padding-left: 16px;
-    border-bottom: 1px solid #bbb; padding-bottom: 6px;}
+    border-bottom: 1px solid #333333; padding-bottom: 6px;}
     
 .threads {margin-bottom:48px;}
-.row {border-bottom: 1px solid #ddd; display: block; clear: both; padding: 3px;
+.row {border-bottom: 1px solid rgb(81, 6, 44); display: block; clear: both; padding: 3px;
     transition: 0.4s ease-out;}
 .morerow {text-align: center; cursor: pointer; width: 85%; margin: auto;}
-.row-pinned { padding-left: 8%;
-    background: linear-gradient(to right, rgb(246, 246, 195) 0%, rgba(255, 255, 255, 0) 15%); }
-.row:hover {background: #e2cad7; transition: 0s ease 0s; border-bottom: 1px solid #cd96b2;}
+.row-pinned { border-left: 32px solid #840B49;
+    /*background: linear-gradient(to right, rgb(246, 246, 195) 0%, rgba(255, 255, 255, 0) 15%);*/ }
+.row:hover {background: #840B49; transition: 0s ease 0s; border-bottom: 1px solid rgb(224, 17, 123);}
 .row-name {font-size: 24px;}
 .row-data {float: right; text-align: right; }
 .row-user-groups {font-size: 12px;}
 .rownew { background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(255, 255, 255, 0) 48px); }
 .rownew:hover {background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(186, 186, 255, 0.5) 48px); transition-delay: 0.1s;}
-a.row-text {display: block; text-decoration: none; color: black;}
-a.row-text:hover {color: #4a0629;}
+a.row-text {display: block; text-decoration: none; color: white;}
+a.row-text:hover {color: rgb(255, 202, 229);}
 
 .row-name .author {font-size: 16px; margin-left: 12px; font-style:italic;}
 .row-name .author::before {content: '—';}
 
+hr {border: 1px solid #840B49; margin: 32px 0 32px 0;}
+
 .index-admin {text-align: right;}
-.forum-admin    {text-align: right; float: right; margin-top: 42px;}
+.forum-admin    {text-align: right; float: right; margin-top: 16px;;}
 /*.category-admin {text-align: right; float: right; margin-top: 4px;}*/
 .category-admin {float: right; font-size: 14px; font-weight: normal;}
 
 .thread-controls {float: right;}
 .thread-desc {font-style: italic; margin-bottom: 2px; padding-left: 16px;
-    border-bottom: 1px solid #bbb; padding-bottom: 6px;}
+    border-bottom: 1px solid #333333; padding-bottom: 6px;}
 .thread-article {padding: 4px 0 4px 0;
-    border-bottom: 1px solid #ddd; margin: 4px auto 8px auto;}
+    border-bottom: 1px solid #222222; margin: 4px auto 8px auto;}
 .thread-article-text {width: 90%; margin: auto;}
 .thread-article-text p {text-indent: 4%; text-align: justify;}
 .article-error {color: #f00;}
@@ -111,19 +124,19 @@ a.row-text:hover {color: #4a0629;}
     background: none; padding: 4px; clear: both;}
 .post-fragment {display: hidden; position:relative; top:-64px;}
 
-.post-sidebar {height: 100%; min-height: 100px; display:inline-block; width: 150px; border-right: 1px solid #ddd;
+.post-sidebar {height: 100%; min-height: 100px; display:inline-block; width: 150px; border-right: 1px solid #840B49;
     float: left; background: none; text-align: center;  padding-bottom: 6px;}
 .post-author {font-weight: bold; margin-bottom: 4px;}
 .post-author-posts {font-size: smaller; margin-bottom: 3px;}
 
-.post-contents {margin-left: 150px;  height: 100%; min-height: 100px; border-left: 1px solid #ddd; }
-.post-data {border: 1px solid #ddd; border-left: 0; padding: 2px 6px 2px 2px; border-radius: 0 8px 8px 0;  width: 100%; text-align: right; font-size: smaller; background: #f7f7f7;}
+.post-contents {margin-left: 150px;  height: 100%; min-height: 100px; border-left: 1px solid #840B49; }
+.post-data {border: 1px solid #840B49; border-left: 0; padding: 2px 6px 2px 2px; border-radius: 0 8px 8px 0;  width: 100%; text-align: right; font-size: smaller; background: #840B49;}
 .post-text {padding: 4px 4px 4px 12px;}
 .post-text p {text-indent: 4%;}
 .post-text textarea {width: 95%; min-height: 100px; border: none; font-family: 'Ubuntu', sans-serif;
-    background: white; color: #111; box-shadow: inset 0 0 6px #bbb; border-radius: 1em; padding:0.5em;
-    border: 1px solid #555; }
-.post-text textarea:focus {box-shadow: inset 0 0 6px #cc0;}
+    background: black; color: white; box-shadow: inset 0 0 6px #333333; border-radius: 1em; padding:0.5em;
+    border: 1px solid #840B49; }
+.post-text textarea:focus {box-shadow: inset 0 0 6px #40400e;}
 .new-post-controls {text-align: center;}
 .post-edited {font-size: smaller; text-align: right; font-style: italic;
     /*position: absolute; right: 0; bottom: 0;*/}
@@ -132,19 +145,21 @@ a.permalink:hover {text-decoration: underline;}
 
 .locked-text {text-align: center; font-size: 17px; margin: 4px;}
 
-.post:target, .post:target .post-sidebar {background-color: #ffffe4;
-    background: linear-gradient(to bottom, #ffffff 0%, rgba(255, 255, 255, 0) 50%);}
+.post:target, .post:target .post-sidebar {background-color: #000000fe4;
+    background: linear-gradient(to bottom, #000000000000 0%, rgba(255, 255, 255, 0) 50%);}
 
 .new-thread #name, .post-contents #name, .category-name #name{width: 100%; margin-bottom:6px; font-size: 24px;}
 .card-user #fullname {font-size: 24px; max-width: 300px;}
 .category-name #name {font-weight: bold; width: 50%;}
 
-.fail {color: #800;}
+.fail {color: #ff8787;}
 
 .card {margin: auto; margin-top: 32px; width: 90%; max-width: 600px; min-height: 200px;
-    border: 1px solid #666; border-radius: 8px;
-    padding: 12px; box-shadow:  0 0 1em #bbb;}
-.card-image {width: 250px; height: 250px; border: 1px solid #999; border-radius: 8px;
+    border: 2px solid #ababab; border-radius: 8px;
+    padding: 12px; box-shadow:  0 0 1em #333333; background: #eee; color: black;}
+.card h2 {background: inherit;}
+.card a {color: #840B49;}
+.card-image {width: 250px; height: 250px; border: 2px solid #840B49; border-radius: 8px;
     float: left; margin-right: 12px; text-align: center;
     position: relative;}
 .card-edit {float: right;}
@@ -173,7 +188,7 @@ a.permalink:hover {text-decoration: underline;}
     margin: auto;
 }
 
-.edit-groups {max-height: 400px; border: 1px solid #555; overflow-y: scroll; padding: 8px; margin-bottom: 4px;}
+.edit-groups {max-height: 400px; border: 1px solid #b8b8b8; overflow-y: scroll; padding: 8px; margin-bottom: 4px;}
 .edit-groups ul {list-style: none; padding: 0; margin: 0;}
 
 .new-icon {display: inline-block; font-size: 8px; color: black; background-color: yellow;
@@ -200,8 +215,8 @@ a.permalink:hover {text-decoration: underline;}
     .row-data {font-size: 12px; position: absolute; bottom: 0; right: 0; margin-top: 64px;}
     
     .post-contents {margin-left: 0;}
-    .post-sidebar {float: left; position: inherit; height: auto; border-bottom: 1px solid #ddd; margin-right: 4px;
-        width: 150px; background: white; border-radius: 0 0 8px 0;}
+    .post-sidebar {float: left; position: inherit; height: auto; border-bottom: 1px solid #840B49; margin-right: 4px;
+        width: 150px; background: #111; border-radius: 0 0 8px 0;}
         
     .post-text textarea {width: calc(100% - 160px);}
         
@@ -220,4 +235,6 @@ a.permalink:hover {text-decoration: underline;}
     }
     /*.topbar-links {width: 100%; overflow-x: scroll; white-space: nowrap;}*/
 }
+
+
 

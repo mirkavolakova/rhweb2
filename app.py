@@ -178,7 +178,6 @@ class TaskForm(Form):
     text = TextField('Text', [validators.required()])
     user_id = SelectField('Uživatel', coerce=int)
     submit = SubmitField("Zadat")
-    
 
 @app.route("/", methods="GET POST".split())
 def index():

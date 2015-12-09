@@ -3,7 +3,7 @@
 {% block title %}index{% endblock %}
 
 {% block content %}
-    <h1><a href="{{url_for('index')}}">RHForum</a></h1>
+    <!--<h1><a href="{{url_for('index')}}">RHForum</a></h1>-->
     {% if false %}
         {% if g.user.in_group('retroherna') and tasks %}
             <div class="tasks-container">
@@ -109,6 +109,7 @@
             <a href="{{trash.url}}">Koš</a>
         </div>
     {% endif %}
+    <hr>
     {% if latest_posts %}
         <h2>Nejnovější příspěvky</h2>
         <div class="threads latest-posts">

@@ -3,11 +3,13 @@
 {% block title %}login{% endblock %}
 
 {% block content %}
-    <h1><a href="{{url_for('index')}}">RHForum</a> » <a href="{{url_for('login')}}">Login</a></h1>
+    <h2><a href="{{url_for('login')}}">Přihlášení</a></h2>
     <form method="POST">
-        <div>Jméno: {{form.name}}</div>
-        <div>Heslo: {{form.password}}</div>
-        <div>{{form.submit}}</div>
+        <dl>
+        <dt>Login:</dt>     <dd>{{form.name}}</dd>
+        <dt>Heslo:</dt>     <dd>{{form.password}}</dd>
+        </dl>
+        {{form.submit}}
     </form>
     {% if failed %}
         <p class="fail">Nesprávné uživatelské jméno nebo heslo.

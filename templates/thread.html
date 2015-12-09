@@ -3,7 +3,7 @@
 {% block title %}{{ forum.name }} » {{ thread.name }}{% endblock %}
 
 {% block content %}
-    <h1><a href="{{url_for('index')}}">RHForum</a> » <a href="{{forum.url}}">{{forum.name}}</a> » <a href="{{thread.url}}">{{thread.name}}</a></h1>
+    <h2><a href="{{forum.url}}">{{forum.name}}</a> » <a href="{{thread.url}}">{{thread.name}}</a></h2>
     {% if g.user.admin %}
         <div class="thread-controls">
             <form action="{{thread.url}}/set" method="POST">
