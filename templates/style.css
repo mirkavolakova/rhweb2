@@ -8,12 +8,16 @@ body {background: #111; color: white;
 .container {width: 75%; margin: auto; padding: 8px; padding-bottom: 16px;
     margin-top: 28px;}
     
-.logo {text-align: center;}
+.logo {text-align: center; margin: 24px 0 24px 0;}
 .logolink {display: block; text-decoration: none;}
 .inner {display: inline-block; margin: auto; max-width: 100%;}
 .rhlogo { margin-right: 8px; width: 80px; height: 80px;}
 .logo .rhlogo {vertical-align:auto;}
 .rhlogotext {width: 420px;}
+
+.logo_small {margin: 12px 0 4px 0;}
+.logo_small .rhlogo {height: 42px; width: auto;}
+.logo_small .rhlogotext {height: 42px; width: auto;}
     
 
 input[type="text"], input[type="password"] { border: 2px solid #840B49; background: black; padding: 2px; margin: 1px; border-radius: 3.5px; color: white; box-shadow: 0 0 4px #111;}
