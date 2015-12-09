@@ -9,12 +9,12 @@ body {background: #111; color: white;
     margin-top: 28px;}
     
 .hide_logo {display: none;}
-.logo {text-align: center; margin: 24px 0 24px 0;}
+.logo {text-align: center; margin: 24px 0 24px 0; max-width: 100%;}
 .logolink {display: block; text-decoration: none;}
 .inner {display: inline-block; margin: auto; max-width: 100%;}
 .rhlogo { margin-right: 8px; width: 80px; height: 80px;}
 .logo .rhlogo {vertical-align:auto;}
-.rhlogotext {width: 420px;}
+.rhlogotext {width: 420px; max-width: 100%;}
 
 .logo_small {margin: 12px 0 4px 0;}
 .logo_small .rhlogo {height: 42px; width: auto;}
