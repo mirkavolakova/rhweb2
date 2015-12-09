@@ -1,0 +1,19 @@
+{% extends "_base.html" %}
+
+{% block title %}chyba {{error}}{% endblock %}
+
+{% block content %}
+    <h2>Chyba {{error}}</h2>
+    {% if error == 403 %}
+        <p>Bohužel nemáte přístup na tuto stránku.
+        {% if not g.user.guest %}
+            <p>Možná se musíte <a href="{{url_for('login')}}">přihlásit</a>?
+        {% endif %}
+    {% elif error == 404 %}
+        <p>Tato stránka neexistuje.  Zpět na <a href="{{url_for('index')}}">index</a>?
+    {% elif error == 500 %}
+        <p>Něco je špatně na straně serveru.  Chyba byla zaznamenána a snad se brzy opraví.
+    {% else %}
+        <p>Něco je špatně.  Zpět na <a href="{{url_for('index')}}">index</a>?
+    {% endif %}
+{% endblock %}
