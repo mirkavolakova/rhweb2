@@ -21,6 +21,7 @@
             {% if category != editable %}
                 {% if category and g.user and g.user.admin and not editable %}
                 {% endif %}
+                <div id="category-{{category.id}}" class="fragment"></div>
                 <h2 class="category-name">
                     {% if category %}
                         {{category.name}}

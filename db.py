@@ -149,6 +149,10 @@ class Category(Base):
     
     group_id = Column(Integer, ForeignKey('groups.gid'))
     group = relationship("Group", backref='categories')
+    
+    @property
+    def url(self):
+        return url_for('index', _anchor="category-{}".format(self.id))
 
 class Forum(Base):
     __tablename__ = 'fora'

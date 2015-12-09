@@ -8,6 +8,7 @@ body {background: #111; color: white;
 .container {width: 75%; margin: auto; padding: 8px; padding-bottom: 16px;
     margin-top: 28px;}
     
+.hide_logo {display: none;}
 .logo {text-align: center; margin: 24px 0 24px 0;}
 .logolink {display: block; text-decoration: none;}
 .inner {display: inline-block; margin: auto; max-width: 100%;}
@@ -42,8 +43,9 @@ a:hover {color: rgb(255, 202, 229);  transition: 0.1s ease;}
 .topbar a {text-decoration: none; color: rgb(255, 202, 229);}
 .topbar a:hover {text-decoration: underline;}
 .topbar-links {display: inline-block; }
-.rh-link {font-weight: bold;}
+.primary-link {font-weight: bold;}
 .topbar-user {float: right; display: inline-block; padding-left: 8px;}
+.topbar-logo {height: 18px; width: auto; vertical-align: top;}
 
 .flash {border: 1px solid rgb(197, 188, 16); background: rgb(248, 241, 190);
     border-radius:8px; padding: 8px; margin: 6px 12px 0px 12px; color: black;}
@@ -79,13 +81,20 @@ h1 a:first-child {font-weight: bold;}
 .new-task {padding-bottom: 16px; width: 80%; margin: auto; text-align: center;}
 .new-task #text {width: 100%;}
 
-h2 {font-size: 26px; margin-bottom: 2px; background: #840B49;
+.breadcrumbs {margin-bottom: 6px; margin-top: 32px;}
+.breadcrumbs a {text-decoration: none;}
+.breadcrumbs a:hover {text-decoration: underline;}
+.small-logo {vertical-align: middle;}
+.small-rlogo img {height: 26px; width: auto; vertical-align: middle;  }
+
+h2 {font-size: 26px; margin: 2px 0px 2px 0px; background: #840B49;
     border-bottom: 2px solid #840B49; border-left: 2px solid #840B49; border-radius: 0 0 0 8px; padding: 4px 4px 2px 6px;
     /*background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #1a0210 100%);*/}
 h2 > a {color: white; text-decoration: none;}
 h2 > a:hover {text-decoration: underline;}
 .category-group {font-size: 14px; font-weight: normal;}
 
+.fora {margin-bottom: 16px;}
 .forum-desc {font-style: italic; margin-bottom: 2px; padding-left: 16px;
     border-bottom: 1px solid #333333; padding-bottom: 6px;}
     
@@ -126,11 +135,13 @@ hr {border: 1px solid #840B49; margin: 32px 0 32px 0;}
 /*.post:before { content: ''; display: block; position: relative; width: 0; height: 5em; margin-top: -5em; background: none !important; }*/ /* For anchor */ 
 .post {min-height: 100px; margin-bottom: 14px; position: relative;
     background: none; padding: 4px; clear: both;}
-.post-fragment {display: hidden; position:relative; top:-64px;}
+.fragment {position:relative; top:-50px;}
 
 .post-sidebar {height: 100%; min-height: 100px; display:inline-block; width: 150px; border-right: 1px solid #840B49;
     float: left; background: none; text-align: center;  padding-bottom: 6px;}
 .post-author {font-weight: bold; margin-bottom: 4px;}
+.post-author a {text-decoration: none;}
+.post-author a:hover {text-decoration: underline;}
 .post-author-posts {font-size: smaller; margin-bottom: 3px;}
 
 .post-contents {margin-left: 150px;  height: 100%; min-height: 100px; border-left: 1px solid #840B49; }

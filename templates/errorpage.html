@@ -6,7 +6,7 @@
     <h2>Chyba {{error}}</h2>
     {% if error == 403 %}
         <p>Bohužel nemáte přístup na tuto stránku.
-        {% if not g.user.guest %}
+        {% if not g.user %}
             <p>Možná se musíte <a href="{{url_for('login')}}">přihlásit</a>?
         {% endif %}
     {% elif error == 404 %}

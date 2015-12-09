@@ -462,7 +462,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             db.session.commit()
             g.reporting_messages.append("Nový příspěvek od *{}* do *{}*: {}".format(
                 post.author.name, post.thread.name, BASE_URL+post.url))
-            return redirect(thread.url+"#latest") # TODO id
+            return redirect(thread.url+"#post-latest") # TODO id
     
     if g.user:
         thread_read = db.session.query(db.ThreadRead).filter(db.ThreadRead.user==g.user, db.ThreadRead.thread==thread).scalar()
