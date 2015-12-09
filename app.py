@@ -178,6 +178,21 @@ class TaskForm(Form):
     text = TextField('Text', [validators.required()])
     user_id = SelectField('Uživatel', coerce=int)
     submit = SubmitField("Zadat")
+    
+@app.errorhandler(404)
+def page_not_found(e):
+    if not request.path.startswith("/static"):
+        return render_template('errorpage.html', error=404), 404
+    else:
+        return "404", 404 # we don't have templates
+
+@app.errorhandler(403)
+def page_not_found(e):
+    return render_template('errorpage.html', error=403), 403
+
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('errorpage.html', error=500), 500
 
 @app.route("/", methods="GET POST".split())
 def index():
