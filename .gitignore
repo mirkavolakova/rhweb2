@@ -1,1 +1,5 @@
 *~
+config.py
+*.log
+*.pyc
+env
