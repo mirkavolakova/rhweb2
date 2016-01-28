@@ -170,12 +170,12 @@ a.permalink:hover {text-decoration: underline;}
 .fail {color: #ff8787;}
 
 .card {margin: auto; margin-top: 32px; width: 90%; max-width: 600px; min-height: 200px;
-    border: 2px solid #ababab; border-radius: 8px;
-    padding: 12px; box-shadow:  0 0 1em #333333; background: #eee; color: black;}
+    border: 2px solid #840B49; border-radius: 8px;
+    padding: 12px; box-shadow:  0 0 1em #333;  color: white; background: #840B49 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACBAMAAACAmBAXAAAAB3RJTUUH4AEcDxIZ6vzvmwAAAAlwSFlzAAALEgAACxIB0t1+/AAAAARnQU1BAACxjwv8YQUAAAAGUExURfi/JAAAAOFhhRcAAAABdFJOUwBA5thmAAAADElEQVR42mMQYGAEAAA1ABICz6RDAAAAAElFTkSuQmCC');}
 .card h2 {background: inherit;}
 .card a {color: #840B49;}
 .card-image {width: 250px; height: 250px; border: 2px solid #840B49; border-radius: 8px;
-    float: left; margin-right: 12px; text-align: center;
+    float: left; margin-right: 12px; text-align: center; background: black;
     position: relative;}
 .card-edit {float: right;}
 .card-user {display: inline-block;} 
