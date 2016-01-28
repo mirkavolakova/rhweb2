@@ -1,9 +1,20 @@
 * {box-sizing: content-box;} /* border-box */
 
+@font-face {
+  font-family: "Rockwell";
+  src:  local("Rockwell"), /* Prefer a locally installed version of the font. */
+        url("/static/rockwell.ttf");
+}
+@font-face {
+  font-family: "Myriad Pro";
+  src:  local("Myriad Pro"), /* Prefer a locally installed version of the font. */
+        url("/static/myriad.ttf");
+}
+
 .clear {clear: both;}
 
 body {background: #111; color: white; 
-    font-family: 'Ubuntu', sans-serif;  margin: 0; padding: 0; padding-bottom: 32px;}
+    font-family: "Myriad Pro", "Ubuntu", sans-serif;  margin: 0; padding: 0; padding-bottom: 32px;}
     
 .container {width: 75%; margin: auto; padding: 8px; padding-bottom: 16px;
     margin-top: 28px;}
@@ -13,6 +24,7 @@ body {background: #111; color: white;
 .logolink {display: block; text-decoration: none;}
 .inner {display: inline-block; margin: auto; max-width: 100%;}
 .rhlogo { margin-right: 8px; width: 80px; height: 80px;}
+.rhtitle { font-family: "Rockwell", "Courier New"; text-transform: uppercase; }
 .logo .rhlogo {vertical-align:auto;}
 .rhlogotext {width: 420px; max-width: 100%;}
 
@@ -37,7 +49,7 @@ input.delete-button {box-shadow: inset -2px -2px 6px 0px #a00, 0 0 4px #111; col
 a {color: rgb(255, 151, 204); transition: 0.4s ease-out;}
 a:hover {color: rgb(255, 202, 229);  transition: 0.1s ease;}
 
-.topbar { width: auto; position: fixed; top: 0; background: #840B49; width: 100%;
+.topbar { width: auto; position: fixed; top: 0; background: #420524; width: 100%;
     border-bottom: 1px solid #33071f; z-index: 10;}
 .topbar-contents { padding: 4px 32px 4px 32px; }
 .topbar a {text-decoration: none; color: rgb(255, 202, 229);}
@@ -87,7 +99,7 @@ h1 a:first-child {font-weight: bold;}
 .small-logo {vertical-align: middle;}
 .small-rlogo img {height: 26px; width: auto; vertical-align: middle;  }
 
-h2 {font-size: 26px; margin: 2px 0px 2px 0px; background: #840B49 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACBAMAAACAmBAXAAAAB3RJTUUH4AEcDxIZ6vzvmwAAAAlwSFlzAAALEgAACxIB0t1+/AAAAARnQU1BAACxjwv8YQUAAAAGUExURfi/JAAAAOFhhRcAAAABdFJOUwBA5thmAAAADElEQVR42mMQYGAEAAA1ABICz6RDAAAAAElFTkSuQmCC');
+h2 {font-size: 26px; margin: 2px 0px 2px 0px; background: #420524;
     border-bottom: 2px solid #840B49; border-left: 2px solid #840B49; border-radius: 0 0 0 8px; padding: 4px 4px 2px 6px;
     /*background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #1a0210 100%);*/}
 h2 > a {color: white; text-decoration: none;}
@@ -99,12 +111,11 @@ h2 > a:hover {text-decoration: underline;}
     border-bottom: 1px solid #333333; padding-bottom: 6px;}
     
 .threads {margin-bottom:48px;}
-.row {border-bottom: 1px solid rgb(81, 6, 44); display: block; clear: both; padding: 3px;
-    transition: 0.2s ease-out;}
+.row {border-bottom: 1px solid rgb(81, 6, 44); display: block; clear: both; padding: 3px;}
 .morerow {text-align: center; cursor: pointer; width: 85%; margin: auto;}
 .row-pinned { border-left: 32px solid #840B49;
     /*background: linear-gradient(to right, rgb(246, 246, 195) 0%, rgba(255, 255, 255, 0) 15%);*/ }
-.row:hover {background: #840B49; transition: 0s ease 0s; border-bottom: 1px solid rgb(224, 17, 123);}
+.row:hover {background: #840B49; border-bottom: 1px solid rgb(224, 17, 123);}
 .row-name {font-size: 24px;}
 .row-data {float: right; text-align: right; }
 .row-user-groups {font-size: 12px;}
@@ -145,7 +156,7 @@ hr {border: 1px solid #840B49; margin: 32px 0 32px 0;}
 .post-author-posts {font-size: smaller; margin-bottom: 3px;}
 
 .post-contents {margin-left: 150px;  height: 100%; min-height: 100px; border-left: 1px solid #840B49; }
-.post-data {border: 1px solid #840B49; border-left: 0; padding: 2px 6px 2px 2px; border-radius: 0 8px 8px 0;  width: 100%; text-align: right; font-size: smaller; background: #840B49 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACBAMAAACAmBAXAAAAB3RJTUUH4AEcDxIZ6vzvmwAAAAlwSFlzAAALEgAACxIB0t1+/AAAAARnQU1BAACxjwv8YQUAAAAGUExURfi/JAAAAOFhhRcAAAABdFJOUwBA5thmAAAADElEQVR42mMQYGAEAAA1ABICz6RDAAAAAElFTkSuQmCC');}
+.post-data {border: 1px solid #840B49; border-left: 0; padding: 2px 6px 2px 2px; border-radius: 0 8px 8px 0;  width: 100%; text-align: right; font-size: smaller; background: #420524;}
 .post-text {padding: 4px 4px 4px 12px;}
 .post-text p {text-indent: 4%;}
 .post-text textarea {width: 95%; min-height: 100px; border: none; font-family: 'Ubuntu', sans-serif;
@@ -171,7 +182,7 @@ a.permalink:hover {text-decoration: underline;}
 
 .card {margin: auto; margin-top: 32px; width: 90%; max-width: 600px; min-height: 200px;
     border: 2px solid #840B49; border-radius: 8px;
-    padding: 12px; box-shadow:  0 0 1em #333;  color: white; background: #840B49 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACBAMAAACAmBAXAAAAB3RJTUUH4AEcDxIZ6vzvmwAAAAlwSFlzAAALEgAACxIB0t1+/AAAAARnQU1BAACxjwv8YQUAAAAGUExURfi/JAAAAOFhhRcAAAABdFJOUwBA5thmAAAADElEQVR42mMQYGAEAAA1ABICz6RDAAAAAElFTkSuQmCC');}
+    padding: 12px; box-shadow:  0 0 1em #333;  color: white; background: #420524;}
 .card h2 {background: inherit;}
 .card a {color: #840B49;}
 .card-image {width: 250px; height: 250px; border: 2px solid #840B49; border-radius: 8px;
