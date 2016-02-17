@@ -4,6 +4,7 @@ from __future__ import absolute_import, unicode_literals, print_function
 
 import os
 import time
+import re
 
 import db
 from sqlalchemy import or_, and_, not_, asc, desc, func
@@ -87,6 +88,14 @@ def clean(value):
         return cleaner.clean_html(value)
     except ParserError:
         return ""
+    
+
+@app.template_filter('bbcode')
+def bbcode(text):
+    text = re.sub("\[quote\]", "<blockquote><p>", text)
+    text = re.sub("\[quote=(\w*)\]", "<blockquote><div class='quoting'>\\1</div><p>", text)
+    text = re.sub("\[\/quote\]", "</blockquote>", text)
+    return text
 
 @app.before_request
 def before_request():
@@ -193,6 +202,10 @@ def page_not_found(e):
 @app.errorhandler(500)
 def page_not_found(e):
     return render_template('errorpage.html', error=500), 500
+    
+@app.errorhandler(400)
+def page_not_found(e):
+    return render_template('errorpage.html', error=400), 400
 
 @app.route("/", methods="GET POST".split())
 def index():
@@ -449,10 +462,25 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     if not thread: abort(404)
     if thread.forum.category and thread.forum.category.group and thread.forum.category.group not in g.user.groups: abort(403)
     if thread.forum.trash and not g.user.admin: abort(403)
+    reply_post = None
+    if "reply" in request.args:
+        try:
+            reply_post_id = int(request.args["reply"])
+        except ValueError:
+            abort(400)
+        reply_post = db.session.query(db.Post).get(reply_post_id)
+        if reply_post_id and not reply_post:
+            abort(404)
+        if reply_post and reply_post.thread != thread:
+            abort(400)
+    
     posts = thread.posts.filter(db.Post.deleted==False)
     form = None
     if not thread.forum.trash and not (thread.locked and not g.user.admin):
-        form = PostForm(request.form)
+        text = ""
+        if reply_post:
+            text = "[quote={}]{}[/quote]\n".format(reply_post.author.login, reply_post.text)
+        form = PostForm(request.form, text=text)
         if g.user and request.method == 'POST' and form.validate():
             now = datetime.now()
             post = db.Post(thread=thread, author=g.user, timestamp=now,
@@ -488,7 +516,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             print(ex)
             doku_error = ex
     
-    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), last_read_timestamp=last_read_timestamp, article=article, article_revisions=article_revisions, article_info=article_info, doku_error=doku_error)
+    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), last_read_timestamp=last_read_timestamp, article=article, article_revisions=article_revisions, article_info=article_info, doku_error=doku_error, reply_post=reply_post)
 
 @app.route("/<int:forum_id>/<int:topic_id>/set", methods="POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/set", methods="POST".split())
@@ -526,7 +554,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     
     if post == posts[0] and g.user.admin:
         edit_thread = True
-        form = EditThreadForm(request.form, text=post.text, name=thread.name, forum_id=thread.forum_id)
+        form = EditThreadForm(request.form, text=post.text, name=thread.name, forum_id=thread.forum_id, wiki_article=thread.wiki_article)
         forums = db.session.query(db.Forum).outerjoin(db.Category).order_by(db.Category.position, db.Forum.position).all()
         form.forum_id.choices = [(f.id, f.name) for f in forums]
     else:

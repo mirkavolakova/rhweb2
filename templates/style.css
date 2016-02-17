@@ -46,7 +46,8 @@ input[type="submit"]:focus, select:focus {  box-shadow: inset -0px -0px 6px 0px 
     border-color: rgb(224, 17, 123);}
 input.delete-button {box-shadow: inset -2px -2px 6px 0px #a00, 0 0 4px #111; color: #fee; }
 
-a {color: rgb(255, 151, 204); transition: 0.4s ease-out;}
+a {color: rgb(255, 151, 204); transition: 0.4s ease-out;
+    text-decoration: underline; cursor: pointer;}
 a:hover {color: rgb(255, 202, 229);  transition: 0.1s ease;}
 
 .topbar { width: auto; position: fixed; top: 0; background: #420524; width: 100%;
@@ -60,7 +61,8 @@ a:hover {color: rgb(255, 202, 229);  transition: 0.1s ease;}
 .topbar-logo {height: 18px; width: auto; vertical-align: top;}
 
 .flash {border: 1px solid rgb(197, 188, 16); background: rgb(248, 241, 190);
-    border-radius:8px; padding: 8px; margin: 6px 12px 0px 12px; color: black;}
+    border-radius:8px; padding: 8px; margin: 6px 12px 0px 12px; color: black;
+    margin-bottom: 24px;}
 
 h1 {font-weight: normal; margin: 0; margin-bottom: 6px;}
 h1 a:first-child {font-weight: bold;}
@@ -158,11 +160,18 @@ hr {border: 1px solid #840B49; margin: 32px 0 32px 0;}
 .post-contents {margin-left: 150px;  height: 100%; min-height: 100px; border-left: 1px solid #840B49; }
 .post-data {border: 1px solid #840B49; border-left: 0; padding: 2px 6px 2px 2px; border-radius: 0 8px 8px 0;  width: 100%; text-align: right; font-size: smaller; background: #420524;}
 .post-text {padding: 4px 4px 4px 12px;}
-.post-text p {text-indent: 4%;}
-.post-text textarea {width: 95%; min-height: 100px; border: none; font-family: 'Ubuntu', sans-serif;
+.post-text p {text-indent: 12px; padding-left: 4px;}
+.post-text textarea {width: 95%; min-height: 250px; border: none; font-family: 'Ubuntu', sans-serif;
     background: black; color: white; box-shadow: inset 0 0 6px #333333; border-radius: 1em; padding:0.5em;
     border: 1px solid #840B49; }
 .post-text textarea:focus {box-shadow: inset 0 0 6px #40400e;}
+
+blockquote {border: 1px solid #840B49; border-width: 0 0 0px 1px; margin-left: 12px; padding-left: 12px; }
+blockquote .quoting {text-align: left; font-style: italic;
+    border: 1px solid #840B49; border-width: 1px 1px 1px 0; border-radius: 0 8px 8px 0;
+    margin-bottom: 6px; background: #420524;
+    margin-left: -12px; padding-left: 12px; }
+
 .new-post-controls {text-align: center;}
 .post-edited {font-size: smaller; text-align: right; font-style: italic;
     /*position: absolute; right: 0; bottom: 0;*/}
@@ -184,7 +193,7 @@ a.permalink:hover {text-decoration: underline;}
     border: 2px solid #840B49; border-radius: 8px;
     padding: 12px; box-shadow:  0 0 1em #333;  color: white; background: #420524;}
 .card h2 {background: inherit;}
-.card a {color: #840B49;}
+/*.card a {color: #840B49;}*/
 .card-image {width: 250px; height: 250px; border: 2px solid #840B49; border-radius: 8px;
     float: left; margin-right: 12px; text-align: center; background: black;
     position: relative;}
