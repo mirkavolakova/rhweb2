@@ -92,8 +92,8 @@ def clean(value):
 
 @app.template_filter('bbcode')
 def bbcode(text):
-    text = re.sub("\[quote=(\w*)@(\d)*\]", "<blockquote><div class='quoting' data-id='\\2'>\\1</div><p>", text)
-    text = re.sub("\[quote=(\w*)\]", "<blockquote><div class='quoting'>\\1</div><p>", text)
+    text = re.sub("\[quote=([\w ]*)@(\d)*\]", "<blockquote><div class='quoting' data-id='\\2'>\\1</div><p>", text)
+    text = re.sub("\[quote=([\w ]*)\]", "<blockquote><div class='quoting'>\\1</div><p>", text)
     text = re.sub("\[quote\]", "<blockquote><p>", text)
     text = re.sub("\[\/quote\]", "</blockquote>", text)
     return text
