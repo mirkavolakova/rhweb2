@@ -92,8 +92,9 @@ def clean(value):
 
 @app.template_filter('bbcode')
 def bbcode(text):
-    text = re.sub("\[quote\]", "<blockquote><p>", text)
+    text = re.sub("\[quote=(\w*)@(\d)*\]", "<blockquote><div class='quoting' data-id='\\2'>\\1</div><p>", text)
     text = re.sub("\[quote=(\w*)\]", "<blockquote><div class='quoting'>\\1</div><p>", text)
+    text = re.sub("\[quote\]", "<blockquote><p>", text)
     text = re.sub("\[\/quote\]", "</blockquote>", text)
     return text
 
@@ -479,7 +480,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     if not thread.forum.trash and not (thread.locked and not g.user.admin):
         text = ""
         if reply_post:
-            text = "[quote={}]{}[/quote]\n".format(reply_post.author.login, reply_post.text)
+            text = "[quote={}@{}]{}[/quote]\n".format(reply_post.author.login, reply_post.id, reply_post.text)
         form = PostForm(request.form, text=text)
         if g.user and request.method == 'POST' and form.validate():
             now = datetime.now()
