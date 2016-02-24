@@ -3,18 +3,18 @@
 @font-face {
   font-family: "Rockwell";
   src:  local("Rockwell"), /* Prefer a locally installed version of the font. */
-        url("/static/rockwell.ttf");
+        url("/static/Rockwell.woff");
 }
 @font-face {
   font-family: "Myriad Pro";
   src:  local("Myriad Pro"), /* Prefer a locally installed version of the font. */
-        url("/static/myriad.ttf");
+        url("/static/MyriadPro-Regular.woff");
 }
 
 .clear {clear: both;}
 
 body {background: #111; color: white; 
-    font-family: "Myriad Pro", "Ubuntu", sans-serif;  margin: 0; padding: 0; padding-bottom: 32px;}
+    font-family: "Ubuntu", sans-serif; margin: 0; padding: 0; padding-bottom: 32px;}
     
 .container {width: 75%; margin: auto; padding: 8px; padding-bottom: 16px;
     margin-top: 28px;}
