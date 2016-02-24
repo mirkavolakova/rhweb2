@@ -121,6 +121,12 @@ class User(Base):
     
     def set_password(self, password):
         self.pass_ = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    
+    
+    def __nonzero__(self): # this is fine.
+        if not self.in_group("user"):
+            return False
+        return True
 
 class Guest(User):
     def __nonzero__(self): # hi yes I'm a responsible programmer
@@ -276,6 +282,12 @@ if __name__ == "__main__":
         for thread in session.query(Thread):
             if thread.pinned == None:
                 thread.pinned = False
+        session.commit()
+    if raw_input('make everybody user?') == 'y':
+        g = Group(name="user")
+        session.add(g)
+        for user in session.query(User):
+            user.groups.append(g)
         session.commit()
     #if raw_input('mark everything as read for everybody? ') == 'y':
     #    for user in session.query(User):
