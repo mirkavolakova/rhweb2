@@ -39,10 +39,12 @@
                         Poslední revize {{article_info['author']}}, {{article_info['lastModified']}}
                     </div>
                 {% endif %}
-                <div>
-                    <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}&do=edit">Editovat</a> &bull;
-                    <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}&do=revisions">Historie</a>
-                </div>
+                {% if g.user.admin or (thread.wiki_article.startswith("encyklopedie") and g.user) %}
+                    <div>
+                        <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}&do=edit">Editovat</a> &bull;
+                        <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}&do=revisions">Historie</a>
+                    </div>
+                {% endif %}
             </div>
             <div class="thread-article-text">
                 {% if article %}
