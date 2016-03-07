@@ -400,8 +400,8 @@ def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
         if form.username.data:
-            abort(400)
-        if db.session.query(db.User).filter(db.User.bbq == form.login.data.lower()).scalar():
+            return "OK"
+        if db.session.query(db.User).filter(db.User.login == form.bbq.data.lower()).scalar():
             flash("Tento login je už zabraný, vyberte si prosím jiný.")
         else:
             user = db.User(login=form.bbq.data.lower(), fullname=form.fullname.data, email=form.email.data, timestamp=datetime.now(), laststamp=datetime.now())
