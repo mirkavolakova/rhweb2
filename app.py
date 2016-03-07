@@ -380,7 +380,8 @@ def login():
     return render_template("login.html", form=form, failed=failed)
 
 class RegisterForm(Form):
-    login = TextField('Login', [validators.required()])
+    username = TextField('Nevyplňovat')
+    bbq = TextField('Login', [validators.required()])
     fullname = TextField('Jméno', [validators.required()])
     password = PasswordField('Heslo', [
         validators.Required(),
@@ -398,10 +399,12 @@ def register():
         return redirect(url_for("index"))
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
-        if db.session.query(db.User).filter(db.User.login == form.login.data.lower()).scalar():
+        if form.username.data:
+            abort(400)
+        if db.session.query(db.User).filter(db.User.bbq == form.login.data.lower()).scalar():
             flash("Tento login je už zabraný, vyberte si prosím jiný.")
         else:
-            user = db.User(login=form.login.data.lower(), fullname=form.fullname.data, email=form.email.data, timestamp=datetime.now(), laststamp=datetime.now())
+            user = db.User(login=form.bbq.data.lower(), fullname=form.fullname.data, email=form.email.data, timestamp=datetime.now(), laststamp=datetime.now())
             user.set_password(form.password.data)
             user_group = db.session.query(db.Group).filter(db.Group.name=="user").scalar()
             if user_group:
