@@ -27,9 +27,7 @@
                 <div class="row-data">
                     <div class="row-total">
                         {{ txt_posts(thread.num_posts) }}
-                        {% if g.user.unread(thread) %}
-                            <a class="new-icon" href="{{g.user.unread(thread).url}}">NEW</a>
-                        {% endif %}
+                        {{ new_icon(thread) }}
                     </div>
                     {% if thread.num_posts %}
                         <div class="row-last" title="{{thread.last_post.timestamp|datetime}}">{{ago(thread.laststamp)}} <a href="{{thread.last_post.url}}"> od <i>{{ thread.last_post.author.name }}</i></a></div>

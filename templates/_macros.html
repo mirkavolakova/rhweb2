@@ -119,3 +119,13 @@
         </div>
     {% endfor %}
 {% endmacro %}
+{% macro new_icon(thread) %}
+    {% if g.user.unread(thread) %}
+        <a class="new-icon" href="{{g.user.unread(thread).url}}">
+            {% if g.user.num_unread(thread) > 1 %}
+                {{ g.user.num_unread(thread) }}
+            {% endif %}
+            NEW
+        </a>
+    {% endif %}
+{% endmacro %}
