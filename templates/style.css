@@ -152,10 +152,11 @@ hr {border: 1px solid #840B49; margin: 32px 0 32px 0;}
 
 .post-sidebar {height: 100%; min-height: 100px; display:inline-block; width: 150px; border-right: 1px solid #840B49;
     float: left; background: none; text-align: center;  padding-bottom: 6px;}
-.post-author {font-weight: bold; margin-bottom: 4px;}
+.post-author {font-weight: bold; margin-bottom: 0px;}
 .post-author a {text-decoration: none;}
 .post-author a:hover {text-decoration: underline;}
-.post-author-posts {font-size: smaller; margin-bottom: 3px;}
+.post-author-title {font-size: smaller; margin-bottom: 4px;}
+.post-author-posts {font-size: x-small; margin-bottom: 3px;}
 
 .post-contents {margin-left: 150px;  height: 100%; min-height: 100px; border-left: 1px solid #840B49; }
 .post-data {border: 1px solid #840B49; border-left: 0; padding: 2px 6px 2px 2px; border-radius: 0 8px 8px 0;  width: 100%; text-align: right; font-size: smaller; background: #420524;}
@@ -198,8 +199,9 @@ a.permalink:hover {text-decoration: underline;}
     float: left; margin-right: 12px; text-align: center; background: black;
     position: relative;}
 .card-edit {float: right;}
-.card-user {display: inline-block;} 
+.card-user {/*display: inline-block;*/ overflow: auto;} 
 .card-threads {clear: both;}
+.card dt {font-weight: bold;}
 
 .avatar {
     display: block; max-width: 200px; max-height: 200px;

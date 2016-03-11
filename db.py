@@ -73,6 +73,14 @@ class User(Base):
     def url(self):
         return url_for('user', user_id=self.id, name=unidecode(self.login))
     
+    @property
+    def title(self):
+        if self.in_group("retroherna"):
+            return "★ RetroHerna"
+        elif self.in_group("extern"):
+            return "☆ Externista"
+        return ""
+    
     def num_unread(self, thread):
         last_read = self.unread(thread)
         if not last_read: return 0

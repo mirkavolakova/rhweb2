@@ -18,13 +18,24 @@
                 </div>
                 <div class="card-user">
                         <h2>{{user.name}}</h2>
+                        {{ user.title }}
                         <dl>
                             <dt>Email</dt>
-                            <dd>{{ user.email.replace('@', ' zavináč ') if user.email else "-" }}<dd>
+                            <dd>{{ user.email.replace('@', ' zavináč ') if user.email else "-" }}</dd>
                             <dt>Homepage</dt>
-                            <dd>{{ user.homepage or "-" }}<dd>
+                            <dd>{{ user.homepage or "-" }}</dd>
+                            <dt>Registrace</dt>
+                            <dd>{{ ago(user.timestamp) if user.timestamp else "-" }}</dd>
                             <dt>Poslední návštěva</dt>
-                            <dd>{{ ago(user.laststamp) if user.laststamp else "-" }}<dd>
+                            <dd>{{ ago(user.laststamp) if user.laststamp else "-" }}</dd>
+                            {% if g.user.admin %}
+                                <dt><i>Skupiny (vidí jen admini):</i></t>
+                                <dd>
+                                    {% for group in user.groups %}
+                                        &bull; {{group.name}}
+                                    {% endfor %}
+                                </dd>
+                            {% endif %}
                         </dl>
                 </div>
         {% else %}

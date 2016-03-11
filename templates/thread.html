@@ -69,7 +69,15 @@
                 {% endif %}
                 <div class="post-sidebar">
                     <div class="post-author"><a href="{{post.author.url}}">{{ post.author.name }}</a></div>
-                    <div class="post-author-posts">{{ txt_posts(post.author.num_posts) }}</div>
+                    <div class="post-author-title">{{ post.author.title }}</div>
+                    <div class="post-author-posts">
+                        {{ txt_posts(post.author.num_posts) }}
+                        <!--
+                            {% if post.author.timestamp %}
+                                &bull; {{ post.author.timestamp.year }}
+                            {% endif %}
+                        -->
+                    </div>
                     <div class="post-avatar">
                         {% if post.author.avatar_url %}
                             <img src="{{post.author.avatar_url}}" class="avatar">
