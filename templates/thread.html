@@ -92,7 +92,7 @@
                     </div>
                     <div class="post-text">
                         {% if post != edit_post %}
-                            <p>{{ post.text | replace("<3", "&lt;3") | urlize | bbcode | clean | safe | replace("\n", "\n<p>"|safe) | safe  }}
+                            <p>{{ post.text | replace("<3", "&lt;3") | bbcode | clean | safe | urlize | replace("\n", "\n<p>"|safe) | safe  }}
                             {% if post.editstamp %}
                                 <div class="post-edited">
                                     Naposledy upraveno {% if (post.editor != post.author) and post.editor.admin %}moderátorem{% endif %} {{ ago(post.editstamp) }} {% if g.user.admin %}({{post.editor.name}}){% endif %}
