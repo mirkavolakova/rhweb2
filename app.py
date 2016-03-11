@@ -222,15 +222,15 @@ def index():
     trash = db.session.query(db.Forum).filter(db.Forum.trash == True).scalar()
     if uncategorized_fora:
         categories.append(None)
-    latest_posts = db.session.query(db.Post).join(db.Thread).join(db.Forum).outerjoin(db.Category)\
+    latest_threads = db.session.query(db.Thread).join(db.Forum).outerjoin(db.Category)\
         .filter(or_(db.Forum.category_id==None, db.Category.group_id.in_([None, 0]), db.Category.group_id.in_(group.id for group in g.user.groups)))\
         .filter(db.Forum.trash == False) \
-        .filter(db.Post.deleted==False).order_by(db.Post.timestamp.desc())[0:10]
+        .order_by(db.Thread.laststamp.desc())[0:10]
     
     tasks = db.session.query(db.Task).filter(db.Task.user_id.in_([g.user.id, None, 0])).all()
     sort_tasks(tasks)
     
-    return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_posts=latest_posts, trash=trash, form=form, tasks=tasks)
+    return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_threads=latest_threads, trash=trash, form=form, tasks=tasks)
 
 @app.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
 @app.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())

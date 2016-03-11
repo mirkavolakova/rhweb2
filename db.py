@@ -73,6 +73,11 @@ class User(Base):
     def url(self):
         return url_for('user', user_id=self.id, name=unidecode(self.login))
     
+    def num_unread(self, thread):
+        last_read = self.unread(thread)
+        if not last_read: return 0
+        return session.query(Post).filter(Post.thread == thread, Post.deleted == False, Post.timestamp > last_read.timestamp).count()
+    
     def unread(self, thread):
         if not self.id: return False
         thread_read = session.query(ThreadRead).filter(ThreadRead.user==self, ThreadRead.thread==thread).scalar()

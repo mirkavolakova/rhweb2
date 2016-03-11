@@ -111,19 +111,24 @@
         </div>
     {% endif %}
     <hr>
-    {% if latest_posts %}
-        <h2>Nejnovější příspěvky</h2>
+    {% if latest_threads %}
+        <h2>Aktivní témata</h2>
         <div class="threads latest-posts">
-            {% for post in latest_posts %}
+            {% for thread in latest_threads %}
                 <div class="row">
                     <div class="row-data">
-                        {{ago(post.timestamp)}}
-                        {% if g.user.unread_post(post) %}
-                            <a class="new-icon" href="{{g.user.unread_post(post).url}}">NEW</a>
+                        {{ago(thread.laststamp)}}
+                        {% if g.user.unread(thread) %}
+                            <a class="new-icon" href="{{g.user.unread(thread).url}}">
+                                {% if g.user.num_unread(thread) > 1 %}
+                                    {{ g.user.num_unread(thread) }}
+                                {% endif %}
+                                NEW
+                            </a>
                         {% endif %}
                     </div>
-                    <a class="row-text" href="{{post.url}}">
-                        <div class="row-description">do <strong>{{post.thread.name}}</strong> od <i>{{post.author.name}}</i></span></div>
+                    <a class="row-text" href="{{thread.url}}">
+                        <div class="row-description">{{thread.forum.name}}: <strong>{{thread.name}}</strong></div>
                     </a>
                 </div>
             {% endfor %}
