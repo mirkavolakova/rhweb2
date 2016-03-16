@@ -81,6 +81,8 @@
                     <div class="post-avatar">
                         {% if post.author.avatar_url %}
                             <img src="{{post.author.avatar_url}}" class="avatar">
+                        {% else %}
+                            <img src="/static/img/rhunknown_alpha_75px.png" class="avatar">
                         {% endif %}
                     </div>
                 </div>
