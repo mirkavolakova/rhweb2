@@ -151,6 +151,11 @@ class Group(Base):
     gid = Column(Integer, primary_key=True, nullable=False)
     name = Column(Unicode(255))
     
+    symbol = Column(Unicode(16))
+    title = Column(Unicode(255))
+    rank = Column(Integer, default=0)
+    display = Column(Boolean)
+    
     @property
     def id(self):
         return self.gid
