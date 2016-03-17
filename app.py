@@ -113,6 +113,7 @@ def before_request():
     g.now = datetime.now()
     g.yesterday = g.now - timedelta(days=1)
     g.tomorrow = g.now + timedelta(days=1)
+    g.production = app.config['PRODUCTION']
 
 
 def telegram_post(method, **params):
@@ -669,6 +670,11 @@ def groups(edit_group_id=None):
     groups = db.session.query(db.Group).all()
     edit_group = None
     form = None
+    if edit_group_id == 0 and request.method == 'POST':
+        group = db.Group(name="")
+        db.session.add(group)
+        db.session.commit()
+        return redirect(url_for('groups', edit_group_id=group.id))
     if edit_group_id:
         edit_group = db.session.query(db.Group).get(edit_group_id)
         form = GroupForm(request.form, edit_group)

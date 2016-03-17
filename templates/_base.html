@@ -46,7 +46,11 @@
         <div class="topbar-contents">
             <div class="topbar-links">
                 <img src="http://retroherna.cz/static/logo-white.png" class="topbar-logo">
-                <span class="rhtitle">RetroHerna</span>
+                {% if g.production %}
+                    <span class="rhtitle">RetroHerna</span>
+                {% else %}
+                    <span class="rhtitle" style="color: red;">DerpoHerpa</span>
+                {% endif %}
                 &bull; <a href="http://retroherna.cz/">Web</a>
                 {% if g.user.in_group("retroherna") %}
                     &bull; <a href="http://retroherna.cz/wiki/">Wiki</a>

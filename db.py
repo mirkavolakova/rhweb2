@@ -75,12 +75,15 @@ class User(Base):
         return url_for('user', user_id=self.id, name=unidecode(self.login))
     
     @property
+    def representative_group(self):
+        return max(self.groups, key=lambda group: group.rank if group.display else -1)
+    
+    @property
     def title(self):
-        if self.in_group("retroherna"):
-            return "★ RetroHerna"
-        elif self.in_group("extern"):
-            return "☆ Externista"
-        return ""
+        group = self.representative_group
+        if not group: return ""
+        if not group.display: return ""
+        return "{} {}".format(group.symbol or "", group.title or "").strip()
     
     def num_unread(self, thread):
         last_read = self.unread(thread)
@@ -178,6 +181,13 @@ class Category(Base):
     @property
     def url(self):
         return url_for('index', _anchor="category-{}".format(self.id))
+    
+    @property
+    def symbol_name(self):
+        if self.group and self.group.display:
+            return "{} {}".format(self.group.symbol, self.name)
+        else:
+            return self.name
 
 class Forum(Base):
     __tablename__ = 'fora'
@@ -204,6 +214,12 @@ class Forum(Base):
     def last_post(self):
         return session.query(Post).join(Post.thread).filter(Thread.forum == self).order_by(Post.timestamp.desc()).first()
     
+    @property
+    def symbol_name(self):
+        if self.category and self.category.group and self.category.group.display:
+            return "{} {}".format(self.category.group.symbol, self.name)
+        else:
+            return self.name
 
 class Thread(Base):
     __tablename__ = 'threads'
