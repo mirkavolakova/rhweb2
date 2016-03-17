@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+
+{% block title %}Skupiny{% endblock %}
+
+{% block content %}
+    <h2>Skupiny</h2>
+    <ul>
+        {% for group in groups %}
+            {% if group != edit_group %}
+                <li><a href="{{ url_for('groups', group.id) }}">edit</a>
+                    {{ "☑" if group.display else "☐" }}
+                    rank {{group.rank}}, {{group.name}} - {{group.symbol}} {{group.title}}
+            {% else %}
+                <li>
+                    <form method="POST">
+                        {% for field in form %}
+                            {{ field.label }}:
+                            {{ field }}
+                            <br>
+                        {% endfor %}
+                    </form>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    {% if not edit_group %}
+        <form method="POST" action="{{ url_for('groups', 0) }}">
+            <input type="submit" value="Založit novou skupinu">
+        </form>
+    {% endif %}
+{% endblock %}
