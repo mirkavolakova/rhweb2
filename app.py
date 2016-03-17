@@ -17,7 +17,7 @@ from lxml.etree import ParserError
 
 from werkzeug import secure_filename
 from flask import Flask, render_template, request, flash, redirect, session, abort, url_for, make_response, g
-from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, HiddenField, SubmitField, validators, ValidationError, widgets
+from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, IntegerField, HiddenField, SubmitField, validators, ValidationError, widgets
 from wtforms.fields.html5 import DateTimeLocalField
 
 import requests
@@ -652,6 +652,37 @@ def edit_user(user_id, name=None):
         return redirect(user.url)
     
     return render_template("user.html", user=user, edit=True, form=form)
+
+class GroupForm(Form):
+    name = TextField('Jméno', [validators.required()])
+    symbol = TextField('Symbol')
+    title = TextField('Titul')
+    rank = IntegerField('Rank')
+    display = BooleanField('Zobrazovat')
+    submit = SubmitField('Uložit')
+    
+
+@app.route("/groups/", methods=["GET"])
+@app.route("/groups/<int:edit_group_id>/edit", methods=["GET", "POST"])
+def groups(edit_group_id=None):
+    if not g.user.admin: abort(403)
+    groups = db.session.query(db.Group).all()
+    edit_group = None
+    form = None
+    if edit_group_id:
+        edit_group = db.session.query(db.Group).get(edit_group_id)
+        form = GroupForm(request.form, edit_group)
+    if request.method == 'POST' and form.validate():
+        edit_group.name = form.name.data
+        edit_group.symbol = form.symbol.data
+        edit_group.title = form.title.data
+        edit_group.rank = form.rank.data
+        edit_group.display = form.display.data
+        db.session.commit()
+        flash("Skupina {} upravena.".format(edit_group.name))
+        return redirect(url_for('groups'))
+    
+    return render_template("groups.html", groups=groups, edit_group=edit_group, form=form)
 
 @app.route("/tasks", methods="GET POST".split())
 @app.route("/tasks/<int:task_id>", methods=["GET", "POST"])
