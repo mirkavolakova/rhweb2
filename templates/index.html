@@ -65,7 +65,9 @@
                                 </div>
                             </div>
                             <a class="row-text" href="{{forum.url}}">
-                                <div class="row-name">{{forum.name}}</div>
+                                <div class="row-name">
+                                    <strong>{{forum.name}}</strong>
+                                </div>
                                 <div class="row-description">{{forum.description}}</div>
                             </a>
                         </div>
@@ -119,7 +121,7 @@
                         {{ new_icon(thread) }}
                     </div>
                     <a class="row-text" href="{{thread.url}}">
-                        <div class="row-description">{{thread.forum.name}}: <strong>{{thread.name}}</strong></div>
+                        <div class="row-single">{{thread.forum.name}}: <strong>{{thread.name}}</strong></div>
                     </a>
                 </div>
             {% endfor %}

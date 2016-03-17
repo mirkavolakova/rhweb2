@@ -106,6 +106,7 @@ h2 {font-size: 26px; margin: 2px 0px 2px 0px; background: #420524;
     /*background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #1a0210 100%);*/}
 h2 > a {color: white; text-decoration: none;}
 h2 > a:hover {text-decoration: underline;}
+h2#reply {margin-top: 20px;}
 .category-group {font-size: 14px; font-weight: normal;}
 
 .fora {margin-bottom: 16px;}
@@ -118,8 +119,9 @@ h2 > a:hover {text-decoration: underline;}
 .row-pinned { border-left: 32px solid #840B49;
     /*background: linear-gradient(to right, rgb(246, 246, 195) 0%, rgba(255, 255, 255, 0) 15%);*/ }
 .row:hover {background: #840B49; border-bottom: 1px solid rgb(224, 17, 123);}
-.row-name {font-size: 24px;}
-.row-data {float: right; text-align: right; }
+.row-name {font-size: 22px;}
+.row-description {font-size: 14px;}
+.row-data {float: right; text-align: right; font-size: 14px; }
 .row-user-groups {font-size: 12px;}
 .rownew { background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(255, 255, 255, 0) 48px); }
 .rownew:hover {background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(186, 186, 255, 0.5) 48px); transition-delay: 0.1s;}

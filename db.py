@@ -189,7 +189,10 @@ class Forum(Base):
     
     @property
     def url(self):
-        return url_for('forum', forum_id=self.id, forum_identifier=self.identifier)
+        if self.id:
+            return url_for('forum', forum_id=self.id, forum_identifier=self.identifier)
+        else:
+            return None
         
     @property
     def last_post(self):

@@ -7,10 +7,15 @@
 {% block content %}
     <div class="breadcrumbs">
         <a href="{{url_for('index')}}">RHForum</a>
-        » <a href="{{forum.category.url}}">{{forum.category.name}}</a>
+        »
+            {% if user %}
+                <a href="{{user.url}}">{{user.name}}</a>
+            {% else %}
+                <a href="{{forum.category.url}}">{{forum.category.name}}</a>
+            {% endif %}
         » 
     </div>
-    {% if g.user and g.user.admin %}
+    {% if forum.id and g.user and g.user.admin %}
         <div class="forum-admin">
             <a href="{{url_for('edit_forum', forum_id=forum.id)}}">Editovat fórum</a>
         </div>
@@ -19,7 +24,7 @@
         <a href="{{forum.url}}">{{forum.name}}</a></h1>
     </h2>
     <div class="forum-desc">
-        {{ forum.description }}
+        {{ forum.description or "" }}
     </div>
     <div class="threads">
         {% for thread in threads %}
@@ -34,7 +39,15 @@
                     {% endif %}
                 </div>
                 <a class="row-text" href="{{thread.url}}">
-                    <div class="row-name">{{thread.name}} <span class="author" href="#">{{thread.author.name}}</span></div>
+                    <div class="row-name">
+                        {% if thread.forum != forum %}
+                            {{thread.forum.name}}: 
+                        {% endif %}
+                        <strong>{{thread.name}}</strong>
+                        {% if not user %}
+                            <span class="author" href="#">{{thread.author.name}}</span>
+                        {% endif %}
+                    </div>
                     <div class="row-description">
                         {% if thread.description %}
                             {{thread.description}}

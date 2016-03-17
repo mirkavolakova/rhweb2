@@ -457,6 +457,22 @@ def forum(forum_id, forum_identifier=None):
             return redirect(thread.url)
     return render_template("forum.html", forum=forum, threads=threads, form=form)
 
+@app.route("/users/<int:user_id>/threads")
+@app.route("/users/<int:user_id>-<name>/threads")
+def user_threads(user_id, name=None):
+    user = db.session.query(db.User).get(user_id)
+    if not user: abort(404)
+    
+    forum = db.Forum(name="Témata od {}".format(user.name))
+    
+    threads = db.session.query(db.Thread).join(db.Forum)\
+        .filter(db.Forum.trash == False, db.Thread.author == user)\
+        .outerjoin(db.Category)\
+        .filter(or_(db.Forum.category_id==None, db.Category.group_id.in_([None, 0]), db.Category.group_id.in_(group.id for group in g.user.groups)))\
+        .filter(db.Forum.trash == False).order_by(db.Thread.laststamp.desc()).all()
+    
+    return render_template("forum.html", forum=forum, threads=threads, user=user)
+    
 
 # TODO <path:thread_identificator>
 @app.route("/<int:forum_id>/<int:topic_id>", methods="GET POST".split())
