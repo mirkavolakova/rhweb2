@@ -22,8 +22,10 @@
                         <dl>
                             <dt>Email</dt>
                             <dd>{{ user.email.replace('@', ' zavináč ') if user.email else "-" }}</dd>
-                            <dt>Homepage</dt>
-                            <dd>{{ user.homepage or "-" }}</dd>
+                            {% if user.homepage %}
+                                <dt>Homepage</dt>
+                                <dd><a href="{{user.homepage}}">{{ user.homepage }}</a></dd>
+                            {% endif %}
                             <dt>Registrace</dt>
                             <dd>{{ ago(user.timestamp) if user.timestamp else "-" }}</dd>
                             <dt>Poslední návštěva</dt>

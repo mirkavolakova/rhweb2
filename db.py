@@ -51,6 +51,7 @@ class User(Base):
     laststamp = Column(DateTime)
     profile = Column(UnicodeText, default='')
     
+    
     groups = relationship("Group", secondary='usergroup')
     
     @property
