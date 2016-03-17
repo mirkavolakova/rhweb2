@@ -2,6 +2,8 @@
 # coding: utf-8
 from __future__ import absolute_import, unicode_literals, print_function
 
+from io import open
+
 import os
 import time
 import re
@@ -100,8 +102,10 @@ def bbcode(text):
 
 @app.before_request
 def before_request():
-    if not hasattr(g, 'reporting_messages'):
-        g.reporting_messages = []
+    if not hasattr(g, 'telegram_messages'):
+        g.telegram_messages = []
+    if not hasattr(g, 'irc_messages'):
+        g.irc_messages = []
     if 'user_id' in session:
         g.user = db.session.query(db.User).get(session['user_id'])
         if not g.user:
@@ -125,11 +129,16 @@ def telegram_post(method, **params):
 
 @app.teardown_request
 def teardown_request(exception=None):
-    while g.reporting_messages:
-        message = g.reporting_messages.pop(0)
+    while g.telegram_messages:
+        message = g.telegram_messages.pop(0)
         if "TELEGRAM_TOKEN" in app.config:
             telegram_post("sendMessage", chat_id=app.config['TELEGRAM_CHAT_ID'], text=message,
                 parse_mode="Markdown", disable_web_page_preview=True)
+    while g.irc_messages:
+        message = g.irc_messages.pop(0)
+        if "IRC_IN" in app.config:
+            open(app.config['IRC_IN'], 'w').write(message + "\n")
+            
 
 @app.teardown_request
 def shutdown_session(exception=None):
@@ -413,7 +422,9 @@ def register():
             db.session.add(user)
             db.session.commit()
             
-            g.reporting_messages.append("Nová registrace: *{}* (login *{}*, email {}): {}".format(
+            g.telegram_messages.append("Nová registrace: *{}* (login *{}*, email {}): {}".format(
+                user.fullname, user.login, user.email, BASE_URL+user.url))
+            g.irc_messages.append("Nová registrace: \x0302{}\x03 (login \x0208{}\x03, email {}): {}".format(
                 user.fullname, user.login, user.email, BASE_URL+user.url))
             
             g.user = user
@@ -453,8 +464,11 @@ def forum(forum_id, forum_identifier=None):
                 text=form.text.data)
             db.session.add(post)
             db.session.commit()
-            g.reporting_messages.append("Nové téma od *{}*: *{}*: {}".format(
+            g.telegram_messages.append("Nové téma od *{}*: *{}*: {}".format(
                 thread.author.name, thread.name, BASE_URL+thread.short_url))
+            if (not forum.category) or (not forum.category.group): # TODO should may report user too 
+                g.irc_messages.append("Nové téma od \x0302{}\x03: \x0306{}\x03: {}".format(
+                    thread.author.name, thread.name, BASE_URL+thread.short_url))
             return redirect(thread.url)
     return render_template("forum.html", forum=forum, threads=threads, form=form)
 
@@ -509,8 +523,11 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             db.session.add(post)
             thread.laststamp = now
             db.session.commit()
-            g.reporting_messages.append("Nový příspěvek od *{}* do *{}*: {}".format(
+            g.telegram_messages.append("Nový příspěvek od *{}* do *{}*: {}".format(
                 post.author.name, post.thread.name, BASE_URL+post.short_url))
+            if (not thread.forum.category) or (not thread.forum.category.group): # TODO should may report user too 
+                g.irc_messages.append("Nový příspěvek od \x0302{}\x03 do \x0306{}\x03: {}".format(
+                    post.author.name, post.thread.name, BASE_URL+post.short_url))
             return redirect(thread.url+"#post-latest") # TODO id
     
     if g.user:
