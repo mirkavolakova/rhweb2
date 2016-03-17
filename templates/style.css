@@ -266,6 +266,11 @@ a.permalink:hover {text-decoration: underline;}
     .task-controls {width: 100px;}
     .post-sidebar {width: 125px;}
     .card-image {width: 150px; height: 150px;}
+    .row-total {display: none;}
+    .rhtitle {display: none;}
+    
+    .topbar {letter-spacing: -0.2px;}
+    
 }
 
 @media (max-width: 400px) {
