@@ -453,7 +453,7 @@ def forum(forum_id, forum_identifier=None):
             db.session.add(post)
             db.session.commit()
             g.reporting_messages.append("Nové téma od *{}*: *{}*: {}".format(
-                thread.author.name, thread.name, BASE_URL+thread.url))
+                thread.author.name, thread.name, BASE_URL+thread.short_url))
             return redirect(thread.url)
     return render_template("forum.html", forum=forum, threads=threads, form=form)
 
@@ -475,7 +475,7 @@ def user_threads(user_id, name=None):
     
 
 # TODO <path:thread_identificator>
-@app.route("/<int:forum_id>/<int:topic_id>", methods="GET POST".split())
+@app.route("/<int:forum_id>/<int:thread_id>", methods="GET POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>", methods="GET POST".split())
 def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     thread = db.session.query(db.Thread).get(thread_id)
@@ -509,7 +509,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             thread.laststamp = now
             db.session.commit()
             g.reporting_messages.append("Nový příspěvek od *{}* do *{}*: {}".format(
-                post.author.name, post.thread.name, BASE_URL+post.url))
+                post.author.name, post.thread.name, BASE_URL+post.short_url))
             return redirect(thread.url+"#post-latest") # TODO id
     
     if g.user:

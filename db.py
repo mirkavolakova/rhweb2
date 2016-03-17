@@ -231,6 +231,10 @@ class Thread(Base):
         return url_for('thread',
             forum_id=self.forum.id, forum_identifier=self.forum.identifier,
             thread_id=self.id, thread_identifier=url_friendly(self.name))
+            
+    @property
+    def short_url(self):
+        return url_for('thread', forum_id=self.forum.id, thread_id=self.id)
 
 
 class Post(Base):
@@ -255,6 +259,10 @@ class Post(Base):
     @property
     def url(self):
         return self.thread.url + "#post-{}".format(self.id)
+    
+    @property
+    def short_url(self):
+        return self.thread.short_url + "#post-{}".format(self.id)
     
     @property
     def current(self):
