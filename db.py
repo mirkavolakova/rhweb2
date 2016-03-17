@@ -159,6 +159,8 @@ class Group(Base):
     rank = Column(Integer, default=0)
     display = Column(Boolean)
     
+    users = relationship("User", secondary='usergroup')
+    
     @property
     def id(self):
         return self.gid
