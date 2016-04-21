@@ -109,6 +109,8 @@ h2 > a:hover {text-decoration: underline;}
 h2#reply {margin-top: 20px;}
 .category-group {font-size: 14px; font-weight: normal;}
 
+.forum-info {text-align: center; margin: 6px 10% 6px 10%;}
+
 .fora {margin-bottom: 16px;}
 .forum-desc {font-style: italic; margin-bottom: 2px; padding-left: 16px;
     border-bottom: 1px solid #333333; padding-bottom: 6px;}
@@ -214,6 +216,7 @@ a.permalink:hover {text-decoration: underline;}
     top: 50%; left: 50%; transform: translate(-50%, -50%);
 }
 
+.users { margin-bottom: 12px; }
 .users .avatar {
     max-height: 32px; display: inline-block;
 }

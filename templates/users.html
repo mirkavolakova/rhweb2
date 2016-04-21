@@ -29,8 +29,12 @@
                     <div class="row-description"></div>
                 </a>
             </div>
-        {% else %}
-            Ještě tu žádná témata nejsou.
         {% endfor %}
     </div>
+    
+    {% if g.user.admin %}
+        <div class="forum-controls">
+            <a href="{{url_for('groups')}}">Upravit skupiny</a>
+        </div>
+    {% endif %}
 {% endblock %}

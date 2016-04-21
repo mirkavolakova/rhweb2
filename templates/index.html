@@ -17,7 +17,8 @@
     {% endif %}
     <div class="clear"></div>
     {% for category in categories %}
-        {% if not category.group or category.group in g.user.groups %}
+        {% if (not category.group or category.group in g.user.groups)
+            and not (not category and not g.user.admin) %}
             {% if category != editable %}
                 {% if category and g.user and g.user.admin and not editable %}
                 {% endif %}
@@ -46,6 +47,11 @@
                         {{form.delete(class_="delete-button")}}
                     </h2>
                 </form>
+            {% endif %}
+            {% if not category %}
+                <div class="forum-info">
+                    Nezařazená fóra vidí tady jenom admini, ale témata z nich jsou přístupná všem - přidejte fórum do kategorie!
+                </div>
             {% endif %}
             <div class="fora">
                 {% for forum in (category.fora if category else uncategorized_fora) %}
@@ -99,6 +105,18 @@
                         </form>
                     {% endif %}
                 {% endfor %}
+            </div>
+        {% elif category.group and category.group.name == "user" %}
+            <h2 class="category-name">
+                {{category.name}}
+            </h2>
+            <div class="forum-info">
+                {% if category.name == "Burza" %}
+                    Burza
+                {% else %}
+                    Tato kategorie
+                {% endif %}
+                je přístupná jen pro přihlášené.<br>Můžete se <a href="{{url_for('login')}}">přihlásit</a> či <a href="{{url_for('register')}}">registrovat</a>.
             </div>
         {% endif %}
     {% endfor %}
