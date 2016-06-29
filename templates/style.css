@@ -117,7 +117,7 @@ h2#reply {margin-top: 20px;}
     
 .threads {margin-bottom:48px;}
 .row {border-bottom: 1px solid rgb(81, 6, 44); display: block; clear: both; padding: 3px;}
-.morerow {text-align: center; cursor: pointer; width: 85%; margin: auto;}
+.morerow {text-align: center; width: 85%; margin: auto; margin-top: 4px;}
 .row-pinned { border-left: 32px solid #840B49;
     /*background: linear-gradient(to right, rgb(246, 246, 195) 0%, rgba(255, 255, 255, 0) 15%);*/ }
 .row:hover {background: #840B49; border-bottom: 1px solid rgb(224, 17, 123);}

@@ -218,6 +218,14 @@ def page_not_found(e):
 def page_not_found(e):
     return render_template('errorpage.html', error=400), 400
 
+def get_active_threads():
+    threads = db.session.query(db.Thread).join(db.Forum).outerjoin(db.Category)\
+        .filter(or_(db.Forum.category_id==None, db.Category.group_id.in_([None, 0]), db.Category.group_id.in_(group.id for group in g.user.groups)))\
+        .filter(db.Forum.trash == False) \
+        .order_by(db.Thread.laststamp.desc())
+    
+    return threads
+
 @app.route("/", methods="GET POST".split())
 def index():
     form = None
@@ -232,15 +240,17 @@ def index():
     trash = db.session.query(db.Forum).filter(db.Forum.trash == True).scalar()
     if uncategorized_fora:
         categories.append(None)
-    latest_threads = db.session.query(db.Thread).join(db.Forum).outerjoin(db.Category)\
-        .filter(or_(db.Forum.category_id==None, db.Category.group_id.in_([None, 0]), db.Category.group_id.in_(group.id for group in g.user.groups)))\
-        .filter(db.Forum.trash == False) \
-        .order_by(db.Thread.laststamp.desc())[0:10]
+    latest_threads = get_active_threads()[0:10]
     
     tasks = db.session.query(db.Task).filter(db.Task.user_id.in_([g.user.id, None, 0])).all()
     sort_tasks(tasks)
     
     return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_threads=latest_threads, trash=trash, form=form, tasks=tasks)
+
+@app.route("/active", methods="GET POST".split())
+def active():
+    active_threads = get_active_threads()[0:100]
+    return render_template("active.html", active_threads=active_threads)
 
 @app.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
 @app.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())
