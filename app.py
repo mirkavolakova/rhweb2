@@ -128,11 +128,11 @@ def after_request(response):
     try:
         while g.telegram_messages:
             message = g.telegram_messages.pop(0)
-            subprocess.Popen(["python", app_dir+"/report.py", "telegram", message])
+            subprocess.Popen(["python", app_dir+"/report.py", "telegram", message.encode('utf-8')])
             
         while g.irc_messages:
             message = g.irc_messages.pop(0)
-            subprocess.Popen(["python", app_dir+"/report.py", "irc", message])
+            subprocess.Popen(["python", app_dir+"/report.py", "irc", message.encode('utf-8')])
     except Exception as ex:
         print(type(ex), ex)
     
