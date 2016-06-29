@@ -125,15 +125,16 @@ def before_request():
 
 @app.after_request
 def after_request(response):
-    while g.telegram_messages:
-        message = g.telegram_messages.pop(0)
-        subprocess.Popen(["python", app_dir+"/report.py", "telegram", message])
-        
-    while g.irc_messages:
-        message = g.irc_messages.pop(0)
-        subprocess.Popen(["python", app_dir+"/report.py", "irc", message])
-        #if "IRC_IN" in app.config:
-        #    open(app.config['IRC_IN'], 'w').write(message + "\n")
+    try:
+        while g.telegram_messages:
+            message = g.telegram_messages.pop(0)
+            subprocess.Popen(["python", app_dir+"/report.py", "telegram", message])
+            
+        while g.irc_messages:
+            message = g.irc_messages.pop(0)
+            subprocess.Popen(["python", app_dir+"/report.py", "irc", message])
+    except Exception as ex:
+        print(type(ex), ex)
     
     return response
             
