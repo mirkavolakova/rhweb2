@@ -14,6 +14,8 @@ from datetime import datetime, timedelta
 from functools import wraps # We need this to make Flask understand decorated routes.
 import hashlib
 
+import subprocess
+
 from lxml.html.clean import Cleaner
 from lxml.etree import ParserError
 
@@ -120,24 +122,20 @@ def before_request():
     g.production = app.config['PRODUCTION']
 
 
-def telegram_post(method, **params):
-    for i in range(3):
-        try:
-            return requests.post("https://api.telegram.org/bot{}/{}".format(app.config['TELEGRAM_TOKEN'], method), data=params).json()
-        except Exception as ex:
-            time.sleep(1)
 
-@app.teardown_request
-def teardown_request(exception=None):
+@app.after_request
+def after_request(response):
     while g.telegram_messages:
         message = g.telegram_messages.pop(0)
-        if "TELEGRAM_TOKEN" in app.config:
-            telegram_post("sendMessage", chat_id=app.config['TELEGRAM_CHAT_ID'], text=message,
-                parse_mode="Markdown", disable_web_page_preview=True)
+        subprocess.Popen(["python", app_dir+"/report.py", "telegram", message])
+        
     while g.irc_messages:
         message = g.irc_messages.pop(0)
-        if "IRC_IN" in app.config:
-            open(app.config['IRC_IN'], 'w').write(message + "\n")
+        subprocess.Popen(["python", app_dir+"/report.py", "irc", message])
+        #if "IRC_IN" in app.config:
+        #    open(app.config['IRC_IN'], 'w').write(message + "\n")
+    
+    return response
             
 
 @app.teardown_request
@@ -771,6 +769,25 @@ def change_task_status(task_id):
         task.status = "done"
     db.session.commit()
     return redirect(url_for("tasks"))
+
+
+class IRCSendForm(Form):
+    text = TextField('Text', [validators.required()])
+    submit = SubmitField('Odeslat')
+
+@app.route("/irc-send/", methods=["GET", "POST"])
+def irc_send():
+    if not g.user.admin: error(403)
+    
+    text = None
+    form = IRCSendForm(request.form)
+    if request.method == 'POST' and form.validate():
+        text = form.text.data
+        g.irc_messages.append(text)
+        
+        form = IRCSendForm()
+    
+    return render_template("irc_send.html", form=form, text=text)
 
 if not app.debug:
     import logging
