@@ -8,6 +8,8 @@ from sys import argv
 
 from codecs import open
 
+import requests
+
 #from flask import Flask
 #import app
 #app_dir = os.path.dirname(os.path.abspath(__file__))
@@ -18,8 +20,9 @@ import config
 def telegram_post(method, **params):
     for i in range(3):
         try:
-            return requests.post("https://api.telegram.org/bot{}/{}".format(config.TELEGRAM_TOKEN, method), ata=params).json()
+            return requests.post("https://api.telegram.org/bot{}/{}".format(config.TELEGRAM_TOKEN, method), data=params).json()
         except Exception as ex:
+            print("Failed to post to Telegram: {}: {}".format(type(ex), ex))
             time.sleep(1)
 
 def report_telegram(message):
