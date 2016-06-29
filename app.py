@@ -249,8 +249,9 @@ def index():
 
 @app.route("/active", methods="GET POST".split())
 def active():
+    form = ForumControlsForm(request.form)
     active_threads = get_active_threads()[0:100]
-    return render_template("active.html", active_threads=active_threads)
+    return render_template("active.html", active_threads=active_threads, form=form)
 
 @app.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
 @app.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())
