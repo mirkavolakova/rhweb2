@@ -28,7 +28,7 @@
     </div>
     <div class="threads">
         {% for thread in threads %}
-            <div class="row {{'row-pinned' if thread.pinned else ''}}">
+            <div class="row {{'row-pinned' if thread.pinned else ''}} {{'row-archived' if thread.archived else ''}}">
                 <div class="row-data">
                     <div class="row-total">
                         {{ txt_posts(thread.num_posts) }}

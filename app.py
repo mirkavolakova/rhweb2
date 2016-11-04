@@ -44,7 +44,10 @@ BASE_URL = app.config.get("BASE_URL", "")
 doku = None
 if app.config.get("DOKU_URL", ""):
     from dokuwiki import DokuWiki
-    doku = DokuWiki(app.config['DOKU_URL'], app.config['DOKU_USER'], app.config['DOKU_PASS'])
+    try:
+        doku = DokuWiki(app.config['DOKU_URL'], app.config['DOKU_USER'], app.config['DOKU_PASS'])
+    except Exception as ex:
+        print("Failed to connect to DokuWiki: ", ex)
 
 
 class PostForm(Form):
@@ -461,7 +464,7 @@ def forum(forum_id, forum_identifier=None):
     if not forum: abort(404)
     if forum.category and forum.category.group and forum.category.group not in g.user.groups: abort(403)
     if forum.trash and not g.user.admin: abort(403)
-    threads = db.session.query(db.Thread).filter(db.Thread.forum == forum).order_by(db.Thread.pinned.desc(), db.Thread.laststamp.desc())
+    threads = db.session.query(db.Thread).filter(db.Thread.forum == forum).order_by(db.Thread.archived.asc(), db.Thread.pinned.desc(), db.Thread.laststamp.desc())
     form = None
     if not forum.trash:
         form = ThreadForm(request.form)
@@ -577,10 +580,16 @@ def thread_set(forum_id, thread_id, forum_identifier=None, thread_identifier=Non
         thread.pinned = True
     elif request.form.get("unpin"):
         thread.pinned = False
+        
     elif request.form.get("lock"):
         thread.locked = True
     elif request.form.get("unlock"):
         thread.locked = False
+        
+    elif request.form.get("archive"):
+        thread.archived = True
+    elif request.form.get("unarchive"):
+        thread.archived = False
     db.session.commit()
     
     return redirect(thread.url)

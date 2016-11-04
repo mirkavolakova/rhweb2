@@ -238,6 +238,7 @@ class Thread(Base):
     laststamp = Column(DateTime)
     pinned = Column(Boolean, default=False, nullable=False)
     locked = Column(Boolean, default=False, nullable=False)
+    archived = Column(Boolean, default=False, nullable=False)
     
     posts = relationship("Post", order_by="Post.timestamp", lazy="dynamic")#, viewonly=True, primaryjoin="foreign(Post.deleted)==False")
     

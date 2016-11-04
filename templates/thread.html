@@ -20,10 +20,17 @@
                 {% else %}
                     <input type="submit" name="unpin" value="Odšpendlit">
                 {% endif %}
+                
                 {% if not thread.locked %}
                     <input type="submit" name="lock" value="Zamknout">
                 {% else %}
                     <input type="submit" name="unlock" value="Odemknout">
+                {% endif %}
+                
+                {% if not thread.archived %}
+                    <input type="submit" name="archive" value="Zarchivovat">
+                {% else %}
+                    <input type="submit" name="unarchive" value="Odarchivovat">
                 {% endif %}
             </form>
         </div>
