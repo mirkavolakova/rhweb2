@@ -327,17 +327,21 @@ class Task(Base):
 
 if __name__ == "__main__":
     print('this is db.py.  make sure you know where you are.')
-    if raw_input('fix thread.pinned = NULL? ') == 'y':
+    if raw_input('fix thread.{pinned,archived} = NULL? ') == 'y':
         for thread in session.query(Thread):
             if thread.pinned == None:
                 thread.pinned = False
+            if thread.archived == None:
+                thread.archived = False
         session.commit()
+        print("fixed")
     if raw_input('make everybody user?') == 'y':
         g = Group(name="user")
         session.add(g)
         for user in session.query(User):
             user.groups.append(g)
         session.commit()
+        print("done")
     #if raw_input('mark everything as read for everybody? ') == 'y':
     #    for user in session.query(User):
     #        user.read_all()

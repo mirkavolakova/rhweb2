@@ -33,6 +33,12 @@
                     <input type="submit" name="unarchive" value="Odarchivovat">
                 {% endif %}
             </form>
+            
+            {% if not show_deleted %}
+                <a href="{{thread.url}}?show_deleted">Ukázat odstraněné příspěvky</a>
+            {% else %}
+                <a href="{{thread.url}}">Skrýt odstraněné příspěvky</a>
+            {% endif %}
         </div>
     {% endif %}
     {% if thread.wiki_article %}
@@ -66,7 +72,7 @@
     {% endif %}
     <div class="posts">
         {% for post in posts %}
-            <div class="post">
+            <div class="post {{ 'post-deleted' if post.deleted else '' }}">
                 <div id="post-{{post.id}}" class="fragment"></div>
                 {% if post.original_id %}
                     <div id="post-{{post.original_id}}" class="fragment"></div>
@@ -95,11 +101,11 @@
                 </div>
                 <div class="post-contents">
                     <div class="post-data">
-                        {% if not reply_post %}
+                        {% if not reply_post and not post.deleted %}
                             <a href="{{thread.url}}?reply={{post.id}}#reply">Odpovědět</a>
                             &bull;
                         {% endif %}
-                        {% if ((post.author == g.user) or g.user.admin) and post != edit_post %}
+                        {% if ((post.author == g.user) or g.user.admin) and post != edit_post and not post.deleted %}
                             <a href="{{thread.url}}/edit/{{post.id}}#post-{{post.id}}">Upravit</a> &bull;
                         {% endif %}
                         <a href="{{post.url}}" class="permalink">{{ ago(post.timestamp) }}</a>

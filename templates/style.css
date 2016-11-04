@@ -142,7 +142,7 @@ hr {border: 1px solid #840B49; margin: 32px 0 32px 0;}
 /*.category-admin {text-align: right; float: right; margin-top: 4px;}*/
 .category-admin {float: right; font-size: 14px; font-weight: normal;}
 
-.thread-controls {float: right;}
+.thread-controls {float: right; text-align: right;}
 .thread-desc {font-style: italic; margin-bottom: 2px; padding-left: 16px;
     border-bottom: 1px solid #333333; padding-bottom: 6px;}
 .thread-article {padding: 4px 0 4px 0;
@@ -155,6 +155,9 @@ hr {border: 1px solid #840B49; margin: 32px 0 32px 0;}
 .post {min-height: 100px; margin-bottom: 14px; position: relative;
     background: none; padding: 4px; clear: both;}
 .fragment {position:relative; top:-50px;}
+
+.post-deleted {opacity: 0.9; background-color: rgba(255, 0, 0, 0.2);
+    border-radius: 8px;}
 
 .post-sidebar {height: 100%; min-height: 100px; display:inline-block; width: 150px; border-right: 1px solid #840B49;
     float: left; background: none; text-align: center;  padding-bottom: 6px;}
