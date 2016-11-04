@@ -526,6 +526,9 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
         posts = thread.posts.filter()
     else:
         posts = thread.posts.filter(db.Post.deleted==False)
+    
+    num_deleted = thread.posts.count() - thread.posts.filter(db.Post.deleted==False).count()
+    
     form = None
     if not thread.forum.trash and not (thread.locked and not g.user.admin):
         text = ""
@@ -570,7 +573,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             print(ex)
             doku_error = ex
     
-    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), last_read_timestamp=last_read_timestamp, article=article, article_revisions=article_revisions, article_info=article_info, doku_error=doku_error, reply_post=reply_post, show_deleted="show_deleted" in request.args)
+    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.now(), last_read_timestamp=last_read_timestamp, article=article, article_revisions=article_revisions, article_info=article_info, doku_error=doku_error, reply_post=reply_post, show_deleted="show_deleted" in request.args, num_deleted=num_deleted)
 
 @app.route("/<int:forum_id>/<int:topic_id>/set", methods="POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/set", methods="POST".split())

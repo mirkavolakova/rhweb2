@@ -35,7 +35,7 @@
             </form>
             
             {% if not show_deleted %}
-                <a href="{{thread.url}}?show_deleted">Ukázat odstraněné příspěvky</a>
+                <a href="{{thread.url}}?show_deleted">Ukázat odstraněné příspěvky ({{ num_deleted }})</a>
             {% else %}
                 <a href="{{thread.url}}">Skrýt odstraněné příspěvky</a>
             {% endif %}
