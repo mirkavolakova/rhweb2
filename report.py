@@ -8,6 +8,7 @@ from sys import argv
 
 from codecs import open
 
+import json
 import requests
 
 #from flask import Flask
@@ -34,12 +35,23 @@ def report_irc(message):
     message = message.decode('utf-8') + u"\n"
     f.write(message)
 
+def report_mattermost(message):
+    payload = {
+        'text': message,
+        'channel': 'test-sanky',
+        'username': 'rhbot',
+        'icon_url': "https://mattermost.test.retroherna.cz/api/v3/users/68qfcbhggt8ympgfhtayr3pjrw/image"
+    }
+    r = requests.post(config.MATTERMOST_URL, data={'payload': json.dumps(payload)})
+    print(r)
+
 if __name__ == '__main__':
     method = argv[1]
     message = argv[2]
 
     func = {"irc": report_irc,
-        "telegram": report_telegram}[method]
+        "telegram": report_telegram,
+        "mattermost": report_mattermost}[method]
     
     func_ = lambda: func(message)
 
