@@ -45,13 +45,24 @@ def report_mattermost(message):
     r = requests.post(config.MATTERMOST_URL, data={'payload': json.dumps(payload)})
     print(r)
 
+def report_discord(message):
+    payload = {
+        'content': message,
+    }
+    r = requests.post(config.DISCORD_URL,
+        headers={"Content-Type": "application/json"},
+        data=json.dumps(payload))
+    print(r, r.text)
+
+
 if __name__ == '__main__':
     method = argv[1]
     message = argv[2]
 
     func = {"irc": report_irc,
         "telegram": report_telegram,
-        "mattermost": report_mattermost}[method]
+        "mattermost": report_mattermost,
+        "discord": report_discord}[method]
     
     func_ = lambda: func(message)
 
