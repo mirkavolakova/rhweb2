@@ -92,7 +92,7 @@ class User(Base):
     
     def unread(self, thread):
         if not self.id: return False
-        thread_read = session.query(ThreadRead).filter(ThreadRead.user==self, ThreadRead.thread==thread).scalar()
+        thread_read = session.query(ThreadRead).filter(ThreadRead.user==self, ThreadRead.thread==thread).first() # XXX should be .scalar()
         if not thread_read:
             return thread
         if thread_read.last_post.current == thread.last_post:
