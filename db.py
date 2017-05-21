@@ -116,7 +116,7 @@ class User(Base):
     def read(self, post):
         if not post: return
         if not self.id: return
-        thread_read = session.query(ThreadRead).filter(ThreadRead.user==self, ThreadRead.thread==post.thread).scalar()
+        thread_read = session.query(ThreadRead).filter(ThreadRead.user==self, ThreadRead.thread==post.thread).first()
         if not thread_read:
             thread_read = ThreadRead(user=self, thread=post.thread, last_post_id=post.original.id if post.original else post.id)
         else:
