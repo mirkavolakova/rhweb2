@@ -45,7 +45,7 @@
         <div class="thread-article">
             <div class="thread-desc">
                 <div>
-                    Diskuze k wiki článku <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}">{{thread.wiki_article}}</a>
+                    Diskuze k wiki článku <a href="/wiki/doku.php?id={{thread.wiki_article}}">{{thread.wiki_article}}</a>
                 </div>
                 {% if article_info %}
                     <div>
@@ -54,8 +54,8 @@
                 {% endif %}
                 {% if g.user.admin or (thread.wiki_article.startswith("encyklopedie") and g.user) %}
                     <div>
-                        <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}&do=edit">Editovat</a> &bull;
-                        <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}&do=revisions">Historie</a>
+                        <a href="/wiki/doku.php?id={{thread.wiki_article}}&do=edit">Editovat</a> &bull;
+                        <a href="/wiki/doku.php?id={{thread.wiki_article}}&do=revisions">Historie</a>
                     </div>
                 {% endif %}
             </div>

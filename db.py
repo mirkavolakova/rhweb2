@@ -311,7 +311,7 @@ class Task(Base):
     text = Column(UnicodeText)
     created_time = Column(DateTime)
     due_time = Column(DateTime, nullable=True)
-    status = Column(Enum("todo", "inprogress", "done"), nullable=True)
+    status = Column(Enum("todo", "inprogress", "done", name="status"), nullable=True)
     
     author_id = Column(Integer, ForeignKey('users.uid'))
     author = relationship("User", foreign_keys=[author_id])

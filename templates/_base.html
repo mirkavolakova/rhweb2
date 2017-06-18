@@ -45,18 +45,18 @@
     <div class="topbar">
         <div class="topbar-contents">
             <div class="topbar-links">
-                <img src="http://retroherna.cz/static/logo-white.png" class="topbar-logo">
+                <img src="/static/logo-white.png" class="topbar-logo">
                 {% if g.production %}
                     <span class="rhtitle">RetroHerna</span>
                 {% else %}
                     <span class="rhtitle" style="color: red;">DerpoHerpa</span>
                 {% endif %}
-                &bull; <a href="http://retroherna.cz/">Web</a>
+                &bull; <a href="/">Web</a>
                 {% if g.user.in_group("retroherna") %}
-                    &bull; <a href="http://retroherna.cz/wiki/">Wiki</a>
+                    &bull; <a href="/wiki/">Wiki</a>
                 {% endif %}
-                &bull; <a href="http://retroherna.cz/forum/" class="primary-link">Fórum</a>
-                &bull; <a href="http://retroherna.cz/chat">Chat</a>
+                &bull; <a href="/forum/" class="primary-link">Fórum</a>
+                &bull; <a href="/chat">Chat</a>
                 {% if g.user.admin %}
                 &bull; <a href="{{url_for('users')}}">Uživatelé</a>
                 {% endif %}
@@ -75,9 +75,9 @@
     <div class="container">
         <h1 class="logo {% if hide_logo %}hide_logo{% endif %}">
             <a href="{{url_for('index')}}" class="logolink">
-                <img src="http://retroherna.cz/static/logo-white.png" class="rhlogo">
+                <img src="/static/logo-white.png" class="rhlogo">
                 <div class="inner">
-                    <img src="http://retroherna.cz/static/img/logo_text_white.png" class="rhlogotext" alt="RetroHerna - Interaktivní muzeum videoherní historie">
+                    <img src="/static/img/logo_text_white.png" class="rhlogotext" alt="RetroHerna - Interaktivní muzeum videoherní historie">
                 </div>
             </a>
         </h1>
