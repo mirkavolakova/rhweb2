@@ -26,6 +26,12 @@ from wtforms.fields.html5 import DateTimeLocalField
 
 import requests
 
+# XXX from https://stackoverflow.com/a/17752647
+def pg_utcnow():
+    import psycopg2
+    return datetime.utcnow().replace(
+        tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None))
+
 class MultiCheckboxField(SelectMultipleField):
     """
     A multiple-select, except displays a list of checkboxes.
@@ -121,7 +127,7 @@ def before_request():
         g.user.laststamp = datetime.now()
     else:
         g.user = db.Guest()
-    g.now = datetime.now()
+    g.now = pg_utcnow()
     g.yesterday = g.now - timedelta(days=1)
     g.tomorrow = g.now + timedelta(days=1)
     g.production = app.config['PRODUCTION']
@@ -154,6 +160,7 @@ def shutdown_session(exception=None):
     db.session.remove()
 
 def sort_tasks(tasks):
+    return []
     now = g.now
     
     def cmp_tasks(task0, task1):
