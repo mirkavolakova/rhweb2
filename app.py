@@ -95,6 +95,11 @@ def datetime_format(value, format='%d. %m. %Y %H:%M:%S'):
 
 cleaner = Cleaner(comments=False, style=False, embedded=False, annoying_tags=False)
 
+@app.template_filter('postfilter')
+def postfilter(text):
+    text = text.replace("retroherna.cz", "retroherna.org")
+    return text
+
 @app.template_filter('clean')
 def clean(value):
     try:
