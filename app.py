@@ -574,7 +574,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             return redirect(thread.url+"#post-latest") # TODO id
     
     if g.user:
-        thread_read = db.session.query(db.ThreadRead).filter(db.ThreadRead.user==g.user, db.ThreadRead.thread==thread).scalar()
+        thread_read = db.session.query(db.ThreadRead).filter(db.ThreadRead.user==g.user, db.ThreadRead.thread==thread).first()
         if not thread_read:
             last_read_timestamp = None
         else:
