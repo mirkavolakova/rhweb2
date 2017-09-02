@@ -21,6 +21,12 @@ app.config.from_pyfile(app_dir+"/config.py") # XXX
 
 debug = app.config.get("DEBUG", False)
 
+# XXX from https://stackoverflow.com/a/17752647
+def pg_utcnow():
+    import psycopg2
+    return datetime.utcnow().replace(
+        tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None))
+
 def url_friendly(string):
     return unidecode(string).lower().replace(' ', '-').replace('/', '-')
 
@@ -311,7 +317,7 @@ class Task(Base):
     text = Column(UnicodeText)
     created_time = Column(DateTime)
     due_time = Column(DateTime, nullable=True)
-    status = Column(Enum("todo", "inprogress", "done"), nullable=True)
+    status = Column(Enum("todo", "inprogress", "done", name="status"), nullable=True)
     
     author_id = Column(Integer, ForeignKey('users.uid'))
     author = relationship("User", foreign_keys=[author_id])
@@ -379,12 +385,12 @@ if __name__ == "__main__":
             u2 = User(login="uzivatel", fullname="Uživatel", pass_=bcrypt.hashpw(b"test", bcrypt.gensalt(rounds=9)), groups=[g2])
             session.add(u2)
 
-            t = Thread(name="První téma na fóru", description="", timestamp=datetime.now(), laststamp=datetime.now(), forum=f, author=u)
+            t = Thread(name="První téma na fóru", description="", timestamp=pg_utcnow(), laststamp=pg_utcnow(), forum=f, author=u)
             session.add(t)
 
-            p = Post(thread=t, author=u, text="First post!  <b>Test</b>!", timestamp=datetime.now())
+            p = Post(thread=t, author=u, text="First post!  <b>Test</b>!", timestamp=pg_utcnow())
             session.add(t)
-            p = Post(thread=t, author=u, text="Test ", timestamp=datetime.now())
+            p = Post(thread=t, author=u, text="Test ", timestamp=pg_utcnow())
             session.add(t)
 
             session.commit()

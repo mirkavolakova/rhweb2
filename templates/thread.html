@@ -45,7 +45,7 @@
         <div class="thread-article">
             <div class="thread-desc">
                 <div>
-                    Diskuze k wiki článku <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}">{{thread.wiki_article}}</a>
+                    Diskuze k wiki článku <a href="/wiki/doku.php?id={{thread.wiki_article}}">{{thread.wiki_article}}</a>
                 </div>
                 {% if article_info %}
                     <div>
@@ -54,14 +54,14 @@
                 {% endif %}
                 {% if g.user.admin or (thread.wiki_article.startswith("encyklopedie") and g.user) %}
                     <div>
-                        <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}&do=edit">Editovat</a> &bull;
-                        <a href="http://retroherna.cz/wiki/doku.php?id={{thread.wiki_article}}&do=revisions">Historie</a>
+                        <a href="/wiki/doku.php?id={{thread.wiki_article}}&do=edit">Editovat</a> &bull;
+                        <a href="/wiki/doku.php?id={{thread.wiki_article}}&do=revisions">Historie</a>
                     </div>
                 {% endif %}
             </div>
             <div class="thread-article-text">
                 {% if article %}
-                    {{ article | safe }}
+                    {{ article | postfilter | safe }}
                 {% elif doku_error %}
                     <div class="article-error">
                         Selhalo získávání článku z DokuWiki: {{doku_error}}
@@ -115,7 +115,7 @@
                     </div>
                     <div class="post-text">
                         {% if post != edit_post %}
-                            <p>{{ post.text | bbcode | safe | urlize  | replace("<3", "&lt;3") | clean | safe | replace("\n", "\n<p>"|safe)  }}
+                            <p>{{ post.text | postfilter | bbcode | safe | urlize  | replace("<3", "&lt;3") | clean | safe | replace("\n", "\n<p>"|safe)  }}
                             {% if post.editstamp %}
                                 <div class="post-edited">
                                     Naposledy upraveno {% if (post.editor != post.author) and post.editor.admin %}moderátorem{% endif %} {{ ago(post.editstamp) }} {% if g.user.admin %}({{post.editor.name}}){% endif %}
