@@ -214,7 +214,7 @@ class Forum(Base):
         
     @property
     def last_post(self):
-        return session.query(Post).join(Post.thread).filter(Thread.forum == self).order_by(Post.timestamp.desc()).first()
+        return session.query(Post).join(Post.thread).filter(Thread.forum == self, Post.deleted==False).order_by(Post.timestamp.desc()).first()
     
     @property
     def symbol_name(self):
