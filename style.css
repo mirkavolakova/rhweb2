@@ -1,0 +1,25 @@
+* {margin: 0; padding: 0;}
+body {
+    width: 800px;
+    background-color: #1b2441;
+    color: white;
+}
+
+.sidebar {
+    float: left;
+    width: 400px;
+    
+}
+
+.primary {
+    margin-left: 400px;
+}
+
+.clear {clear: both;}
+
+
+@media (max-width: 600px) {
+    .column {
+        width: 100%;
+    }
+} 
