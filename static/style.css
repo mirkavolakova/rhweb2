@@ -111,8 +111,8 @@ background-size: 50%; background-repeat: repeat-x;}
 p {line-height: 1.75; font-size: 11pt;
    margin-bottom: 1em;}
 
-blockquote:before {display: inline-block; content:"“"; font-size: 64px; margin-right: 8px; height: 32px; margin-top: -32px; vertical-align: middle;}
-blockquote:after {display: inline-block; content:"”"; font-size: 64px; margin-left: 8px; height: 32px; margin-top: -32px; vertical-align: middle;}
+blockquote::before {content: ""; display: inline-block; background: url("/static/img/quot-left.png") no-repeat; width: 16px; height: 16px; background-size: contain; margin-right: 8px;}
+blockquote:after {content: ""; display: inline-block; background: url("/static/img/quot-right.png") no-repeat; width: 16px; height: 16px; background-size: contain; margin-left: 8px;}
 blockquote {margin-bottom: 12px; margin-top: 26px;}
 .quote-author {font-weight: bold; margin-bottom: 8px;}
 .clear {clear: both;}
