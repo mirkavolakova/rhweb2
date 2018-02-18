@@ -1,0 +1,25 @@
+
+
+{% macro photo(name) %}
+    <div class="photo">
+        <img src="/static/img/foto/{{name}}.png" class="image">
+        <div class="border"></div>
+    </div>
+{% endmacro %}
+
+{% macro action_link(identifier, text) %}
+    <li><a href="#">
+        <img src="/static/img/icons/{{identifier}}@2x.png">
+        <div>
+            {{text}}
+        </div>
+    </a>
+{% endmacro %}
+
+{% macro action_links(links) %}
+    <ul class="action-links">
+        {% for identifier, text in links %}
+            {{ action_link(identifier, text) }}
+        {% endfor %}
+    </ul>
+{% endmacro %}
