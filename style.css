@@ -1,6 +1,14 @@
 * {margin: 0; padding: 0; box-sizing: border-box;}
 a {text-decoration: none;}
-a:hover {text-decoration: underline;}
+/*p a {text-decoration: underline;}
+a:hover {text-decoration: underline;}*/
+a:not(.discord-link, .action-links):hover,
+.sidebar ul li.more a,
+p a
+ { background: url("img/line-a.png");
+background-position: bottom left; padding-bottom: 3px;
+ background-repeat: repeat-x;}
+ 
 .clearfix {clear: both;}
 .clearright {clear: right;}
 
@@ -31,7 +39,7 @@ body {
     grid-gap: 1rem;
 }
 
-.photo img {width: 100%; padding: 2px;}
+.photo img {width: 100%; padding: 0.8%; padding-top: 0.85%;}
 .photo {position: relative;}
 .photo .border {position: absolute; left: 0; top: 0;
     width: 100%; height: 100%;
@@ -46,7 +54,18 @@ h3 {margin-top: 1.2em; margin-bottom: 1em;}
 .sidebar h3 {margin-top: 2em; margin-bottom: 1em;}
 .sidebar ul {list-style: none;}
 .sidebar ul li {margin-bottom: 0.7em; font-size: 11pt;}
-.sidebar ul li.more a {font-weight: bold; text-decoration: underline;}
+.sidebar ul li.more a {font-weight: bold;}
+
+.sidebar ul:last-child {margin-bottom: 32px;}
+
+.discord-link {
+    display: block;
+    border: 10px solid #b01134;
+    background: #b01134; background-clip: padding-box;
+    border-image: url("img/button1.svg") 10 10 round;
+    height: 50px; width: 240px;
+    margin: 32px auto 8px auto;}
+a.discord-link:hover {}
 
 ul.page-links, ul.social-media-links {list-style: none;}
 ul.page-links li {display: inline-block; margin-right: 32px;
@@ -59,10 +78,24 @@ ul.social-media-links li a {display:block; max-width: 32px; height: 32px;
 .icon-facebook {background: url('img/icons/facebook.png'); width: 24px;}
 .icon-twitter {background: url('img/icons/twitter.png'); width: 36px;}
 .icon-youtube {background: url('img/icons/youtube.png');}
+.icon-discord {
+    display:inline-block; width: 32px; height: 32px;
+    background: url('img/icons/discord.png');
+    background-size: contain; background-repeat: no-repeat;
+    vertical-align: middle;
+}
 
 .linkbar {background: url("img/line-menu.png") no-repeat;
 background-position: bottom left; padding-bottom: 16px;
 background-size: 50%; background-repeat: repeat-x;}
+
+.action-links {list-style: none;}
+.action-links li {display: inline-block; margin-right: 8px;
+    width: 180px;}
+.action-links li a {display: block;}
+.action-links li a img {display: block; width: 68px; margin: 4px auto 8px auto;}
+.action-links li a {font-size: 11pt; color: #ee234f; font-weight: bold;
+    text-align: center;}
 
 p {line-height: 1.75; font-size: 11pt;
    margin-bottom: 1em;}
