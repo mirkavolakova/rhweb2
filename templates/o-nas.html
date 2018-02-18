@@ -1,0 +1,52 @@
+{% extends '_base.html' %}
+
+{% macro photo(name) %}
+    <div class="photo">
+        <img src="/static/img/foto/{{name}}.png" class="image">
+        <div class="border"></div>
+    </div>
+{% endmacro %}
+
+{% macro action_link(identifier, text) %}
+    <li><a href="#">
+        <img src="/static/img/icons/{{identifier}}@2x.png">
+        <div>
+            {{text}}
+        </div>
+    </a>
+{% endmacro %}
+
+{% block content %}
+    <h2>O projektu</h2>
+    <h3>Ahoj, vítej v RetroHerně!</h3>
+    <p>Projekt RetroHerna vám už dva roky přináší možnost vyzkoušet si rozmanitou nabídku z hluboké historie počítačových i konzolových her. A i když je hlavní hry hrát a tedy je zpřístupnit veřejnosti, není to všechno, co děláme. Videohry si zaslouží přístup také z pohledu výzkumníka, archiváře.
+    <p>Videohry jsou s námi bezmála už půl století. Jsou jich statisíce na stovkách platforem a přinesly nespočet radosti miliónům hráčů na celém světě. Co je na nich tak fascinujícího? To můžete zjistit na vlastní prsty.
+    <div class="photos-two">
+         {{ photo('hraci') }}
+         {{ photo('knihovna') }}
+    </div>
+    <p>Archivace herních časopisů, články nadšenců, rozhovory s vývojáři i vaše vzpomínky na někdejší pátrání po tajných lokacích, to všechno prohlubuje zážitek z hraní a buduje tak skvělou komunitu hráčů, kteří spolu navzájem sdílejí své nadšení.
+    
+    <h3>Co děláme</h3>
+    <p>Zajímá Vás cokoli z videoherní historie? Sháníte příslušenství nebo sběratelský kousek? Vyzkoušejte některý z našich komunikačních kanálů uvedených v záhlaví stránky nebo napište na naše <a href="#">fórum</a> a poraďte se s komunitou. Než vám přistane odpověď, můžete mrknout třeba na <a href="#">naše články</a>.
+    
+    <ul class="action-links">
+        {{ action_link("o-projektu/vyjezdy-a-akce",
+            "Výjezdy a akce") }}
+        {{ action_link("o-projektu/komunita",
+            "Komunita") }}
+        {{ action_link("o-projektu/vyzkum-a-archivace",
+            "Výzkum a archivace") }}
+    </ul>
+    
+    <h3>Zapoj se</h3>
+    <p>V rámci aktivit RetroHerny je nespočet možností, jak se mezi nás můžete osobně zapojit. Nejlepším způsobem, jak zjistit, co by se vám líbilo, je navštívit některý z našich <a>výjezdů</a>. A nebo nám napište a my s vámi rádi hodíme řeč osobně. Rádi si s vámi popovídáme a vymyslíme, co by se Ti líbilo.
+    
+     {{ photo('hraci-na-pohovce') }}
+    
+    RetroHernu najdete na <a href="#">Facebooku</a> a na <a href="#">Discordu</a>. Na každé akci jsme pro vás a když zrovna netaháme televize, vždycky se rádi zastavíme na kus řeči. Ať už osobně a nebo on-line, nebojte se s námi sdílet svoje zážitky.
+    
+    <h3>Zapoj se</h3>
+    <h3>Zapoj se</h3>
+    <h3>Zapoj se</h3>
+{% endblock %}

@@ -5,7 +5,7 @@ a:hover {text-decoration: underline;}*/
 a:not(.discord-link, .action-links):hover,
 .sidebar ul li.more a,
 p a
- { background: url("img/line-a.png");
+ { background: url("/static/img/line-a.png");
 background-position: bottom left; padding-bottom: 3px;
  background-repeat: repeat-x;}
  
@@ -15,7 +15,7 @@ background-position: bottom left; padding-bottom: 3px;
 body {
     width: 100%;
     background:
-        url("img/sidebar-bg.png") repeat-y,
+        url("/static/img/sidebar-bg.png") repeat-y,
         #1b2441;
     color: #f8f7f6;
     font-family: sans-serif;
@@ -43,7 +43,7 @@ body {
 .photo {position: relative;}
 .photo .border {position: absolute; left: 0; top: 0;
     width: 100%; height: 100%;
-    background: url("img/photo-border.png");
+    background: url("/static/img/photo-border.png");
     background-size: contain;
     background-repeat: no-repeat;}
 
@@ -62,7 +62,7 @@ h3 {margin-top: 1.2em; margin-bottom: 1em;}
     display: block;
     border: 10px solid #b01134;
     background: #b01134; background-clip: padding-box;
-    border-image: url("img/button1.svg") 10 10 round;
+    border-image: url("/static/img/button1.svg") 10 10 round;
     height: 50px; width: 240px;
     margin: 32px auto 8px auto;}
 a.discord-link:hover {}
@@ -85,7 +85,7 @@ ul.social-media-links li a {display:block; max-width: 32px; height: 32px;
     vertical-align: middle;
 }
 
-.linkbar {background: url("img/line-menu.png") no-repeat;
+.linkbar {background: url("/static/img/line-menu.png") no-repeat;
 background-position: bottom left; padding-bottom: 16px;
 background-size: 50%; background-repeat: repeat-x;}
 
