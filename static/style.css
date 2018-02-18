@@ -50,7 +50,8 @@ body {
 h1, h2, .copyright {font-family: 'Amatic SC', 'Open Sans', 'Helvetica', 'Arial', sans-serif;}
 h1 {font-size: 32pt;}
 h2 {color: #ee234f; font-size: 35pt; margin-top: 0.9em;}
-h3 {margin-top: 1.2em; margin-bottom: 1em;}
+h3:first {margin-top: 1.2em; margin-bottom: 1em;}
+h3 {margin-top: 2em; margin-bottom: 1em;}
 .sidebar h3 {margin-top: 2em; margin-bottom: 1em;}
 .sidebar ul {list-style: none;}
 .sidebar ul li {margin-bottom: 0.7em; font-size: 11pt;}
@@ -112,6 +113,10 @@ blockquote:after {display: inline-block; content:"”"; font-size: 64px; margin-
 blockquote {margin-bottom: 12px; margin-top: 26px;}
 .quote-author {font-weight: bold; margin-bottom: 8px;}
 .clear {clear: both;}
+
+ul.partners {list-style: none;}
+ul.partners li {display: inline-block; margin-right: 32px; width: 140px;}
+ul.partners img {width: 100%;}
 
 a {color: white;}
 

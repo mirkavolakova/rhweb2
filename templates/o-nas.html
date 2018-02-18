@@ -73,7 +73,30 @@
     
     <h3>Naši partneři</h3>
     <p>Speciální poděkování bychom rádi věnovali umělci Eniacovi, který pro RetroHernu vytvořil originální grafiku.  Tuhle i další jeho fantastickou práci naleznete na stránkách <a href="http://www.eniac.ninja">www.eniac.ninja</a>.
-    <div>[TODO PARTNERI]</div>
+    <ul class="partners">
+        {% set partners = (("https://animefest.cz/", "animefest"),
+("http://www.4fans.cz", "4fans"),
+("http://unicon.lol", "unicon"),
+("http://arcadehry.cz", "arcadehry"),
+("http://skillzone.cz/", "skillzone"),
+("http://b2b.cqe.cz/", "cqe"),
+("http://www.darkelf.cz/", "darkelf"),
+("http://www.kudyznudy.cz/", "kudyznudy"),
+("http://www.geekarna.cz/", "geekarna"),
+("http://www.festivalfantazie.cz/", "festivalfantazie"),
+("http://www.lancraft.cz/", "lancarft"),
+("http://www.con-ec.cz/", "conec"),
+("https://www.pirati.cz/", "pirati"),
+("https://www.siliconhill.cz/", "siliconhill"),
+("http://www.nm.cz/", "nm"),
+("http://y-games.sk/", "y-games"),
+("https://zasilkovna.cz/", "zasilkovna"),
+("http://opticon.cz/", "opticon"),
+("http://www.cswu.cz/koprcon/", "koprcon")) %}
+        {% for url, name in partners %}
+            <li><a href="{{url}}"><img src="/static/img/partners/{{name}}.png" alt="{{name}}"></a>
+        {% endfor %}
+    </ul>
     <p>RetroHerna své hlavní partnery teprve hledá. Myslíte si, že byste to mohli být vy? Napište nám e-mail na <a href="mailto:info@retroherna.org">info@retroherna.org</a> nebo nechte zprávu na <a href="#">Facebooku</a> a my se Vám ozveme.
     
     {{ action_links((
