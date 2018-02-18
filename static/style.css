@@ -18,7 +18,7 @@ body {
         url("/static/img/sidebar-bg.png") repeat-y,
         #1b2441;
     color: #f8f7f6;
-    font-family: sans-serif;
+    font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;
 }
 
 .sidebar {
@@ -47,7 +47,7 @@ body {
     background-size: contain;
     background-repeat: no-repeat;}
 
-h1, h2 {font-family: 'Amatic SC', cursive;}
+h1, h2, .copyright {font-family: 'Amatic SC', 'Open Sans', 'Helvetica', 'Arial', sans-serif;}
 h1 {font-size: 32pt;}
 h2 {color: #ee234f; font-size: 35pt; margin-top: 0.9em;}
 h3 {margin-top: 1.2em; margin-bottom: 1em;}
@@ -68,8 +68,10 @@ h3 {margin-top: 1.2em; margin-bottom: 1em;}
 a.discord-link:hover {}
 
 ul.page-links, ul.social-media-links {list-style: none;}
+footer ul.page-links {margin-bottom: 12px;}
 ul.page-links li {display: inline-block; margin-right: 32px;
     font-size: 24pt; font-family: 'Amatic SC', cursive;}
+footer ul.page-links li {font-size: 18pt;}
 ul.social-media-links {float: right; margin-top: 6px;}
 ul.social-media-links li {display:inline-block; margin-right: 8px; }
 ul.social-media-links li a {display:block; max-width: 32px; height: 32px;
@@ -85,22 +87,30 @@ ul.social-media-links li a {display:block; max-width: 32px; height: 32px;
     vertical-align: middle;
 }
 
+footer {opacity: 0.5;}
+
 .linkbar {background: url("/static/img/line-menu.png") no-repeat;
 background-position: bottom left; padding-bottom: 16px;
 background-size: 50%; background-repeat: repeat-x;}
+footer {background: url("/static/img/line-menu.png") no-repeat;
+background-position: top left; padding-top: 16px;
+background-size: 50%; background-repeat: repeat-x;}
 
-.action-links {list-style: none;}
+.action-links {list-style: none; margin: 8px 0px 20px 0px;}
 .action-links li {display: inline-block; margin-right: 8px;
     width: 180px;}
 .action-links li a {display: block;}
-.action-links li a img {display: block; width: 68px; margin: 4px auto 8px auto;}
+.action-links li a img {display: block; max-width: 68px; max-height: 68px; margin: 4px auto 8px auto;}
 .action-links li a {font-size: 11pt; color: #ee234f; font-weight: bold;
     text-align: center;}
 
 p {line-height: 1.75; font-size: 11pt;
    margin-bottom: 1em;}
 
-
+blockquote:before {display: inline-block; content:"“"; font-size: 64px; margin-right: 8px; height: 32px; margin-top: -32px; vertical-align: middle;}
+blockquote:after {display: inline-block; content:"”"; font-size: 64px; margin-left: 8px; height: 32px; margin-top: -32px; vertical-align: middle;}
+blockquote {margin-bottom: 12px; margin-top: 26px;}
+.quote-author {font-weight: bold; margin-bottom: 8px;}
 .clear {clear: both;}
 
 a {color: white;}

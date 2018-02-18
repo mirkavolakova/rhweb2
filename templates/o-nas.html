@@ -16,6 +16,14 @@
     </a>
 {% endmacro %}
 
+{% macro action_links(links) %}
+    <ul class="action-links">
+        {% for identifier, text in links %}
+            {{ action_link(identifier, text) }}
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
 {% block content %}
     <h2>O projektu</h2>
     <h3>Ahoj, vítej v RetroHerně!</h3>
@@ -44,9 +52,49 @@
     
      {{ photo('hraci-na-pohovce') }}
     
-    RetroHernu najdete na <a href="#">Facebooku</a> a na <a href="#">Discordu</a>. Na každé akci jsme pro vás a když zrovna netaháme televize, vždycky se rádi zastavíme na kus řeči. Ať už osobně a nebo on-line, nebojte se s námi sdílet svoje zážitky.
+    <p>RetroHernu najdete na <a href="#">Facebooku</a> a na <a href="#">Discordu</a>. Na každé akci jsme pro vás a když zrovna netaháme televize, vždycky se rádi zastavíme na kus řeči. Ať už osobně a nebo on-line, nebojte se s námi sdílet svoje zážitky.
     
-    <h3>Zapoj se</h3>
-    <h3>Zapoj se</h3>
-    <h3>Zapoj se</h3>
+    {{ action_links((
+        ("o-projektu/jak-se-zapojit", "Jak se zapojit"),
+        ("o-projektu/napis-nam", "Napište nám"),
+        ("o-projektu/nase-komunita", "Naše komunita")
+      ))
+    }}
+    
+    <h3>Jak nás podpořit</h3>
+    
+    <p>Podpořit nás můžete třeba starým kouskem do sbírky (konzolí, herním příslušenstvím, počítačem, monitory, CRT televizí, hrami, herními magazíny a literaturou), přiložením ruky k dílu (organizace výjezdů, údržba a opravy techniky) nebo finančním příspěvkem na náš <a href="#">transparentní účet</a>.
+    {{ action_links((
+        ("o-projektu/darovat-hardware", "Darovat hardware"),
+        ("o-projektu/zapojit-se", "Zapojit se do projektu"),
+        ("o-projektu/financne-podporit", "Finančně podpořit")
+      ))
+    }}
+    
+    <h3>Naši partneři</h3>
+    <p>Speciální poděkování bychom rádi věnovali umělci Eniacovi, který pro RetroHernu vytvořil originální grafiku.  Tuhle i další jeho fantastickou práci naleznete na stránkách <a href="http://www.eniac.ninja">www.eniac.ninja</a>.
+    <div>[TODO PARTNERI]</div>
+    <p>RetroHerna své hlavní partnery teprve hledá. Myslíte si, že byste to mohli být vy? Napište nám e-mail na <a href="mailto:info@retroherna.org">info@retroherna.org</a> nebo nechte zprávu na <a href="#">Facebooku</a> a my se Vám ozveme.
+    
+    {{ action_links((
+        ("o-projektu/pro-media", "Pro média"),
+        ("o-projektu/objednejte-si-nas", "Objednejte si nás"),
+        ("o-projektu/stante-se-partnerem", "Staňte se partnerem")
+      ))
+    }}
+    
+    <h3>Zážitky a ohlasy</h3>
+    <blockquote>Parta velmi schopných a milých lidí, které potkávám pravidelně na akcích. Skvělá funkční technika, s hrami, které vás vrátí do dětství.</blockquote>
+    <div class="quote-author">Jan Novák</div>
+    
+    <blockquote>Hry mají přinášet radost a v RetroHerně se tak děje. Doufám, že tomu tak bude i nadále. Užasní lidé i technika. Zapařit jedny z nejstarších her je prostě super.</blockquote>
+    <div class="quote-author">Honza Novotný</div>
+    
+    {{ action_links((
+        ("o-projektu/zahraj-si", "Přijďte si zahrát"),
+        ("o-projektu/pokecej-si", "Hoďte s námi řeč"),
+      ))
+    }}
+    
 {% endblock %}
+
