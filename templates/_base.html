@@ -58,12 +58,15 @@
                 <li><a href="#" class="icon-youtube">YouTube</a>
             </ul>
             <h1 class="mobile-logo">RetroHerna</h1>
-            <ul class="page-links">
-                <li><a href="#">O projektu</a>
+            {% macro basic_links() %}
+                <li><a href="{{url_for('o_nas')}}">O projektu</a>
                 <li><a href="#">Výjezdy</a>
                 <li><a href="#">Komunita</a>
                 <li><a href="#">Články</a>
-                <li><a href="#">Kontakt</a>
+                <li><a href="{{url_for('kontakt')}}">Kontakt</a>
+            {% endmacro %}
+            <ul class="page-links">
+                {{ basic_links() }}
                 <li class="mobile-link"><a href="#">Novinky</a>
                 <li class="mobile-link"><a href="#">Nadcházející akce</a>
             </ul>
@@ -75,11 +78,7 @@
         </div>
         <footer>
             <ul class="page-links">
-                <li><a href="#">O projektu</a>
-                <li><a href="#">Výjezdy</a>
-                <li><a href="#">Komunita</a>
-                <li><a href="#">Články</a>
-                <li><a href="#">Kontakt</a>
+                {{ basic_links() }}
                 <li><a href="#">Zásady ochrany soukromí</a>
             </ul>
             <div class="copyright">Copyright ⓒ 2017 RetroHerna</div>

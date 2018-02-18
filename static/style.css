@@ -2,12 +2,12 @@
 a {text-decoration: none;}
 /*p a {text-decoration: underline;}
 a:hover {text-decoration: underline;}*/
-a:not(.discord-link, .action-links):hover,
-.sidebar ul li.more a,
-p a
- { background: url("/static/img/line-a.png");
-background-position: bottom left; padding-bottom: 3px;
- background-repeat: repeat-x;}
+a:hover {text-decoration: underline;}
+.page-links a:hover {
+    text-decoration: none;
+    background: url("/static/img/line-a.png");
+    background-position: bottom left; padding-bottom: 3px;
+    background-repeat: repeat-x;}
  
 .clearfix {clear: both;}
 .clearright {clear: right;}
@@ -21,6 +21,8 @@ body {
     color: #f8f7f6;
     font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;
 }
+
+a {color: #f8f7f6;}
 
 .sidebar {
     float: left;
@@ -103,10 +105,12 @@ background-size: 50%; background-repeat: repeat-x;}
 .action-links {list-style: none; margin: 8px 0px 20px 0px;}
 .action-links li {display: inline-block; margin-right: 8px;
     width: 180px;}
-.action-links li a {display: block;}
-.action-links li a img {display: block; max-width: 68px; max-height: 68px; margin: 4px auto 8px auto;}
-.action-links li a {font-size: 11pt; color: #ee234f; font-weight: bold;
+.action-links li a {display: block;
+    font-size: 11pt; color: #ee234f; font-weight: bold;
     text-align: center;}
+.action-links li a:hover {background: none; padding-bottom: 0px;}
+.action-links li a img {display: block; max-width: 68px; max-height: 68px; margin: 4px auto 8px auto;}
+.action-links-contact li {width: 100px;}
 
 p {line-height: 1.75; font-size: 11pt;
    margin-bottom: 1em;}
@@ -121,8 +125,7 @@ ul.partners {list-style: none;}
 ul.partners li {display: inline-block; margin-right: 32px; width: 140px;}
 ul.partners img {width: 100%;}
 
-a {color: white;}
-
+.highlight {color: #ee234f;}
 
 @media (max-width: 1200px) {
     body {background-position: -100px 0;}

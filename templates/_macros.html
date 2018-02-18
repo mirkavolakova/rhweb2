@@ -1,5 +1,4 @@
 
-
 {% macro photo(name) %}
     <div class="photo">
         <img src="/static/img/foto/{{name}}.png" class="image">
@@ -16,8 +15,8 @@
     </a>
 {% endmacro %}
 
-{% macro action_links(links) %}
-    <ul class="action-links">
+{% macro action_links(links, class) %}
+    <ul class="action-links action-links-{{class}}">
         {% for identifier, text in links %}
             {{ action_link(identifier, text) }}
         {% endfor %}
