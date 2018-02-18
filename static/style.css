@@ -74,7 +74,7 @@ ul.page-links, ul.social-media-links {list-style: none;}
 footer ul.page-links {margin-bottom: 12px;}
 ul.page-links li {display: inline-block; margin-right: 32px;
     font-size: 24pt; font-family: 'Amatic SC', cursive;}
-.mobile-link {display: none;}
+.mobile-link {display: none !important;}
 footer ul.page-links li {font-size: 18pt;}
 ul.social-media-links {float: right; margin-top: 6px;}
 ul.social-media-links li {display:inline-block; margin-right: 8px; }
@@ -136,17 +136,21 @@ a {color: white;}
 } 
 @media (max-width: 800px) {
     .sidebar {display: none;}
-    .primary {margin-left: 0px; padding-left: 30px;}
-    .linkbar {background: none;}
+    .primary {margin-left: 0px; padding: 0px;}
+    .main {padding: 0px 32px 8px 32px;}
+    .linkbar {background: url("/static/img/topbar-bg.png") repeat-x;
+        background-position: bottom left;
+        padding: 16px 32px 32px 32px;}
+    .main h2:first-child {margin-top: 0.2em;}
     body {
-    background:
-        url("/static/img/topbar-bg.png") repeat-x,
-        #1b2441;
-    background-position: 0 -200px;
+    background: #1b2441;
+    /*background-position: 0 -200px;*/
     }
-    .mobile-link {display: inline-block;}
+    
+    .mobile-link {display: inline-block !important; font-size: 20pt !important;}
     .mobile-logo {display: block;}
+    footer {background-size: 100%;
+        padding: 32px 32px 16px 32px;}
 } 
 @media (max-width: 520px) {
-    body {background-position: 0 -150px;}
 }
