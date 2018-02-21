@@ -1,0 +1,114 @@
+{% extends '_base.html' %}
+{% block content %}
+    <h2>Výjezdy</h2>
+    <p>RetroHerna zatím nemá trvalé zázemí pro veřejnost, ale můžete nás potkat na některém z výjezdů na cony a festivaly, které pravidelně konáme. Spolupracujeme s pořadateli neziskových, soukromých i firemních akcí. Přejete si mít RetroHernu také v programu? Napište nám na <a href="mailto:vyjezdy@retroherna.org">vyjezdy@retroherna.org</a>.
+    <div class="photos-two">
+         {{ photo('franx') }}
+         {{ photo('duck-hunt') }}
+    </div>
+    <p>Místo stálé expozice na jednom místě máte příležitost RetroHernu potkat na festivalech po celé České republice.
+    
+    <h3>Chystáme pro vás</h3>
+    
+    <h3>Proběhlé akce</h3>
+    
+{% set events = {
+    "2018": (
+        ("25. 1. 2018", "Praha", "Den otevřených dveří na FIT ČVUT", "https://www.facebook.com/events/452085515186452/"), 
+    ),
+    "2017": (
+        ("24.-26. 11. 2017", "Kopřivnice", "KoprCon", "http://www.cswu.cz/koprcon/"), 
+        ("11.-12. 11. 2017", "Kladno", "Herní čas", "https://hernicas.cz"), 
+        ("4. 11. 2017", "Praha", "DevFest", "https://2017.devfest.cz"), 
+        ("7.-8. 10. 2017", "Praha", "LinuxDays", "https://www.linuxdays.cz/2017/"), 
+        ("7.-8. 10. 2017", "Brno", "Gamer Pie", "http://www.gamerpie.wtf"), 
+        ("23. 9. 2017", "Praha", "CONiáš", "https://www.mlp.cz/cz/projekty/akce/conias/"), 
+        ("11.-13. 8. 2017", "Brno", "CONec", "http://con-ec.cz/"), 
+        ("29. 6. - 9. 7. 2017", "Chotěboř", "Festival Fantazie", "http://www.festivalfantazie.cz/"), 
+        ("24. 6. 2017", "Praha", "GameeCon", "http://www.gug.cz/cs/akce/gameecon/terminy/2"), 
+        ("27.5.", "Praha", "Retroden v Národním muzeu", "http://www.nm.cz/Hlavni-strana/Pro-rodiny-s-detmi-HM/Retroden-zabava-ve-stylu-80-let.html"), 
+        ("19.-21. 5.", "Brno", "Animefest", "https://www.animefest.cz"), 
+        ("29.-30. 4.", "Děčín", "Anime Jikan", "https://www.facebook.com/events/1810882449201206/"), 
+        ("25. 2.", "Praha", "4FANS 2017", "http://www.4fans.cz"), 
+        ("17.-19. 2.", "Trnava", "Unicon 2017", "https://http://unicon.lol"), 
+        ("3. 2.", "Praha", "DOD na FIT ČVUT Podruhé", "http://fit.cvut.cz/zajemci-o-studium/bakalarsky-program/den-otevrenych-dveri/2017-02-03"), 
+        ("27.-29. 1.", "Bratislava", "Demobit", "https://www.demobit.party"), 
+    ),
+    "2016": (
+    ("16. 12.", "Praha", "Den otevřených dveří na FIT ČVUT", "https://www.facebook.com/events/1113968392028810/"), 
+        ("25.-27. 11.", "Kopřivnice", "Koprcon", "http://www.cswu.cz/koprcon/"), 
+        ("8.-9. 10.", "Praha", "LinuxDays", "https://www.linuxdays.cz/2016/"), 
+        ("1. 10.", "Brno", "Gamer Pie", "http://www.gamerpie.wtf"), 
+        ("11. 8. - 14. 8.", "Brno", "CONEC 2016", "http://www.con-ec.cz"), 
+        ("18. 5. - 27. 7.", "Praha) - každou středu v tomto období", "Geekárna", "http://www.geekarna.cz/"), 
+        ("28.-31. 7.", "Praha", "Advik 2016", "http://advik.cz/"), 
+        ("1.-9. 7.", "Chotěboř", "Festival Fantazie", "http://www.festivalfantazie.cz/"), 
+        ("16. 7.", "Praha", "Nintendo retro sobota", "https://www.facebook.com/events/1124004030971030/"), 
+        ("25. 6.", "Praha", "Národní muzeum", "http://www.nm.cz/"), 
+        ("29. 4. - 1. 5.", "Brno", "Animefest", "https://www.animefest.cz"), 
+        ("16.-17. 4.", "Bratislava", "Y-Games", "http://y-games.sk"), 
+        ("1. 4.", "Praha", "Prima COOL DAY", "http://www.kdykde.cz/calendar/kdykde/1217457-cool-day-prima-cool-slavi-7-narozeniny"), 
+        ("19.-20. 3.", "Červený Újezd", "Arcade Hry", "http://www.arcadehry.cz/museum"), 
+        ("12.-14. 2.", "Trnava", "UniCon", "http://unicon.lol"), 
+        ("16.-17. 1.", "Praha", "4FANS", "http://www.4fans.cz"), 
+    ),
+    "2015": (
+        ("30. 11. - 3. 12.", "Bratislava", "První výstava na Slovensku", "https://www.facebook.com/events/948864208521189/"), 
+        ("27.-29. 11.", "Kopřivnice", "Koprcon", "http://www.cswu.cz/koprcon"), 
+        ("28.-30. 8.", "Ústí nad Labem", "Geetacon", "https://www.facebook.com/Geetacon.cz/"), 
+        ("13.-16. 8.", "Brno", "Conec", "http://www.con-ec.cz"), 
+        ("23.-26. 7.", "Ostrava", "LanCraft", "http://www.lancraft.cz/cz"), 
+        ("7.-11. 7.", "Chotěboř", "Festival Fantazie", "http://www.festivalfantazie.cz"), 
+        ("7. 6.", "Praha", "RetroFest", "https://retrofest.cz"), 
+        ("1.-3. 5.", "Brno", "AnimeFest", "https://www.animefest.cz"), 
+        ("18.-19. 4.", "Praha", "Geek Road Show", "http://www.geekroadshow.cz"),
+    )
+}
+%}
+    
+    <!-- TODO links -->
+    <div class="columns-2 events">
+        {% for year in events %}
+            <h4>{{ year }}</h4>
+            <ul>
+                {% for date, place, name, url in events[year] %}
+                    <li>{{ date }} - <strong><a href="{{url}}">{{ name }}</a></strong> ({{place}})
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </div>
+    
+    {{ action_links((
+        ("", "Přečíst zprávy z akcí"),
+      ))
+    }}
+    
+    {% set photos = "vectrex hraci-na-pohovce hraci sonic-1 darovany-bordel plakat ukazu-ti soccer".split() %}
+    {% for photo1, photo2 in zip(photos[0::2], photos[1::2]) %}
+        <div class="photos-two">
+             {{ photo(photo1) }}
+             {{ photo(photo2) }}
+        </div>
+    {% endfor %}
+    
+    <h3>Náš inventář</h3>
+    <p>Tento seznam představuje výpis námi vlastněných domácích konzolí a handheldů s informačním popiskem. Není ale úplný, jelikož RetroHerna zachází i s technikou mimo naše hlavní zaměření - především konzole vydané po roce 2000 a také obskurnější historicky nedůležité a neoriginální exponáty. Část z uvedených konzolí také vlastníme ve více exponátech.
+    
+    {{ action_links((
+        ("vyjezdy/inventar", "Inventář"),
+        ("vyjezdy/akce", "Akce"),
+      ))
+    }}
+    
+    <h3>Objednejte si nás</h3>
+    <p>Tento seznam představuje výpis námi vlastněných domácích konzolí a handheldů s informačním popiskem. Není ale úplný, jelikož RetroHerna zachází i s technikou mimo naše hlavní zaměření - především konzole vydané po roce 2000 a také obskurnější historicky nedůležité.
+    
+    {{ action_links((
+        ("vyjezdy/objednat-retrohernu", "Objednat RetroHernu"),
+      ))
+    }}
+
+
+    
+{% endblock %}
+

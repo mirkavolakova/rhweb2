@@ -60,8 +60,8 @@
             <h1 class="mobile-logo">RetroHerna</h1>
             {% macro basic_links() %}
                 <li><a href="{{url_for('o_nas')}}">O projektu</a>
-                <li><a href="#">Výjezdy</a>
-                <li><a href="#">Komunita</a>
+                <li><a href="{{url_for('vyjezdy')}}">Výjezdy</a>
+                <li><a href="{{url_for('komunita')}}">Komunita</a>
                 <li><a href="#">Články</a>
                 <li><a href="{{url_for('kontakt')}}">Kontakt</a>
             {% endmacro %}
