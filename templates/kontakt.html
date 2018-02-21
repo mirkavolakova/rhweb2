@@ -10,16 +10,17 @@
     
     <h3>Pro média</h3>
     <p>Spolek Herní historie, z.s. je nezisková organizace, která má za cíl tyto aktivity spojené s dějinami videoher zaštiťovat pod projektem RetroHerna. Je to pozvánka pro vás, abyste se přidali a vytvořili jsme tak unikátní komunitní projekt. Pomoci může každý a společně se podaří naši aktivity ještě rozšířit.
-    <div>
-        <a href="" class="highlight">Stáhnout press kit</a>
-    </div>
+    {{ action_links((
+        ("", "Stáhnout press kit"),
+      ))
+    }}
     <h3>Sociální sítě</h3>
     {{ action_links((
         ("kontakt/discord", "Discord"),
         ("kontakt/facebook", "Facebook"),
         ("kontakt/twitter", "Twitter"),
         ("kontakt/youtube", "YouTube"),
-      ), "contact")
+      ), "small")
     }}
     
 {% endblock %}

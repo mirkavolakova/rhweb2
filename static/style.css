@@ -57,8 +57,8 @@ h2 {color: #ee234f; font-size: 35pt; margin-top: 0.9em;}
 h3:first {margin-top: 1.2em; margin-bottom: 1em;}
 h3 {margin-top: 2em; margin-bottom: 1em;}
 .sidebar h3 {margin-top: 2em; margin-bottom: 1em;}
-.sidebar ul {list-style: none;}
-.sidebar ul li {margin-bottom: 0.7em; font-size: 11pt;}
+.sidebar ul {list-style: none; margin: 0; padding: 0;}
+.sidebar ul li {margin: 0; padding: 0; margin-bottom: 0.7em; font-size: 11pt;}
 .sidebar ul li.more a {font-weight: bold;}
 
 .sidebar ul:last-child {margin-bottom: 32px;}
@@ -72,9 +72,9 @@ h3 {margin-top: 2em; margin-bottom: 1em;}
     margin: 32px auto 8px auto;}
 a.discord-link:hover {}
 
-ul.page-links, ul.social-media-links {list-style: none;}
+ul.page-links, ul.social-media-links {margin: 0; padding: 0; list-style: none;}
 footer ul.page-links {margin-bottom: 12px;}
-ul.page-links li {display: inline-block; margin-right: 32px;
+ul.page-links li {margin: 0; padding: 0; display: inline-block; margin-right: 32px;
     font-size: 24pt; font-family: 'Amatic SC', cursive;}
 .mobile-link {display: none !important;}
 footer ul.page-links li {font-size: 18pt;}
@@ -103,17 +103,20 @@ background-position: top left; padding-top: 16px;
 background-size: 50%; background-repeat: repeat-x;}
 
 .action-links {list-style: none; margin: 8px 0px 20px 0px;}
-.action-links li {display: inline-block; margin-right: 8px;
+.action-links li {margin: 0; padding: 0; display: inline-block; margin-right: 8px;
     width: 180px;}
 .action-links li a {display: block;
     font-size: 11pt; color: #ee234f; font-weight: bold;
     text-align: center;}
 .action-links li a:hover {background: none; padding-bottom: 0px;}
 .action-links li a img {display: block; max-width: 68px; max-height: 68px; margin: 4px auto 8px auto;}
-.action-links-contact li {width: 100px;}
+.action-links-small li {width: 100px;}
 
 p {line-height: 1.75; font-size: 11pt;
    margin-bottom: 1em;}
+
+ul {margin-left: 1.2em;}
+li {padding-left: 0.5em;}
 
 blockquote::before {content: ""; display: inline-block; background: url("/static/img/quot-left.png") no-repeat; width: 16px; height: 16px; background-size: contain; margin-right: 8px;}
 blockquote:after {content: ""; display: inline-block; background: url("/static/img/quot-right.png") no-repeat; width: 16px; height: 16px; background-size: contain; margin-left: 8px;}

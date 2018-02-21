@@ -1,0 +1,64 @@
+{% extends '_base.html' %}
+{% block content %}
+    <h2>Komunita</h2>
+    <h3>Naše komunita</h3>
+    <p>Zajímá Vás cokoli z videoherní historie? Sháníte příslušenství nebo sběratelský kousek? Vyzkoušejte některý z našich komunikačních kanálů uvedených v záhlaví stránky nebo napište na naše fórum a poraďte se s komunitou. Než vám přistane odpověď, můžete mrknout třeba na naše články.
+    <div class="photos-two">
+         {{ photo('sberatele') }}
+         {{ photo('pc-hraci') }}
+    </div>
+    <p>Místo stálé expozice na jednom místě máte příležitost RetroHernu potkat na festivalech po celé České republice. Přijímáme pozvání na veřejné i uzavřené konference, nové akce pravidelně vyhlašujeme v sekci <a href="#TODO">Výjezdy</a>. Chcete si RetroHernu objednat na svou vlastní akci?
+    
+    <h3>Kde si pokecat</h3>
+    <p>RetroHernu najdete na Facebooku a na Discordu. Na každé akci jsme pro vás a když zrovna netaháme televize, vždycky se rádi zastavíme na kus řeči. Ať už osobně a nebo on-line, nebojte se s námi sdílet svoje zážitky a podněty!
+    
+    {{ action_links((
+        ("komunita/discord", "Discord"),
+        ("komunita/email", "Email"),
+        ("komunita/forum", "Fórum"),
+      ), "small")
+    }}
+    
+    <h3>Jak se zapojit</h3>
+    <p>V rámci aktivit RetroHerny je nespočet možností, jak se mezi nás můžete osobně zapojit. Nejlepším způsobem, jak zjistit, co by se vám líbilo, je navštívit některý z našich výjezdů. A nebo nám napište a my s vámi rádi hodíme řeč osobně.
+    <ul>
+        <li>Zapojit se do diskuse a popovídat si o videohrách a konzolích
+        <li>Napsat článek o tématu, které Tě baví
+        <li>Pochlubit se svou vlastní sbírkou a úspěchy
+        <li>Pomoci s organizací výjezdů a akcí RetroHerny
+        <li>Přispět na sbírku (finančně/hmotně)
+        <li>Poomoci čistit nebo opravovat konzole a počítače
+        <li>Natáčet retro letsplaye nebo jiná videa pro RetroHernu
+        <li>Vytvořit grafické materiály
+        <li>Věnovat se archivaci a prezervaci herní dokumentace
+        <li>Programovat pro RetroHernu
+        <li>Nebo se zapojit jinak, stačí nám napsat
+    </ul>
+    
+    {{ action_links((
+        ("", "Domluv se na Discordu"),
+        ("", "Napiš nám email"),
+      ))
+    }}
+    
+    <h3>Kde nás sledovat</h3>
+    <p>RetroHernu najdete na Facebooku a na Discordu. Na každé akci jsme pro vás a když zrovna netaháme televize, vždycky se rádi zastavíme na kus řeči. Ať už osobně a nebo on-line, nebojte se s námi sdílet svoje zážitky a podněty!
+    
+    {{ action_links((
+        ("komunita/facebook", "Facebook"),
+        ("komunita/twitter", "Twitter"),
+        ("komunita/rss", "RSS"),
+        ("komunita/newsletter", "Newsletter"),
+      ), "small")
+    }}
+    
+    <h3>Fórum</h3>
+    <p>RetroHernu najdete na Facebooku a na Discordu. Na každé akci jsme pro vás a když zrovna netaháme televize, vždycky se rádi zastavíme na kus řeči.
+    
+    {{ action_links((
+        ("", "Přejít do fóra"),
+      ))
+    }}
+    
+{% endblock %}
+

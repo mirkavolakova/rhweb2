@@ -10,6 +10,9 @@ def o_nas():
 @app.route("/kontakt")
 def kontakt():
     return render_template("kontakt.html")
+@app.route("/komunita")
+def komunita():
+    return render_template("komunita.html")
 
 if __name__ == "__main__":
     app.run(host="", port=9011, debug=True)

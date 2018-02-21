@@ -8,7 +8,9 @@
 
 {% macro action_link(identifier, text) %}
     <li><a href="#">
-        <img src="/static/img/icons/{{identifier}}@2x.png">
+        {% if identifier %}
+            <img src="/static/img/icons/{{identifier}}@2x.png">
+        {% endif %}
         <div>
             {{text}}
         </div>
