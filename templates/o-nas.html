@@ -11,15 +11,14 @@
     <p>Archivace herních časopisů, články nadšenců, rozhovory s vývojáři i vaše vzpomínky na někdejší pátrání po tajných lokacích, to všechno prohlubuje zážitek z hraní a buduje tak skvělou komunitu hráčů, kteří spolu navzájem sdílejí své nadšení.
     
     <h3>Co děláme</h3>
-    <p>Zajímá Vás cokoli z videoherní historie? Sháníte příslušenství nebo sběratelský kousek? Vyzkoušejte některý z našich komunikačních kanálů uvedených v záhlaví stránky nebo napište na naše <a href="#">fórum</a> a poraďte se s komunitou. Než vám přistane odpověď, můžete mrknout třeba na <a href="#">naše články</a>.
+    <p>Zajímá Vás cokoli z videoherní historie? Sháníte příslušenství nebo sběratelský kousek? Vyzkoušejte některý z našich komunikačních kanálů uvedených v záhlaví stránky nebo napište na naše <a href="/forum/">fórum</a> a poraďte se s komunitou. Než vám přistane odpověď, můžete mrknout třeba na <a href="{{url_for('clanky')}}">naše články</a>.
     
     <ul class="action-links">
-        {{ action_link("o-projektu/vyjezdy-a-akce",
-            "Výjezdy a akce") }}
-        {{ action_link("o-projektu/komunita",
-            "Komunita") }}
-        {{ action_link("o-projektu/vyzkum-a-archivace",
-            "Výzkum a archivace") }}
+        {{ action_links((
+         ("o-projektu/vyjezdy-a-akce", "Výjezdy a akce", url_for('vyjezdy')),
+         ("o-projektu/komunita", "Komunita", url_for('komunita')),
+         ("o-projektu/vyzkum-a-archivace", "Výzkum a archivace", url_for('clanky')),
+        ))}}
     </ul>
     
     <h3>Zapoj se</h3>
@@ -27,22 +26,22 @@
     
      {{ photo('hraci-na-pohovce') }}
     
-    <p>RetroHernu najdete na <a href="#">Facebooku</a> a na <a href="#">Discordu</a>. Na každé akci jsme pro vás a když zrovna netaháme televize, vždycky se rádi zastavíme na kus řeči. Ať už osobně a nebo on-line, nebojte se s námi sdílet svoje zážitky.
+    <p>RetroHernu najdete na <a href="{{urls.facebook}}">Facebooku</a> a na <a href="{{urls.discord}}">Discordu</a>. Na každé akci jsme pro vás a když zrovna netaháme televize, vždycky se rádi zastavíme na kus řeči. Ať už osobně a nebo on-line, nebojte se s námi sdílet svoje zážitky.
     
     {{ action_links((
-        ("o-projektu/jak-se-zapojit", "Jak se zapojit"),
-        ("o-projektu/napis-nam", "Napište nám"),
-        ("o-projektu/nase-komunita", "Naše komunita")
+        ("o-projektu/jak-se-zapojit", "Jak se zapojit", url_for('komunita')),
+        ("o-projektu/napis-nam", "Napište nám", url_for('kontakt')),
+        ("o-projektu/nase-komunita", "Naše komunita", url_for('komunita'))
       ))
     }}
     
     <h3>Jak nás podpořit</h3>
     
-    <p>Podpořit nás můžete třeba starým kouskem do sbírky (konzolí, herním příslušenstvím, počítačem, monitory, CRT televizí, hrami, herními magazíny a literaturou), přiložením ruky k dílu (organizace výjezdů, údržba a opravy techniky) nebo finančním příspěvkem na náš <a href="#">transparentní účet</a>.
+    <p>Podpořit nás můžete třeba starým kouskem do sbírky (konzolí, herním příslušenstvím, počítačem, monitory, CRT televizí, hrami, herními magazíny a literaturou), přiložením ruky k dílu (organizace výjezdů, údržba a opravy techniky) nebo finančním příspěvkem na náš <a href="{{urls.bankaccount}}">transparentní účet</a>.
     {{ action_links((
-        ("o-projektu/darovat-hardware", "Darovat hardware"),
-        ("o-projektu/zapojit-se", "Zapojit se do projektu"),
-        ("o-projektu/financne-podporit", "Finančně podpořit")
+        ("o-projektu/darovat-hardware", "Darovat hardware", url_for('kontakt')),
+        ("o-projektu/zapojit-se", "Zapojit se do projektu", url_for('komunita')),
+        ("o-projektu/financne-podporit", "Finančně podpořit", url_for('kontakt'))
       ))
     }}
     
@@ -72,12 +71,12 @@
             <li><a href="{{url}}"><img src="/static/img/partners/{{name}}.png" alt="{{name}}"></a>
         {% endfor %}
     </ul>
-    <p>RetroHerna své hlavní partnery teprve hledá. Myslíte si, že byste to mohli být vy? Napište nám e-mail na <a href="mailto:info@retroherna.org">info@retroherna.org</a> nebo nechte zprávu na <a href="#">Facebooku</a> a my se Vám ozveme.
+    <p>RetroHerna své hlavní partnery teprve hledá. Myslíte si, že byste to mohli být vy? Napište nám e-mail na <a href="mailto:info@retroherna.org">info@retroherna.org</a> nebo nechte zprávu na <a href="{{urls.facebook}}">Facebooku</a> a my se Vám ozveme.
     
     {{ action_links((
-        ("o-projektu/pro-media", "Pro média"),
-        ("o-projektu/objednejte-si-nas", "Objednejte si nás"),
-        ("o-projektu/stante-se-partnerem", "Staňte se partnerem")
+        ("o-projektu/pro-media", "Pro média", url_for('kontakt')),
+        ("o-projektu/objednejte-si-nas", "Objednejte si nás", url_for('kontakt')),
+        ("o-projektu/stante-se-partnerem", "Staňte se partnerem", url_for('kontakt'))
       ))
     }}
     
@@ -89,8 +88,8 @@
     <div class="quote-author">Honza Novotný</div>
     
     {{ action_links((
-        ("o-projektu/zahraj-si", "Přijďte si zahrát"),
-        ("o-projektu/pokecej-si", "Hoďte s námi řeč"),
+        ("o-projektu/zahraj-si", "Přijďte si zahrát", url_for('vyjezdy')),
+        ("o-projektu/pokecej-si", "Hoďte s námi řeč", url_for('komunita')),
       ))
     }}
     

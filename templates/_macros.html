@@ -6,8 +6,8 @@
     </div>
 {% endmacro %}
 
-{% macro action_link(identifier, text) %}
-    <li><a href="#">
+{% macro action_link(identifier, text, url) %}
+    <li><a href="{{url}}">
         {% if identifier %}
             <img src="/static/img/icons/{{identifier}}@2x.png">
         {% endif %}
@@ -19,8 +19,8 @@
 
 {% macro action_links(links, class) %}
     <ul class="action-links action-links-{{class}}">
-        {% for identifier, text in links %}
-            {{ action_link(identifier, text) }}
+        {% for identifier, text, url in links %}
+            {{ action_link(identifier, text, url) }}
         {% endfor %}
     </ul>
 {% endmacro %}

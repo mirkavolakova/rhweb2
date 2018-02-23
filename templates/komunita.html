@@ -13,9 +13,9 @@
     <p>RetroHernu najdete na Facebooku a na Discordu. Na každé akci jsme pro vás a když zrovna netaháme televize, vždycky se rádi zastavíme na kus řeči. Ať už osobně a nebo on-line, nebojte se s námi sdílet svoje zážitky a podněty!
     
     {{ action_links((
-        ("komunita/discord", "Discord"),
-        ("komunita/email", "Email"),
-        ("komunita/forum", "Fórum"),
+        ("komunita/discord", "Discord", urls.discord),
+        ("komunita/email", "Email", "email"),
+        ("komunita/forum", "Fórum", urls.forum),
       ), "small")
     }}
     
@@ -36,8 +36,8 @@
     </ul>
     
     {{ action_links((
-        ("", "Domluv se na Discordu"),
-        ("", "Napiš nám email"),
+        ("", "Domluv se na Discordu", urls.discord),
+        ("", "Napiš nám email", urls.email),
       ))
     }}
     
@@ -45,10 +45,10 @@
     <p>RetroHernu najdete na Facebooku a na Discordu. Na každé akci jsme pro vás a když zrovna netaháme televize, vždycky se rádi zastavíme na kus řeči. Ať už osobně a nebo on-line, nebojte se s námi sdílet svoje zážitky a podněty!
     
     {{ action_links((
-        ("komunita/facebook", "Facebook"),
-        ("komunita/twitter", "Twitter"),
-        ("komunita/rss", "RSS"),
-        ("komunita/newsletter", "Newsletter"),
+        ("komunita/facebook", "Facebook", urls.facebook),
+        ("komunita/twitter", "Twitter", urls.twitter),
+        ("komunita/rss", "RSS", url_for('clanky')),
+        ("komunita/newsletter", "Newsletter", ""),
       ), "small")
     }}
     
@@ -56,7 +56,7 @@
     <p>RetroHernu najdete na Facebooku a na Discordu. Na každé akci jsme pro vás a když zrovna netaháme televize, vždycky se rádi zastavíme na kus řeči.
     
     {{ action_links((
-        ("", "Přejít do fóra"),
+        ("", "Přejít do fóra", urls.forum),
       ))
     }}
     

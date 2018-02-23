@@ -45,7 +45,7 @@
             <li class="more"><a href="#">Další novinky</a>
         </ul>
         
-        <a class="discord-link" href="#">
+        <a class="discord-link" href="{{urls.discord}}">
             <div class="icon-discord"></div>
             Pokecej si na Discordu
         </a>
@@ -53,16 +53,16 @@
     <div class="primary">
         <div class="linkbar">
             <ul class="social-media-links">
-                <li><a href="#" class="icon-facebook">Facebook</a>
-                <li><a href="#" class="icon-twitter">Twitter</a>
-                <li><a href="#" class="icon-youtube">YouTube</a>
+                <li><a href="{{urls.facebook}}" class="icon-facebook">Facebook</a>
+                <li><a href="{{urls.twitter}}" class="icon-twitter">Twitter</a>
+                <li><a href="{{urls.youtube}}" class="icon-youtube">YouTube</a>
             </ul>
             <h1 class="mobile-logo">RetroHerna</h1>
             {% macro basic_links() %}
                 <li><a href="{{url_for('o_nas')}}">O projektu</a>
                 <li><a href="{{url_for('vyjezdy')}}">Výjezdy</a>
                 <li><a href="{{url_for('komunita')}}">Komunita</a>
-                <li><a href="#">Články</a>
+                <li><a href="{{url_for('clanky')}}">Články</a>
                 <li><a href="{{url_for('kontakt')}}">Kontakt</a>
             {% endmacro %}
             <ul class="page-links">

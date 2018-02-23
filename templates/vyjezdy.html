@@ -79,7 +79,7 @@
     </div>
     
     {{ action_links((
-        ("", "Přečíst zprávy z akcí"),
+        ("", "Přečíst zprávy z akcí", url_for("clanky")),
       ))
     }}
     
@@ -95,8 +95,8 @@
     <p>Tento seznam představuje výpis námi vlastněných domácích konzolí a handheldů s informačním popiskem. Není ale úplný, jelikož RetroHerna zachází i s technikou mimo naše hlavní zaměření - především konzole vydané po roce 2000 a také obskurnější historicky nedůležité a neoriginální exponáty. Část z uvedených konzolí také vlastníme ve více exponátech.
     
     {{ action_links((
-        ("vyjezdy/inventar", "Inventář"),
-        ("vyjezdy/akce", "Akce"),
+        ("vyjezdy/inventar", "Inventář", ""),
+        ("vyjezdy/akce", "Akce", ""),
       ))
     }}
     
@@ -104,7 +104,7 @@
     <p>Tento seznam představuje výpis námi vlastněných domácích konzolí a handheldů s informačním popiskem. Není ale úplný, jelikož RetroHerna zachází i s technikou mimo naše hlavní zaměření - především konzole vydané po roce 2000 a také obskurnější historicky nedůležité.
     
     {{ action_links((
-        ("vyjezdy/objednat-retrohernu", "Objednat RetroHernu"),
+        ("vyjezdy/objednat-retrohernu", "Objednat RetroHernu", url_for("kontakt")),
       ))
     }}
 
