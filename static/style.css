@@ -18,7 +18,7 @@ body {
     background:
         url("/static/img/sidebar-bg.png") repeat-y,
         #1b2441;
-    background-position: 0 0;
+    background-position: -100px 0;
     color: #f8f7f6;
     font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;
 }
@@ -27,14 +27,14 @@ a {color: #f8f7f6;}
 
 .sidebar {
     float: left;
-    width: 400px;
+    width: 300px;
     padding: 32px 32px 32px 32px;
 }
 
 .primary {
-    max-width: 800px;
+    max-width: 900px;
     padding: 32px 32px 32px 75px;
-    margin-left: 400px;
+    margin-left: 300px;
 }
 
 .photos-two {
@@ -52,6 +52,9 @@ a {color: #f8f7f6;}
     background-repeat: no-repeat;}
 
 .mobile-logo {display: none;}
+.mobile-logo img {vertical-align: middle;}
+.mobile-logo .logotext {height: 30px;}
+h1 .logo {width: 200px;}
 h1, h2, .copyright {font-family: 'Amatic SC', 'Open Sans', 'Helvetica', 'Arial', sans-serif;}
 h1 {font-size: 32pt;}
 h2 {color: #ee234f; font-size: 35pt; margin-top: 0.9em;}
@@ -165,6 +168,8 @@ ul.partners img {width: 100%;}
     .mobile-logo {display: block;}
     footer {background-size: 100%;
         padding: 32px 32px 16px 32px;}
-} 
-@media (max-width: 520px) {
+}
+@media (max-width: 400px) {
+    .mobile-logo .logotext {height: 25px;}
+    ul.page-links li {font-size: 21pt;}
 }
