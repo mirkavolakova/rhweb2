@@ -12,7 +12,7 @@ app_dir = os.path.dirname(os.path.abspath(__file__))
 DOKUUSER = "rhweb"
 DOKUPASS = open(app_dir+'/DOKUPASS').read().strip()
 
-wiki = DokuWiki("http://routeer.retroherna.org/wiki", DOKUUSER, DOKUPASS)
+wiki = DokuWiki("https://retroherna.org/wiki", DOKUUSER, DOKUPASS)
 
 def wikipage(name, force=False):
     name = name.replace("/", ":")
@@ -59,7 +59,7 @@ def transform_wikipage(page):
     
     if False:
         for img in page.find_all('img'):
-            img['src'] = img['src'].replace("/wiki/lib/exe/fetch.php", "http://routeer.retroherna.org/wiki/lib/exe/fetch.php")
+            img['src'] = img['src'].replace("/wiki/lib/exe/fetch.php", "https://retroherna.org/wiki/lib/exe/fetch.php")
             title = img.get('title')
             
             parent = img.parent
