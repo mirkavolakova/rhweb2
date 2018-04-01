@@ -57,32 +57,31 @@ def transform_wikipage(page):
         if a.get('href') and "/wiki/doku.php" in a['href']:
             a['href'] = a['href'].replace("/wiki/doku.php?id=web:", "/").replace(':', '/')
     
-    if False:
-        for img in page.find_all('img'):
-            img['src'] = img['src'].replace("/wiki/lib/exe/fetch.php", "https://retroherna.org/wiki/lib/exe/fetch.php")
-            title = img.get('title')
-            
-            parent = img.parent
-            if parent.name == "a" and parent['href'].startswith("/wiki"):
-                parent.name = "div"
-                del parent['href']
-            else:
-                parent = page.new_tag("div")
-                img.wrap(parent)
-            parent['class'] = img['class'] + [" mediawrap"]
-            if 'mediacenter' in img['class'] and img.get('width'):
-                # life is too short
-                parent['style'] = 'width: {}px;'.format(img['width'])
-            del img['class']
-            
-            # XXX yes this is necessary, thanks dokuwiki
-            if title and not any(title.endswith(t) for t in ("png", "jpg", "jpeg", "gif")):
-                title = page.new_tag("div")
-                title['class'] = "mediatitle"
-                if img.get('width'):
-                    title['style'] = "max-width: {}px;".format(img['width'])
-                title.string = img['title']
-                parent.append(title)
+    for img in page.find_all('img'):
+        img['src'] = img['src'].replace("/wiki/lib/exe/fetch.php", "https://retroherna.org/wiki/lib/exe/fetch.php")
+        title = img.get('title')
+        
+        parent = img.parent
+        if parent.name == "a" and parent['href'].startswith("/wiki"):
+            parent.name = "div"
+            del parent['href']
+        else:
+            parent = page.new_tag("div")
+            img.wrap(parent)
+        parent['class'] = img['class'] + [" mediawrap"]
+        if 'mediacenter' in img['class'] and img.get('width'):
+            # life is too short
+            parent['style'] = 'width: {}px;'.format(img['width'])
+        del img['class']
+        
+        # XXX yes this is necessary, thanks dokuwiki
+        if title and not any(title.endswith(t) for t in ("png", "jpg", "jpeg", "gif")):
+            title = page.new_tag("div")
+            title['class'] = "mediatitle"
+            if img.get('width'):
+                title['style'] = "max-width: {}px;".format(img['width'])
+            title.string = img['title']
+            parent.append(title)
     
     return page
 
