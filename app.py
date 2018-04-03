@@ -59,7 +59,8 @@ def transform_wikipage(page):
             a['href'] = a['href'].replace("/wiki/doku.php?id=web:", "/").replace(':', '/')
     
     for img in page.find_all('img'):
-        img['src'] = img['src'].replace("/wiki/lib/exe/fetch.php", "https://retroherna.org/wiki/lib/exe/fetch.php")
+        if not img['src'].startswith("http"):
+            img['src'] = img['src'].replace("/wiki/lib/exe/fetch.php", "https://retroherna.org/wiki/lib/exe/fetch.php")
         title = img.get('title')
         
         parent = img.parent
