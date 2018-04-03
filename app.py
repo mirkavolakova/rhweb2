@@ -68,8 +68,9 @@ def transform_wikipage(page):
         else:
             parent = page.new_tag("div")
             img.wrap(parent)
-        parent['class'] = img['class'] + [" mediawrap"]
-        if 'mediacenter' in img['class'] and img.get('width'):
+        classes = img['class'] if 'class' in img else []
+        parent['class'] = classes + [" mediawrap"]
+        if 'mediacenter' in classes and img.get('width'):
             # life is too short
             parent['style'] = 'width: {}px;'.format(img['width'])
         del img['class']
@@ -145,7 +146,7 @@ def page(path):
     
     page = """{% extends '_base.html' %}
 {% block content %}
-""" + page.prettify() + """
+""" + str(page) + """
 {% endblock %}
 """
     

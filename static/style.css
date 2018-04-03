@@ -141,6 +141,9 @@ ul.partners li {display: inline-block; margin-right: 32px; width: 140px;}
 ul.partners img {width: 100%;}
 
 .highlight {color: #ee234f;}
+.green {color: #00d696;}
+
+details summary { cursor: pointer; }
 
 @media (max-width: 1200px) {
     body {background-position: -100px 0;}
