@@ -11,8 +11,9 @@ app_dir = os.path.dirname(os.path.abspath(__file__))
 
 DOKUUSER = "rhweb"
 DOKUPASS = open(app_dir+'/DOKUPASS').read().strip()
+DOKUURL = "https://retroherna.org/wiki"
 
-wiki = DokuWiki("https://retroherna.org/wiki", DOKUUSER, DOKUPASS)
+wiki = DokuWiki(DOKUURL, DOKUUSER, DOKUPASS)
 
 def wikipage(name, force=False):
     name = name.replace("/", ":")
@@ -99,6 +100,7 @@ def before_request():
     g.footer = transform_wikipage(wikipage("web:footer"))
     
     g.pagetitle = None
+    g.dokuwiki_url = DOKUURL
 
 @app.context_processor
 def new_template_globals():
@@ -112,6 +114,7 @@ def new_template_globals():
         "forum": "/forum/",
         "email": "mailto:info@retroherna.org",
         "hernihistorie": "https://hernihistorie.cz/",
+        "wiki": DOKUURL+"/",
     }
     return {
         'zip': zip,

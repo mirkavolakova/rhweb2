@@ -1,7 +1,12 @@
 
 {% macro photo(name) %}
     <div class="photo">
-        <img src="/static/img/foto/{{name}}.png" class="image">
+        {% if name.startswith("web2:") %}
+            {% set url = g.dokuwiki_url+"/lib/exe/fetch.php?media="+name %}
+        {% else %}
+            {% set url = "/static/img/foto/"+name+".png" %}
+        {% endif %}
+        <img src="{{url}}" class="image">
         <div class="border"></div>
     </div>
 {% endmacro %}
