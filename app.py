@@ -106,6 +106,7 @@ def new_template_globals():
         "youtube": "https://www.youtube.com/channel/UCJNNkhuJNO5dujOhy9r-jdA",
         "twitter": "https://twitter.com/hernihistorie",
         "discord": "https://discord.gg/9jajeqZ",
+        "instagram": "https://www.instagram.com/retroherna/",
         "bankaccount": "https://www.moneta.cz/firmy/instituce-a-verejna-sprava/transparentni-ucty/001/-/transparent-account/8686868686",
         "forum": "/forum/",
         "email": "mailto:info@retroherna.org",
