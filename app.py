@@ -85,7 +85,15 @@ def transform_wikipage(page):
             title.string = img['title']
             parent.append(title)
     
+    #page = page.html.body
+    #page.name = "section"
+    
+    #page = "".join(str(page))
     return page
+
+def render_wikipage(wikipage, **kwargs):
+    wikipage = str(transform_wikipage(wikipage))
+    return render_template_string(wikipage, **kwargs)
 
 @app.before_request
 def before_request():
@@ -96,8 +104,10 @@ def before_request():
         g.purge = True
         g.caching_comment += "purging\n"
 
-    g.banner = transform_wikipage(wikipage("web:banner"))
-    g.footer = transform_wikipage(wikipage("web:footer"))
+    #g.banner = transform_wikipage(wikipage("web:banner"))
+    #g.footer = transform_wikipage(wikipage("web:footer"))
+    if not request.path.startswith("/static"):
+        g.sidebar = render_wikipage(wikipage("web2:sidebar"))
     
     g.pagetitle = None
     g.dokuwiki_url = DOKUURL
@@ -139,13 +149,13 @@ def page(path):
     
     page = transform_wikipage(page)
     
-    h1 = page.find('h1')
-    if h1:
-        g.pagetitle = h1.string
-    elif path == "index":
-        g.pagetitle = None
-    else:
-        g.pagetitle = path
+    #h1 = page.find('h1')
+    #if h1:
+    #    g.pagetitle = h1.string
+    #elif path == "index":
+    #    g.pagetitle = None
+    #else:
+    #    g.pagetitle = path
     
     page = """{% extends '_base.html' %}
 {% block content %}
@@ -153,7 +163,7 @@ def page(path):
 {% endblock %}
 """
     
-    return render_template_string(page, path=path, page=page)
+    return render_wikipage(page, path=path, page=page)
 
 
 """
