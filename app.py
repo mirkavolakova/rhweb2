@@ -86,8 +86,8 @@ def transform_wikipage(page):
             title.string = img['title']
             parent.append(title)
     
-    #page = page.html.body
-    #page.name = "section"
+    page = page.html.body
+    page.name = "section"
     
     #page = "".join(str(page))
     return page
@@ -147,7 +147,6 @@ def page(path):
     #else:
     page = wikipage("web2:"+path.replace("/", ":"))
     if not page: abort(404)
-    
     page = transform_wikipage(page)
     
     #h1 = page.find('h1')
@@ -164,7 +163,7 @@ def page(path):
 {% endblock %}
 """
     
-    return render_wikipage(page, path=path, page=page)
+    return render_template_string(page, path=path, page=page)
 
 
 """

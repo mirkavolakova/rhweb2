@@ -77,7 +77,9 @@ h3 {margin-top: 2em; margin-bottom: 1em;}
     background: #b01134; background-clip: padding-box;
     border-image: url("/static/img/button1.svg") 10 10 round;
     height: 50px; width: 240px;
-    margin: 32px auto 8px auto;}
+    margin: 32px auto 8px auto;
+    font-size: 14px;
+    }
 a.discord-link:hover {}
 
 ul.page-links, ul.social-media-links {margin: 0; padding: 0; list-style: none;}
