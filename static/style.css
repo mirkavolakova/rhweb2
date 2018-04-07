@@ -130,6 +130,8 @@ ul {margin-left: 1.2em;}
 li {padding-left: 0.5em;}
 .events li {padding-left: 0.1em;}
 
+.ul-ideas li {font-size:17px; line-height: 1.6;}
+
 .columns-2 {column-count: 2;}
 
 blockquote::before {content: ""; display: inline-block; background: url("/static/img/quot-left.png") no-repeat; width: 16px; height: 16px; background-size: contain; margin-right: 8px;}
