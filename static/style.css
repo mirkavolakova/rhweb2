@@ -147,6 +147,19 @@ ul.partners img {width: 100%;}
 
 details summary { cursor: pointer; }
 
+.medialeft, .mediaright { margin: 2px 10px 8px 10px;}
+.medialeft {float: left;}
+.mediaright {float: right;}
+.mediawrap.mediacenter {margin-left:auto; margin-right:auto; display: block;}
+
+video.mediacenter {margin: auto; display: block;}
+
+.mediatitle {text-align: center;}
+
+.mediawrap {
+    margin: 4px 16px 4px 16px; }
+
+
 @media (max-width: 1200px) {
     body {background-position: -100px 0;}
     .sidebar {width: 300px;}

@@ -70,7 +70,8 @@ def transform_wikipage(page):
         else:
             parent = page.new_tag("div")
             img.wrap(parent)
-        classes = img['class'] if 'class' in img else []
+        classes = img.get('class')
+        print(classes)
         parent['class'] = classes + [" mediawrap"]
         if 'mediacenter' in classes and img.get('width'):
             # life is too short
@@ -108,7 +109,7 @@ def before_request():
     #g.banner = transform_wikipage(wikipage("web:banner"))
     #g.footer = transform_wikipage(wikipage("web:footer"))
     if not request.path.startswith("/static"):
-        g.sidebar = render_wikipage(wikipage("web2:sidebar"))
+        g.sidebar = render_wikipage(wikipage("web2:sidebar"), force=True)
     
     g.pagetitle = None
     g.dokuwiki_url = DOKUURL
