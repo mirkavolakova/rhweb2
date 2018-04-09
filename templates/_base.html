@@ -35,6 +35,9 @@
             RetroHerna
         </h1>
         
+        {% block forum_sidebar %}
+        {% endblock %}
+        
         {{ g.sidebar | safe }}
         
         <a class="discord-link" href="{{urls.discord}}">

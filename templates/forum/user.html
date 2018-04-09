@@ -39,9 +39,6 @@
                                 </dd>
                             {% endif %}
                         </dl>
-                        <ul>
-                            <li><a href="{{user.url}}/threads">Založená témata</a>
-                        </ul>
                 </div>
         {% else %}
             <form method="POST">
@@ -70,4 +67,7 @@
         <div class="card-threads">
         </div>
     </div>
+    <ul>
+        <li><a href="{{user.url}}/threads">Založená témata</a>
+    </ul>
 {% endblock %}

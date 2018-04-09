@@ -2,6 +2,17 @@
     txt_posts, ago, errors, task_list,
     new_icon with context -%}
 {% extends '_base.html' %}
+
+{% block forum_sidebar %}
+    {% if g.user %}
+        Přihlášen/a za <a href="{{g.user.url}}">{{g.user.name}}</a> &bull;
+        <a href="{{url_for('.logout')}}">Odhlásit se</a>
+    {% else %}
+        <a href="{{url_for('.login')}}">Přihlásit se</a> &bull;
+        <a href="{{url_for('.register')}}">Registrovat</a>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
 <!--    <title>RHforum » {% block title %}{% endblock %}</title> -->
     <script>
@@ -32,14 +43,7 @@
         webshims.polyfill();
         webshims.activeLang("cs");
     </script>-->
-<section id="forumsection">
-    {% if g.user %}
-        Přihlášen/a za <a href="{{g.user.url}}">{{g.user.name}}</a> &bull;
-        <a href="{{url_for('.logout')}}">Odhlásit se</a>
-    {% else %}
-        <a href="{{url_for('.login')}}">Přihlásit se</a> &bull;
-        <a href="{{url_for('.register')}}">Registrovat</a>
-    {% endif %}
+<section class="forum">
     <div class="container">
         {% with messages = get_flashed_messages() %}
             {% for message in messages %}

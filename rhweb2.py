@@ -10,6 +10,7 @@ import rhforum
 
 app = Flask('rhweb2')
 app_dir = os.path.dirname(os.path.abspath(__file__))
+app.config.from_pyfile(app_dir+"/config.py") # XXX
 
 DOKUUSER = "rhweb"
 DOKUPASS = open(app_dir+'/DOKUPASS').read().strip()
@@ -17,7 +18,8 @@ DOKUURL = "https://retroherna.org/wiki"
 
 wiki = DokuWiki(DOKUURL, DOKUUSER, DOKUPASS)
 
-rhweb = Blueprint('rhweb', __name__, template_folder='templates')
+rhweb = Blueprint('rhweb', __name__, template_folder='templates', static_folder='static')
+
 
 def wikipage(name, force=False):
     name = name.replace("/", ":")

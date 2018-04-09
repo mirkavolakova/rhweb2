@@ -334,7 +334,7 @@ def edit_forum_or_category(forum_id=None, category_id=None):
                 else:
                     flash("Kategorie upravena.")
             db.session.commit()
-            return redirect(url_for('index'))
+            return redirect(url_for('.index'))
         elif form.delete.data:
             if request.endpoint == 'edit_forum':
                 if not form.new_forum_id.data and forum.threads:
@@ -354,12 +354,12 @@ def edit_forum_or_category(forum_id=None, category_id=None):
                     else:
                         flash("Fórum odstraněno.")
                     db.session.commit()
-                    return redirect(url_for('index'))
+                    return redirect(url_for('.index'))
             elif request.endpoint == 'edit_category':
                 db.session.delete(category)
                 flash("Kategorie odstraněna.")
                 db.session.commit()
-                return redirect(url_for('index'))
+                return redirect(url_for('.index'))
         else:
             # moving
             i = editable.position
@@ -412,7 +412,7 @@ def login():
                 session['user_id'] = g.user.id
                 session.permanent = True
                 flash("Jste přihlášeni.")
-                return redirect(url_for('index'))
+                return redirect(url_for('.index'))
             else:
                 failed = True
     
@@ -435,7 +435,7 @@ def register():
     if g.user:
         if g.user.admin:
             flash("Pro ruční registraci účtů ostatním použijte prosím DokuWiki.")
-        return redirect(url_for("index"))
+        return redirect(url_for(".index"))
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
         if form.username.data:
@@ -464,7 +464,7 @@ def register():
             session.permanent = True
             
             flash("Registrace proběhla úspěšně.")
-            return redirect(url_for("index"))
+            return redirect(url_for(".index"))
     
     return render_template("forum/register.html", form=form)
 
@@ -473,7 +473,7 @@ def logout():
     if 'user_id' in session:
         session.pop('user_id')
         flash("Odhlášení proběhlo úspěšně.")
-    return redirect(url_for('index'))
+    return redirect(url_for('.index'))
 
 @rhforum.route("/<int:forum_id>", methods="GET POST".split())
 @rhforum.route("/<int:forum_id>-<forum_identifier>", methods="GET POST".split())
@@ -738,7 +738,7 @@ def groups(edit_group_id=None):
         group = db.Group(name="")
         db.session.add(group)
         db.session.commit()
-        return redirect(url_for('groups', edit_group_id=group.id))
+        return redirect(url_for('.groups', edit_group_id=group.id))
     if edit_group_id:
         edit_group = db.session.query(db.Group).get(edit_group_id)
         form = GroupForm(request.form, edit_group)
@@ -750,7 +750,7 @@ def groups(edit_group_id=None):
         edit_group.display = form.display.data
         db.session.commit()
         flash("Skupina {} upravena.".format(edit_group.name))
-        return redirect(url_for('groups'))
+        return redirect(url_for('.groups'))
     
     return render_template("forum/groups.html", groups=groups, edit_group=edit_group, form=form)
 
@@ -789,7 +789,7 @@ def tasks(task_id=None):
                 flash("Úkol přidán.")
             else:
                 flash("Úkol upraven.")
-            return redirect(url_for('tasks'))
+            return redirect(url_for('.tasks'))
     
     tasks = db.session.query(db.Task).all()#.order_by(func.abs(func.now() - db.Task.due_time))
     sort_tasks(tasks)
@@ -806,7 +806,7 @@ def change_task_status(task_id):
     elif request.form["status"] == "done":
         task.status = "done"
     db.session.commit()
-    return redirect(url_for("tasks"))
+    return redirect(url_for(".tasks"))
 
 
 class IRCSendForm(Form):
