@@ -37,12 +37,12 @@ class MultiCheckboxField(SelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 app_dir = os.path.dirname(os.path.abspath(__file__))
-app = Flask('rhforum', template_folder=app_dir+"/templates_rhforum")
+app = Flask('rhforum', template_folder=app_dir+"/templates")
 app.config.from_pyfile(app_dir+"/config.py") # XXX
 BASE_URL = app.config.get("BASE_URL", "")
 
 rhforum = Blueprint('rhforum', __name__,
-    template_folder='templates_rhforum',
+    template_folder='templates',
     static_folder='static')
 
 doku = None
@@ -220,21 +220,21 @@ class TaskForm(Form):
 @rhforum.errorhandler(404)
 def page_not_found(e):
     if not request.path.startswith("/static"):
-        return render_template('errorpage.html', error=404), 404
+        return render_template('forum/errorpage.html', error=404), 404
     else:
         return "404", 404 # we don't have templates
 
 @rhforum.errorhandler(403)
 def page_not_found(e):
-    return render_template('errorpage.html', error=403), 403
+    return render_template('forum/errorpage.html', error=403), 403
 
 @rhforum.errorhandler(500)
 def page_not_found(e):
-    return render_template('errorpage.html', error=500), 500
+    return render_template('forum/errorpage.html', error=500), 500
     
 @rhforum.errorhandler(400)
 def page_not_found(e):
-    return render_template('errorpage.html', error=400), 400
+    return render_template('forum/errorpage.html', error=400), 400
 
 def get_active_threads():
     threads = db.session.query(db.Thread).join(db.Forum).outerjoin(db.Category)\
@@ -263,13 +263,13 @@ def index():
     tasks = db.session.query(db.Task).filter(db.Task.user_id.in_([g.user.id, None, 0])).all()
     sort_tasks(tasks)
     
-    return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_threads=latest_threads, trash=trash, form=form, tasks=tasks)
+    return render_template("forum/index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_threads=latest_threads, trash=trash, form=form, tasks=tasks)
 
 @rhforum.route("/active", methods="GET POST".split())
 def active():
     form = ForumControlsForm(request.form)
     active_threads = get_active_threads()[0:100]
-    return render_template("active.html", active_threads=active_threads, form=form)
+    return render_template("forum/active.html", active_threads=active_threads, form=form)
 
 @rhforum.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
 @rhforum.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())
@@ -386,7 +386,7 @@ def edit_forum_or_category(forum_id=None, category_id=None):
     elif request.endpoint == 'edit_category':
         if not category.id or category.position == len(categories) - 1:
             del form.move_down
-    return render_template("index.html", categories=categories+[None], uncategorized_fora=uncategorized_fora, editable=editable, form=form, new=not bool(forum_id), trash=trash)
+    return render_template("forum/index.html", categories=categories+[None], uncategorized_fora=uncategorized_fora, editable=editable, form=form, new=not bool(forum_id), trash=trash)
 
 class LoginForm(Form):
     name = TextField('Jméno', [validators.required()])
@@ -416,7 +416,7 @@ def login():
             else:
                 failed = True
     
-    return render_template("login.html", form=form, failed=failed)
+    return render_template("forum/login.html", form=form, failed=failed)
 
 class RegisterForm(Form):
     username = TextField('Nevyplňovat')
@@ -466,7 +466,7 @@ def register():
             flash("Registrace proběhla úspěšně.")
             return redirect(url_for("index"))
     
-    return render_template("register.html", form=form)
+    return render_template("forum/register.html", form=form)
 
 @rhforum.route("/logout")
 def logout():
@@ -503,7 +503,7 @@ def forum(forum_id, forum_identifier=None):
                 g.irc_messages.append("Nové téma od \x0302{}\x03: \x0306{}\x03: {}".format(
                     thread.author.name, thread.name, BASE_URL+thread.short_url))
             return redirect(thread.url)
-    return render_template("forum.html", forum=forum, threads=threads, form=form)
+    return render_template("forum/forum.html", forum=forum, threads=threads, form=form)
 
 @rhforum.route("/users/<int:user_id>/threads")
 @rhforum.route("/users/<int:user_id>-<name>/threads")
@@ -519,7 +519,7 @@ def user_threads(user_id, name=None):
         .filter(or_(db.Forum.category_id==None, db.Category.group_id.in_([None, 0]), db.Category.group_id.in_(group.id for group in g.user.groups)))\
         .filter(db.Forum.trash == False).order_by(db.Thread.laststamp.desc()).all()
     
-    return render_template("forum.html", forum=forum, threads=threads, user=user)
+    return render_template("forum/forum.html", forum=forum, threads=threads, user=user)
     
 
 # TODO <path:thread_identificator>
@@ -595,7 +595,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             print(ex)
             doku_error = ex
     
-    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.utcnow(), last_read_timestamp=last_read_timestamp, article=article, article_revisions=article_revisions, article_info=article_info, doku_error=doku_error, reply_post=reply_post, show_deleted="show_deleted" in request.args, num_deleted=num_deleted)
+    return render_template("forum/thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.utcnow(), last_read_timestamp=last_read_timestamp, article=article, article_revisions=article_revisions, article_info=article_info, doku_error=doku_error, reply_post=reply_post, show_deleted="show_deleted" in request.args, num_deleted=num_deleted)
 
 @rhforum.route("/<int:forum_id>/<int:topic_id>/set", methods="POST".split())
 @rhforum.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/set", methods="POST".split())
@@ -670,20 +670,20 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
             db.session.commit()
             return redirect(thread.url)
     
-    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.utcnow(), edit_post=post, edit_thread=edit_thread, last_read_timestamp=g.now)
+    return render_template("forum/thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.utcnow(), edit_post=post, edit_thread=edit_thread, last_read_timestamp=g.now)
 
 @rhforum.route("/users/")
 def users():
     if not g.user.admin: abort(403)
     users = db.session.query(db.User).order_by(db.User.fullname)
-    return render_template("users.html", users=users)
+    return render_template("forum/users.html", users=users)
 
 @rhforum.route("/users/<int:user_id>")
 @rhforum.route("/users/<int:user_id>-<name>")
 def user(user_id, name=None):
     user = db.session.query(db.User).get(user_id)
     if not user: abort(404)
-    return render_template("user.html", user=user)
+    return render_template("forum/user.html", user=user)
 
 @rhforum.route("/users/<int:user_id>/edit", methods="GET POST".split())
 @rhforum.route("/users/<int:user_id>-<name>/edit", methods="GET POST".split())
@@ -716,7 +716,7 @@ def edit_user(user_id, name=None):
         flash("Uživatel upraven.")
         return redirect(user.url)
     
-    return render_template("user.html", user=user, edit=True, form=form)
+    return render_template("forum/user.html", user=user, edit=True, form=form)
 
 class GroupForm(Form):
     name = TextField('Jméno', [validators.required()])
@@ -752,7 +752,7 @@ def groups(edit_group_id=None):
         flash("Skupina {} upravena.".format(edit_group.name))
         return redirect(url_for('groups'))
     
-    return render_template("groups.html", groups=groups, edit_group=edit_group, form=form)
+    return render_template("forum/groups.html", groups=groups, edit_group=edit_group, form=form)
 
 @rhforum.route("/tasks", methods="GET POST".split())
 @rhforum.route("/tasks/<int:task_id>", methods=["GET", "POST"])
@@ -794,7 +794,7 @@ def tasks(task_id=None):
     tasks = db.session.query(db.Task).all()#.order_by(func.abs(func.now() - db.Task.due_time))
     sort_tasks(tasks)
     
-    return render_template("tasks.html", tasks=tasks, form=form, task_id=task_id)
+    return render_template("forum/tasks.html", tasks=tasks, form=form, task_id=task_id)
 
 @rhforum.route("/tasks/<int:task_id>/status", methods=["POST"])
 def change_task_status(task_id):
@@ -825,7 +825,7 @@ def irc_send():
         
         form = IRCSendForm()
     
-    return render_template("irc_send.html", form=form, text=text)
+    return render_template("forum/irc_send.html", form=form, text=text)
 
 app.register_blueprint(rhforum, url_prefix='')
 

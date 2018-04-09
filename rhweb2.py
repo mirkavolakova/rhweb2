@@ -6,6 +6,8 @@ from flask import Blueprint, Flask, render_template, render_template_string, req
 from dokuwiki import DokuWiki, DokuWikiError
 from bs4 import BeautifulSoup
 
+import rhforum
+
 app = Flask('rhweb2')
 app_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -115,7 +117,7 @@ def before_request():
     g.pagetitle = None
     g.dokuwiki_url = DOKUURL
 
-@rhweb.context_processor
+@app.context_processor
 def new_template_globals():
     urls = {
         "facebook": "https://facebook.com/retroherna",
@@ -204,6 +206,7 @@ def clanky():
 """
 
 app.register_blueprint(rhweb, url_prefix='')
+app.register_blueprint(rhforum.rhforum, url_prefix='/forum/')
 
 if __name__ == "__main__":
     app.run(host="", port=9011, debug=True)

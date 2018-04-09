@@ -1,4 +1,4 @@
-{% from '_macros.html' import txt, txt_threads,
+{% from 'forum/_macros.html' import txt, txt_threads,
     txt_posts, ago, errors, task_list,
     new_icon with context -%}
 <!doctype html>
@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--<link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='style.css')}}">-->
     <style>
-        {% include "style.css" %}
+        {% include "forum/style.css" %}
     </style>
     <script>
         window.onload = function(){
