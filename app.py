@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 
-from flask import Flask, render_template, render_template_string, request, flash, redirect, session, abort, url_for, make_response, g
+from flask import Blueprint, Flask, render_template, render_template_string, request, flash, redirect, session, abort, url_for, make_response, g
 
 from dokuwiki import DokuWiki, DokuWikiError
 from bs4 import BeautifulSoup
@@ -14,6 +14,8 @@ DOKUPASS = open(app_dir+'/DOKUPASS').read().strip()
 DOKUURL = "https://retroherna.org/wiki"
 
 wiki = DokuWiki(DOKUURL, DOKUUSER, DOKUPASS)
+
+rhweb = Blueprint('rhweb', __name__, template_folder='templates')
 
 def wikipage(name, force=False):
     name = name.replace("/", ":")
@@ -96,7 +98,7 @@ def render_wikipage(wikipage, **kwargs):
     wikipage = str(transform_wikipage(wikipage))
     return render_template_string(wikipage, **kwargs)
 
-@app.before_request
+@rhweb.before_request
 def before_request():
     g.caching_comment = ""
     
@@ -113,7 +115,7 @@ def before_request():
     g.pagetitle = None
     g.dokuwiki_url = DOKUURL
 
-@app.context_processor
+@rhweb.context_processor
 def new_template_globals():
     urls = {
         "facebook": "https://facebook.com/retroherna",
@@ -132,8 +134,8 @@ def new_template_globals():
         'urls': urls,
     }
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
+@rhweb.route('/', defaults={'path': ''})
+@rhweb.route('/<path:path>')
 def page(path):
     if not path: path = "index"
     path = path.rstrip('/')
@@ -200,6 +202,8 @@ def vyjezdy():
 def clanky():
     return render_template("clanky.html")
 """
+
+app.register_blueprint(rhweb, url_prefix='')
 
 if __name__ == "__main__":
     app.run(host="", port=9011, debug=True)
