@@ -28,11 +28,14 @@ import requests
 
 def now():
     if app.config['DB'].startswith('postgresql+psycopg2'):
+        # https://stackoverflow.com/questions/796008/cant-subtract-offset-naive-and-offset-aware-datetimes/17752647#17752647
         import psycopg2
         return datetime.utcnow().replace(
             tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None))
     else:
         return datetime.utcnow()
+
+dtnow = now
 
 class MultiCheckboxField(SelectMultipleField):
     """
@@ -603,7 +606,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             print(ex)
             doku_error = ex
     
-    return render_template("forum/thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=now(), last_read_timestamp=last_read_timestamp, article=article, article_revisions=article_revisions, article_info=article_info, doku_error=doku_error, reply_post=reply_post, show_deleted="show_deleted" in request.args, num_deleted=num_deleted)
+    return render_template("forum/thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=dtnow(), last_read_timestamp=last_read_timestamp, article=article, article_revisions=article_revisions, article_info=article_info, doku_error=doku_error, reply_post=reply_post, show_deleted="show_deleted" in request.args, num_deleted=num_deleted)
 
 @rhforum.route("/<int:forum_id>/<int:topic_id>/set", methods="POST".split())
 @rhforum.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/set", methods="POST".split())
