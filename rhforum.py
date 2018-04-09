@@ -498,7 +498,7 @@ def forum(forum_id, forum_identifier=None):
     if not forum.trash:
         form = ThreadForm(request.form)
         if g.user and request.method == 'POST' and form.validate():
-            now = now()
+            now = dtnow()
             thread = db.Thread(forum=forum, author=g.user, timestamp=now, laststamp=now,
                 name=form.name.data)
             db.session.add(thread)
@@ -567,7 +567,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             text = "[quote={}@{}]{}[/quote]\n".format(reply_post.author.login, reply_post.id, reply_post.text)
         form = PostForm(request.form, text=text)
         if g.user and request.method == 'POST' and form.validate():
-            now = now()
+            now = dtnow()
             post = db.Post(thread=thread, author=g.user, timestamp=now,
                 text=form.text.data)
             db.session.add(post)
@@ -661,7 +661,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     
     if request.method == 'POST' and form.validate():
         if form.submit.data:
-            now = now()
+            now = dtnow()
             new_post = db.Post(thread=thread, author=post.author, timestamp=post.timestamp, editstamp=now,
                 text=form.text.data, original=post.original if post.original else post, editor=g.user)
             db.session.add(new_post)
