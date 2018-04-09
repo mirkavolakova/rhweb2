@@ -1,5 +1,5 @@
 #!/bin/usr/env python
-from __future__ import absolute_import, unicode_literals, print_function
+
 
 import multiprocessing
 import time
@@ -32,7 +32,7 @@ def report_telegram(message):
 
 def report_irc(message):
     f = open(config.IRC_IN, 'w', encoding='utf-8')
-    message = message.decode('utf-8') + u"\n"
+    message = message.decode('utf-8') + "\n"
     f.write(message)
 
 def report_mattermost(message):

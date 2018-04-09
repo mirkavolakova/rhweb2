@@ -1,5 +1,5 @@
 # encoding: utf-8
-from __future__ import absolute_import, unicode_literals, print_function
+
 from datetime import datetime
 
 from unidecode import unidecode
@@ -21,20 +21,14 @@ app.config.from_pyfile(app_dir+"/config.py") # XXX
 
 debug = app.config.get("DEBUG", False)
 
-# XXX from https://stackoverflow.com/a/17752647
-def pg_utcnow():
-    import psycopg2
-    return datetime.utcnow().replace(
-        tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None))
-
 def url_friendly(string):
     return unidecode(string).lower().replace(' ', '-').replace('/', '-')
 
 if 'mysql' in app.config['DB']:
-    engine = create_engine(app.config['DB'], encoding=b"utf8", pool_size = 100, pool_recycle=4200, echo=debug) # XXX
+    engine = create_engine(app.config['DB'], encoding="utf8", pool_size = 100, pool_recycle=4200, echo=debug) # XXX
     # pool_recycle is to prevent "server has gone away"
 else:
-    engine = create_engine(app.config['DB'], encoding=b"utf8", echo=debug)
+    engine = create_engine(app.config['DB'], encoding="utf8", echo=debug)
 
 session = scoped_session(sessionmaker(bind=engine, autoflush=False))
 
@@ -131,8 +125,9 @@ class User(Base):
         session.commit()
     
     def verify_password(self, password):
+        print(self.pass_, bcrypt.hashpw(password.encode('utf-8'), self.pass_.encode('utf-8')))
         if self.pass_.startswith('$2a'):
-            return bcrypt.hashpw(password.encode('utf-8'), self.pass_.encode('utf-8')) == self.pass_
+            return bcrypt.hashpw(password.encode('utf-8'), self.pass_.encode('utf-8')).decode('ascii') == self.pass_
         else:
             # Old hashing method
             raise OldHashingMethodException
@@ -146,13 +141,13 @@ class User(Base):
         self.pass_ = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     
     
-    def __nonzero__(self): # this is fine.
+    def __bool__(self): # this is fine.
         if not self.in_group("user"):
             return False
         return True
 
 class Guest(User):
-    def __nonzero__(self): # hi yes I'm a responsible programmer
+    def __bool__(self): # hi yes I'm a responsible programmer
         return False
 
 class Group(Base):
@@ -207,7 +202,7 @@ class Forum(Base):
     position = Column(Integer)
     
     category_id = Column(Integer, ForeignKey('categories.id'))
-    category = relationship("Category", backref=backref('fora', order_by=b"Forum.position"))
+    category = relationship("Category", backref=backref('fora', order_by="Forum.position"))
     
     trash = Column(Boolean, nullable=False, default=False)
     
@@ -333,7 +328,7 @@ class Task(Base):
 
 if __name__ == "__main__":
     print('this is db.py.  make sure you know where you are.')
-    if raw_input('fix thread.{pinned,archived} = NULL? ') == 'y':
+    if input('fix thread.{pinned,archived} = NULL? ') == 'y':
         for thread in session.query(Thread):
             if thread.pinned == None:
                 thread.pinned = False
@@ -341,7 +336,7 @@ if __name__ == "__main__":
                 thread.archived = False
         session.commit()
         print("fixed")
-    if raw_input('make everybody user?') == 'y':
+    if input('make everybody user?') == 'y':
         g = Group(name="user")
         session.add(g)
         for user in session.query(User):
@@ -351,21 +346,21 @@ if __name__ == "__main__":
     #if raw_input('mark everything as read for everybody? ') == 'y':
     #    for user in session.query(User):
     #        user.read_all()
-    if raw_input('do dangerous stuff?  type yes. ') == 'yes':
+    if input('do dangerous stuff?  type yes. ') == 'yes':
         #which = raw_input('drop which? ')
         #db.Base.metadata.drop_all(tables=[db.Task.__table__])
         #if which:
         #    print("... DROP TABLE "+which)
         #    session.query("DROP TABLE "+which)
         #    session.commit()
-        if raw_input('drop all? ') == 'y':
+        if input('drop all? ') == 'y':
             print("... drop all")
             Base.metadata.drop_all(bind=engine)
-        if raw_input('create all? ') == 'y':
+        if input('create all? ') == 'y':
             print("... create all")
             Base.metadata.create_all(bind=engine)
 
-        if raw_input('test entries? ') == 'y':
+        if input('test entries? ') == 'y':
             print("... test entries")
             fc = Category(name="Kategorie 1")
             fc2 = Category(name="Druhá kategorie")
@@ -385,12 +380,12 @@ if __name__ == "__main__":
             u2 = User(login="uzivatel", fullname="Uživatel", pass_=bcrypt.hashpw(b"test", bcrypt.gensalt(rounds=9)), groups=[g2])
             session.add(u2)
 
-            t = Thread(name="První téma na fóru", description="", timestamp=pg_utcnow(), laststamp=pg_utcnow(), forum=f, author=u)
+            t = Thread(name="První téma na fóru", description="", timestamp=datetime.utcnow(), laststamp=datetime.utcnow(), forum=f, author=u)
             session.add(t)
 
-            p = Post(thread=t, author=u, text="First post!  <b>Test</b>!", timestamp=pg_utcnow())
+            p = Post(thread=t, author=u, text="First post!  <b>Test</b>!", timestamp=datetime.utcnow())
             session.add(t)
-            p = Post(thread=t, author=u, text="Test ", timestamp=pg_utcnow())
+            p = Post(thread=t, author=u, text="Test ", timestamp=datetime.utcnow())
             session.add(t)
 
             session.commit()

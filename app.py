@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # coding: utf-8
-from __future__ import absolute_import, unicode_literals, print_function
+
 
 from io import open
 
@@ -25,12 +25,6 @@ from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField,
 from wtforms.fields.html5 import DateTimeLocalField
 
 import requests
-
-# XXX from https://stackoverflow.com/a/17752647
-def pg_utcnow():
-    import psycopg2
-    return datetime.utcnow().replace(
-        tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None))
 
 class MultiCheckboxField(SelectMultipleField):
     """
@@ -90,7 +84,7 @@ class AdminUserForm(UserForm):
 @app.template_filter('datetime')
 def datetime_format(value, format='%d. %m. %Y %H:%M:%S'):
     if not value: return "-"
-    if isinstance(value, unicode): return value
+    if isinstance(value, str): return value
     return value.strftime(format)
 
 cleaner = Cleaner(comments=False, style=False, embedded=False, annoying_tags=False)
@@ -129,10 +123,10 @@ def before_request():
         if not g.user:
             # TODO
             pass
-        g.user.laststamp = pg_utcnow()
+        g.user.laststamp = datetime.utcnow()
     else:
         g.user = db.Guest()
-    g.now = pg_utcnow()
+    g.now = datetime.utcnow()
     g.yesterday = g.now - timedelta(days=1)
     g.tomorrow = g.now + timedelta(days=1)
     g.production = app.config['PRODUCTION']
@@ -445,7 +439,7 @@ def register():
         if db.session.query(db.User).filter(db.User.login == form.bbq.data.lower()).scalar():
             flash("Tento login je už zabraný, vyberte si prosím jiný.")
         else:
-            user = db.User(login=form.bbq.data.lower(), fullname=form.fullname.data, email=form.email.data, timestamp=pg_utcnow(), laststamp=pg_utcnow())
+            user = db.User(login=form.bbq.data.lower(), fullname=form.fullname.data, email=form.email.data, timestamp=datetime.utcnow(), laststamp=datetime.utcnow())
             user.set_password(form.password.data)
             user_group = db.session.query(db.Group).filter(db.Group.name=="user").scalar()
             if user_group:
@@ -489,7 +483,7 @@ def forum(forum_id, forum_identifier=None):
     if not forum.trash:
         form = ThreadForm(request.form)
         if g.user and request.method == 'POST' and form.validate():
-            now = pg_utcnow()
+            now = datetime.utcnow()
             thread = db.Thread(forum=forum, author=g.user, timestamp=now, laststamp=now,
                 name=form.name.data)
             db.session.add(thread)
@@ -558,7 +552,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             text = "[quote={}@{}]{}[/quote]\n".format(reply_post.author.login, reply_post.id, reply_post.text)
         form = PostForm(request.form, text=text)
         if g.user and request.method == 'POST' and form.validate():
-            now = pg_utcnow()
+            now = datetime.utcnow()
             post = db.Post(thread=thread, author=g.user, timestamp=now,
                 text=form.text.data)
             db.session.add(post)
@@ -597,7 +591,7 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
             print(ex)
             doku_error = ex
     
-    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=pg_utcnow(), last_read_timestamp=last_read_timestamp, article=article, article_revisions=article_revisions, article_info=article_info, doku_error=doku_error, reply_post=reply_post, show_deleted="show_deleted" in request.args, num_deleted=num_deleted)
+    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.utcnow(), last_read_timestamp=last_read_timestamp, article=article, article_revisions=article_revisions, article_info=article_info, doku_error=doku_error, reply_post=reply_post, show_deleted="show_deleted" in request.args, num_deleted=num_deleted)
 
 @app.route("/<int:forum_id>/<int:topic_id>/set", methods="POST".split())
 @app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/set", methods="POST".split())
@@ -652,7 +646,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     
     if request.method == 'POST' and form.validate():
         if form.submit.data:
-            now = pg_utcnow()
+            now = datetime.utcnow()
             new_post = db.Post(thread=thread, author=post.author, timestamp=post.timestamp, editstamp=now,
                 text=form.text.data, original=post.original if post.original else post, editor=g.user)
             db.session.add(new_post)
@@ -672,7 +666,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
             db.session.commit()
             return redirect(thread.url)
     
-    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=pg_utcnow(), edit_post=post, edit_thread=edit_thread, last_read_timestamp=g.now)
+    return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.utcnow(), edit_post=post, edit_thread=edit_thread, last_read_timestamp=g.now)
 
 @app.route("/users/")
 def users():
@@ -776,7 +770,7 @@ def tasks(task_id=None):
         else:
             if not task_id:
                 task = db.Task()
-                task.created_time = pg_utcnow()
+                task.created_time = datetime.utcnow()
                 task.author = g.user
             task.text = form.text.data
             task.due_time = form.due_time.data
