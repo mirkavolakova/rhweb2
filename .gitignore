@@ -3,6 +3,7 @@ DOKUPASS
 cache/
 env/
 config.py
+test.db
 *.log
 *.pyc
 env

@@ -37,12 +37,12 @@ class MultiCheckboxField(SelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 app_dir = os.path.dirname(os.path.abspath(__file__))
-app = Flask('rhforum', template_folder=app_dir+"/templates")
+app = Flask('rhforum', template_folder=app_dir+"/templates_rhforum")
 app.config.from_pyfile(app_dir+"/config.py") # XXX
 BASE_URL = app.config.get("BASE_URL", "")
 
 rhforum = Blueprint('rhforum', __name__,
-    template_folder='templates',
+    template_folder='templates_rhforum',
     static_folder='static')
 
 doku = None
