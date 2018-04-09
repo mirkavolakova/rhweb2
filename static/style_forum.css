@@ -50,9 +50,9 @@ h2 > a {color: white; text-decoration: none;}
 h2 > a:hover {text-decoration: underline;}*/
 .forum h2 {
     font-family: inherit;
-    font-size: 28px;    
+    font-size: 26px;    
     margin-top: 0.2em; color: white;
-    background: #131936; padding: 8px 4px 6px 4px;
+    background: #131936; padding: 8px 4px 7px 8px;
     border-radius: 8px;}
 h2#reply {margin-top: 20px;}
 .forum h2 a {text-decoration: none;}
@@ -197,9 +197,9 @@ a.permalink:hover {text-decoration: underline;}
 .edit-groups {max-height: 400px; border: 1px solid #b8b8b8; overflow-y: scroll; padding: 8px; margin-bottom: 4px;}
 .edit-groups ul {list-style: none; padding: 0; margin: 0;}
 
-.new-icon {display: inline-block; font-size: 8px; color: black; background-color: yellow;
+.new-icon {display: inline-block; font-size: 8px; color: black !important; background-color: yellow;
     border-radius: 6px; vertical-align: middle; padding: 1px 3px 1px 3px;
-    text-decoration: none; margin-bottom: 3px;
+    text-decoration: none !important; margin-bottom: 3px;
     font-weight: bold;
     }
 .new-icon:hover {color: black; box-shadow: 0 0 6px yellow;}

@@ -280,7 +280,7 @@ def edit_forum_or_category(forum_id=None, category_id=None):
     categories = db.session.query(db.Category).order_by(db.Category.position).all()
     uncategorized_fora = db.session.query(db.Forum).filter(db.Forum.category == None, db.Forum.trash == False).order_by(db.Forum.position)
     trash = db.session.query(db.Forum).filter(db.Forum.trash == True).scalar()
-    if request.endpoint == 'edit_forum':
+    if request.endpoint == 'rhforum.edit_forum':
         if forum_id:
             forum = db.session.query(db.Forum).get(forum_id)
             #forum.last = forum.position == len(forum.category.fora) - 1 if forum.category else True
@@ -295,7 +295,7 @@ def edit_forum_or_category(forum_id=None, category_id=None):
         fora = db.session.query(db.Forum).outerjoin(db.Category).order_by(db.Category.position, db.Forum.position).all()
         form.new_forum_id.choices = [(0, "-")] + [(f.id, f.name) for f in fora]
         editable = forum
-    elif request.endpoint == 'edit_category':
+    elif request.endpoint == 'rhforum.edit_category':
         if category_id:
             category = db.session.query(db.Category).get(category_id)
             #category.last = category.position == len(categories) - 1
@@ -308,17 +308,17 @@ def edit_forum_or_category(forum_id=None, category_id=None):
         form.group_id.choices = [(0, "-")] + [(group.id, group.name) for group in db.session.query(db.Group)]
         editable = category
     if request.method == "POST" and form.validate():
-        if request.endpoint == 'edit_forum':
+        if request.endpoint == 'rhforum.edit_forum':
             forum.name = form.name.data
             forum.identifier = forum.name.lower().replace(' ', '-')
             forum.description = form.description.data
             forum.category_id = form.category_id.data or None
             forum.category = db.session.query(db.Category).get(form.category_id.data)
-        elif request.endpoint == 'edit_category':
+        elif request.endpoint == 'rhforum.edit_category':
             category.name = form.name.data
             category.group_id = form.group_id.data
         if form.save.data:
-            if request.endpoint == 'edit_forum':
+            if request.endpoint == 'rhforum.edit_forum':
                 if not forum_id:
                     if forum.category_id:
                         forum.position = len(forum.category.fora) - 1
@@ -326,7 +326,7 @@ def edit_forum_or_category(forum_id=None, category_id=None):
                     flash("Fórum vytvořeno.")
                 else:
                     flash("Fórum upraveno.")
-            elif request.endpoint == 'edit_category':
+            elif request.endpoint == 'rhforum.edit_category':
                 if not category_id:
                     category.position = len(categories) - 1
                     db.session.add(category)
@@ -336,7 +336,7 @@ def edit_forum_or_category(forum_id=None, category_id=None):
             db.session.commit()
             return redirect(url_for('.index'))
         elif form.delete.data:
-            if request.endpoint == 'edit_forum':
+            if request.endpoint == 'rhforum.edit_forum':
                 if not form.new_forum_id.data and forum.threads:
                     flash("Je nutno témata někam přesunout.")
                 else:
@@ -355,7 +355,7 @@ def edit_forum_or_category(forum_id=None, category_id=None):
                         flash("Fórum odstraněno.")
                     db.session.commit()
                     return redirect(url_for('.index'))
-            elif request.endpoint == 'edit_category':
+            elif request.endpoint == 'rhforum.edit_category':
                 db.session.delete(category)
                 flash("Kategorie odstraněna.")
                 db.session.commit()
@@ -363,9 +363,9 @@ def edit_forum_or_category(forum_id=None, category_id=None):
         else:
             # moving
             i = editable.position
-            if request.endpoint == 'edit_forum':
+            if request.endpoint == 'rhforum.edit_forum':
                 items = list(forum.category.fora)
-            elif request.endpoint == 'edit_category':
+            elif request.endpoint == 'rhforum.edit_category':
                 items = list(categories)
             items.remove(editable)
             if form.move_up and form.move_up.data:
@@ -376,14 +376,14 @@ def edit_forum_or_category(forum_id=None, category_id=None):
                 x.position = i
                 db.session.add(x)
             db.session.commit()
-            if request.endpoint == 'edit_category':
+            if request.endpoint == 'rhforum.edit_category':
                 categories = items
     if editable.position == 0:
         del form.move_up
-    if request.endpoint == 'edit_forum':
+    if request.endpoint == 'rhforum.edit_forum':
         if not forum.category or forum.position == len(forum.category.fora) - 1:
             del form.move_down
-    elif request.endpoint == 'edit_category':
+    elif request.endpoint == 'rhforum.edit_category':
         if not category.id or category.position == len(categories) - 1:
             del form.move_down
     return render_template("forum/index.html", categories=categories+[None], uncategorized_fora=uncategorized_fora, editable=editable, form=form, new=not bool(forum_id), trash=trash)

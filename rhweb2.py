@@ -208,7 +208,7 @@ def clanky():
 """
 
 app.register_blueprint(rhweb, url_prefix='')
-app.register_blueprint(rhforum.rhforum, url_prefix='/forum/')
+app.register_blueprint(rhforum.rhforum, url_prefix='/forum')
 
 if __name__ == "__main__":
     app.config['TEMPLATES_AUTO_RELOAD'] = True
