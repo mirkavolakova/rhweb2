@@ -71,7 +71,6 @@ def transform_wikipage(page):
             parent = page.new_tag("div")
             img.wrap(parent)
         classes = img.get('class')
-        print(classes)
         parent['class'] = classes + [" mediawrap"]
         if 'mediacenter' in classes and img.get('width'):
             # life is too short
@@ -150,13 +149,26 @@ def page(path):
     if not page: abort(404)
     page = transform_wikipage(page)
     
-    #h1 = page.find('h1')
-    #if h1:
-    #    g.pagetitle = h1.string
-    #elif path == "index":
-    #    g.pagetitle = None
-    #else:
-    #    g.pagetitle = path
+    h1 = page.find('h1')
+    h2 = page.find('h2')
+    h3 = page.find('h3')
+    if h1:
+        g.pagetitle = h1.string
+    elif h2:
+        g.pagetitle = h2.string
+    elif h3:
+        g.pagetitle = h3.string
+    elif path == "index":
+        g.pagetitle = None
+    else:
+        g.pagetitle = path
+        
+    g.pagedescription = ""    
+    for p in page.find_all('p'):
+        text = p.get_text().strip()
+        if text and len(text) > 30:
+            g.pagedescription = text
+            break
     
     page = """{% extends '_base.html' %}
 {% block content %}
