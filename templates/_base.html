@@ -8,7 +8,7 @@
     <title>RHforum » {% block title %}{% endblock %}</title>
     <!--<link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">-->
+    <!--<link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='style.css')}}">-->
     <style>
         {% include "style.css" %}
     </style>
@@ -58,23 +58,23 @@
                 &bull; <a href="/forum/" class="primary-link">Fórum</a>
                 &bull; <a href="/chat">Chat</a>
                 {% if g.user.admin %}
-                &bull; <a href="{{url_for('users')}}">Uživatelé</a>
+                &bull; <a href="{{url_for('.users')}}">Uživatelé</a>
                 {% endif %}
             </div>
             <div class="topbar-user">
                 {% if g.user %}
                     Přihlášen/a za <a href="{{g.user.url}}">{{g.user.name}}</a> &bull;
-                    <a href="{{url_for('logout')}}">Odhlásit se</a>
+                    <a href="{{url_for('.logout')}}">Odhlásit se</a>
                 {% else %}
-                    <a href="{{url_for('login')}}">Přihlásit se</a> &bull;
-                    <a href="{{url_for('register')}}">Registrovat</a>
+                    <a href="{{url_for('.login')}}">Přihlásit se</a> &bull;
+                    <a href="{{url_for('.register')}}">Registrovat</a>
                 {% endif %}
             </div>
         </div>
     </div>
     <div class="container">
         <h1 class="logo {% if hide_logo %}hide_logo{% endif %}">
-            <a href="{{url_for('index')}}" class="logolink">
+            <a href="{{url_for('.index')}}" class="logolink">
                 <img src="/static/logo-white.png" class="rhlogo">
                 <div class="inner">
                     <img src="/static/img/logo_text_white.png" class="rhlogotext" alt="RetroHerna - Interaktivní muzeum videoherní historie">

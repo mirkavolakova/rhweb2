@@ -7,15 +7,15 @@
     {% if error == 403 %}
         <p>Bohužel nemáte přístup na tuto stránku.
         {% if not g.user %}
-            <p>Možná se musíte <a href="{{url_for('login')}}">přihlásit</a>?
+            <p>Možná se musíte <a href="{{url_for('.login')}}">přihlásit</a>?
         {% endif %}
     {% elif error == 404 %}
-        <p>Tato stránka neexistuje.  Zpět na <a href="{{url_for('index')}}">index</a>?
+        <p>Tato stránka neexistuje.  Zpět na <a href="{{url_for('.index')}}">index</a>?
     {% elif error == 500 %}
         <p>Něco je špatně na straně serveru.  Chyba byla zaznamenána a snad se brzy opraví.
     {% elif error == 400 %}
-        <p>Žádost nebyla správná.  Buď je chyba u nás, nebo si hrajete s parametry.  Zpět na <a href="{{url_for('index')}}">index</a>?
+        <p>Žádost nebyla správná.  Buď je chyba u nás, nebo si hrajete s parametry.  Zpět na <a href="{{url_for('.index')}}">index</a>?
     {% else %}
-        <p>Něco je špatně.  Zpět na <a href="{{url_for('index')}}">index</a>?
+        <p>Něco je špatně.  Zpět na <a href="{{url_for('.index')}}">index</a>?
     {% endif %}
 {% endblock %}

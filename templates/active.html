@@ -22,7 +22,7 @@
     </div>
     {% if g.user %}
         <div class="forum-controls">
-            <form method="POST" action="{{url_for('index')}}">
+            <form method="POST" action="{{url_for('.index')}}">
                 {{form.mark_read}}
             </form>
         </div>

@@ -72,7 +72,7 @@ class User(Base):
     
     @property
     def url(self):
-        return url_for('user', user_id=self.id, name=unidecode(self.login))
+        return url_for('.user', user_id=self.id, name=unidecode(self.login))
     
     @property
     def representative_group(self):
@@ -182,7 +182,7 @@ class Category(Base):
     
     @property
     def url(self):
-        return url_for('index', _anchor="category-{}".format(self.id))
+        return url_for('.index', _anchor="category-{}".format(self.id))
     
     @property
     def symbol_name(self):
@@ -208,7 +208,7 @@ class Forum(Base):
     @property
     def url(self):
         if self.id:
-            return url_for('forum', forum_id=self.id, forum_identifier=self.identifier)
+            return url_for('.forum', forum_id=self.id, forum_identifier=self.identifier)
         else:
             return None
         
@@ -252,13 +252,13 @@ class Thread(Base):
     
     @property
     def url(self):
-        return url_for('thread',
+        return url_for('.thread',
             forum_id=self.forum.id, forum_identifier=self.forum.identifier,
             thread_id=self.id, thread_identifier=url_friendly(self.name))
             
     @property
     def short_url(self):
-        return url_for('thread', forum_id=self.forum.id, thread_id=self.id)
+        return url_for('.thread', forum_id=self.forum.id, thread_id=self.id)
 
 
 class Post(Base):

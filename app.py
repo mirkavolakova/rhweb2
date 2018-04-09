@@ -20,7 +20,7 @@ from lxml.html.clean import Cleaner
 from lxml.etree import ParserError
 
 from werkzeug import secure_filename
-from flask import Flask, render_template, request, flash, redirect, session, abort, url_for, make_response, g
+from flask import Flask, Blueprint, render_template, request, flash, redirect, session, abort, url_for, make_response, g
 from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, IntegerField, HiddenField, SubmitField, validators, ValidationError, widgets
 from wtforms.fields.html5 import DateTimeLocalField
 
@@ -40,6 +40,10 @@ app_dir = os.path.dirname(os.path.abspath(__file__))
 app = Flask('rhforum', template_folder=app_dir+"/templates")
 app.config.from_pyfile(app_dir+"/config.py") # XXX
 BASE_URL = app.config.get("BASE_URL", "")
+
+rhforum = Blueprint('rhforum', __name__,
+    template_folder='templates',
+    static_folder='static')
 
 doku = None
 if app.config.get("DOKU_URL", ""):
@@ -110,7 +114,7 @@ def bbcode(text):
     text = re.sub("\[\/quote\]", "</blockquote>", text)
     return text
 
-@app.before_request
+@rhforum.before_request
 def before_request():
     if not hasattr(g, 'telegram_messages'):
         g.telegram_messages = []
@@ -133,7 +137,7 @@ def before_request():
 
 
 
-@app.after_request
+@rhforum.after_request
 def after_request(response):
     try:
         while g.telegram_messages:
@@ -153,7 +157,7 @@ def after_request(response):
     return response
             
 
-@app.teardown_request
+@rhforum.teardown_request
 def shutdown_session(exception=None):
     db.session.close()
     db.session.remove()
@@ -213,22 +217,22 @@ class TaskForm(Form):
     user_id = SelectField('Uživatel', coerce=int)
     submit = SubmitField("Zadat")
     
-@app.errorhandler(404)
+@rhforum.errorhandler(404)
 def page_not_found(e):
     if not request.path.startswith("/static"):
         return render_template('errorpage.html', error=404), 404
     else:
         return "404", 404 # we don't have templates
 
-@app.errorhandler(403)
+@rhforum.errorhandler(403)
 def page_not_found(e):
     return render_template('errorpage.html', error=403), 403
 
-@app.errorhandler(500)
+@rhforum.errorhandler(500)
 def page_not_found(e):
     return render_template('errorpage.html', error=500), 500
     
-@app.errorhandler(400)
+@rhforum.errorhandler(400)
 def page_not_found(e):
     return render_template('errorpage.html', error=400), 400
 
@@ -240,7 +244,7 @@ def get_active_threads():
     
     return threads
 
-@app.route("/", methods="GET POST".split())
+@rhforum.route("/", methods="GET POST".split())
 def index():
     form = None
     if g.user:
@@ -261,16 +265,16 @@ def index():
     
     return render_template("index.html", categories=categories, uncategorized_fora=uncategorized_fora, edit_forum = None, latest_threads=latest_threads, trash=trash, form=form, tasks=tasks)
 
-@app.route("/active", methods="GET POST".split())
+@rhforum.route("/active", methods="GET POST".split())
 def active():
     form = ForumControlsForm(request.form)
     active_threads = get_active_threads()[0:100]
     return render_template("active.html", active_threads=active_threads, form=form)
 
-@app.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
-@app.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())
-@app.route("/edit-catgory/<int:category_id>", endpoint="edit_category", methods="GET POST".split())
-@app.route("/edit-category/new", endpoint="edit_category", methods="GET POST".split())
+@rhforum.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
+@rhforum.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())
+@rhforum.route("/edit-catgory/<int:category_id>", endpoint="edit_category", methods="GET POST".split())
+@rhforum.route("/edit-category/new", endpoint="edit_category", methods="GET POST".split())
 def edit_forum_or_category(forum_id=None, category_id=None):
     if not g.user.admin: abort(403) # TODO minrights decorator
     categories = db.session.query(db.Category).order_by(db.Category.position).all()
@@ -389,7 +393,7 @@ class LoginForm(Form):
     password = PasswordField('Heslo', [validators.required()])
     submit = SubmitField('Přihlásit se')
 
-@app.route("/login", methods="GET POST".split())
+@rhforum.route("/login", methods="GET POST".split())
 def login():
     form = LoginForm(request.form)
     failed = False
@@ -426,7 +430,7 @@ class RegisterForm(Form):
     email = TextField('Email', [validators.required()])
     submit = SubmitField('Zaregistrovat se')
 
-@app.route("/register", methods="GET POST".split())
+@rhforum.route("/register", methods="GET POST".split())
 def register():
     if g.user:
         if g.user.admin:
@@ -464,15 +468,15 @@ def register():
     
     return render_template("register.html", form=form)
 
-@app.route("/logout")
+@rhforum.route("/logout")
 def logout():
     if 'user_id' in session:
         session.pop('user_id')
         flash("Odhlášení proběhlo úspěšně.")
     return redirect(url_for('index'))
 
-@app.route("/<int:forum_id>", methods="GET POST".split())
-@app.route("/<int:forum_id>-<forum_identifier>", methods="GET POST".split())
+@rhforum.route("/<int:forum_id>", methods="GET POST".split())
+@rhforum.route("/<int:forum_id>-<forum_identifier>", methods="GET POST".split())
 def forum(forum_id, forum_identifier=None):
     forum = db.session.query(db.Forum).get(forum_id)
     if not forum: abort(404)
@@ -501,8 +505,8 @@ def forum(forum_id, forum_identifier=None):
             return redirect(thread.url)
     return render_template("forum.html", forum=forum, threads=threads, form=form)
 
-@app.route("/users/<int:user_id>/threads")
-@app.route("/users/<int:user_id>-<name>/threads")
+@rhforum.route("/users/<int:user_id>/threads")
+@rhforum.route("/users/<int:user_id>-<name>/threads")
 def user_threads(user_id, name=None):
     user = db.session.query(db.User).get(user_id)
     if not user: abort(404)
@@ -519,8 +523,8 @@ def user_threads(user_id, name=None):
     
 
 # TODO <path:thread_identificator>
-@app.route("/<int:forum_id>/<int:thread_id>", methods="GET POST".split())
-@app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>", methods="GET POST".split())
+@rhforum.route("/<int:forum_id>/<int:thread_id>", methods="GET POST".split())
+@rhforum.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>", methods="GET POST".split())
 def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     thread = db.session.query(db.Thread).get(thread_id)
     if not thread: abort(404)
@@ -593,8 +597,8 @@ def thread(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     
     return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.utcnow(), last_read_timestamp=last_read_timestamp, article=article, article_revisions=article_revisions, article_info=article_info, doku_error=doku_error, reply_post=reply_post, show_deleted="show_deleted" in request.args, num_deleted=num_deleted)
 
-@app.route("/<int:forum_id>/<int:topic_id>/set", methods="POST".split())
-@app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/set", methods="POST".split())
+@rhforum.route("/<int:forum_id>/<int:topic_id>/set", methods="POST".split())
+@rhforum.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/set", methods="POST".split())
 def thread_set(forum_id, thread_id, forum_identifier=None, thread_identifier=None):
     if not g.user.admin: abort(403)
     thread = db.session.query(db.Thread).get(thread_id)
@@ -618,8 +622,8 @@ def thread_set(forum_id, thread_id, forum_identifier=None, thread_identifier=Non
     
     return redirect(thread.url)
 
-@app.route("/<int:forum_id>/<int:thread_id>/edit/<int:post_id>", methods="GET POST".split())
-@app.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/edit/<int:post_id>", methods="GET POST".split())
+@rhforum.route("/<int:forum_id>/<int:thread_id>/edit/<int:post_id>", methods="GET POST".split())
+@rhforum.route("/<int:forum_id>-<forum_identifier>/<int:thread_id>-<thread_identifier>/edit/<int:post_id>", methods="GET POST".split())
 def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identifier=None):
     post = db.session.query(db.Post).get(post_id)
     thread = db.session.query(db.Thread).get(thread_id)
@@ -668,21 +672,21 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
     
     return render_template("thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=datetime.utcnow(), edit_post=post, edit_thread=edit_thread, last_read_timestamp=g.now)
 
-@app.route("/users/")
+@rhforum.route("/users/")
 def users():
     if not g.user.admin: abort(403)
     users = db.session.query(db.User).order_by(db.User.fullname)
     return render_template("users.html", users=users)
 
-@app.route("/users/<int:user_id>")
-@app.route("/users/<int:user_id>-<name>")
+@rhforum.route("/users/<int:user_id>")
+@rhforum.route("/users/<int:user_id>-<name>")
 def user(user_id, name=None):
     user = db.session.query(db.User).get(user_id)
     if not user: abort(404)
     return render_template("user.html", user=user)
 
-@app.route("/users/<int:user_id>/edit", methods="GET POST".split())
-@app.route("/users/<int:user_id>-<name>/edit", methods="GET POST".split())
+@rhforum.route("/users/<int:user_id>/edit", methods="GET POST".split())
+@rhforum.route("/users/<int:user_id>-<name>/edit", methods="GET POST".split())
 def edit_user(user_id, name=None):
     user = db.session.query(db.User).get(user_id)
     if not user: abort(404)
@@ -723,8 +727,8 @@ class GroupForm(Form):
     submit = SubmitField('Uložit')
     
 
-@app.route("/groups/", methods=["GET"])
-@app.route("/groups/<int:edit_group_id>/edit", methods=["GET", "POST"])
+@rhforum.route("/groups/", methods=["GET"])
+@rhforum.route("/groups/<int:edit_group_id>/edit", methods=["GET", "POST"])
 def groups(edit_group_id=None):
     if not g.user.admin: abort(403)
     groups = db.session.query(db.Group).all()
@@ -750,8 +754,8 @@ def groups(edit_group_id=None):
     
     return render_template("groups.html", groups=groups, edit_group=edit_group, form=form)
 
-@app.route("/tasks", methods="GET POST".split())
-@app.route("/tasks/<int:task_id>", methods=["GET", "POST"])
+@rhforum.route("/tasks", methods="GET POST".split())
+@rhforum.route("/tasks/<int:task_id>", methods=["GET", "POST"])
 def tasks(task_id=None):
     if not g.user.in_group("retroherna"): error(403)
     task = None
@@ -792,7 +796,7 @@ def tasks(task_id=None):
     
     return render_template("tasks.html", tasks=tasks, form=form, task_id=task_id)
 
-@app.route("/tasks/<int:task_id>/status", methods=["POST"])
+@rhforum.route("/tasks/<int:task_id>/status", methods=["POST"])
 def change_task_status(task_id):
     if not g.user.in_group("retroherna"): error(403)
     task = db.session.query(db.Task).get(task_id)
@@ -809,7 +813,7 @@ class IRCSendForm(Form):
     text = TextField('Text', [validators.required()])
     submit = SubmitField('Odeslat')
 
-@app.route("/irc-send/", methods=["GET", "POST"])
+@rhforum.route("/irc-send/", methods=["GET", "POST"])
 def irc_send():
     if not g.user.admin: error(403)
     
@@ -822,6 +826,8 @@ def irc_send():
         form = IRCSendForm()
     
     return render_template("irc_send.html", form=form, text=text)
+
+app.register_blueprint(rhforum, url_prefix='')
 
 if not app.debug:
     import logging

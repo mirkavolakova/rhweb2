@@ -81,7 +81,7 @@
         {% else %}
             <div class="task">
                 <div class="task-controls">
-                    <form method="POST" action="{{url_for('change_task_status', task_id=task.id)}}" class="inline">
+                    <form method="POST" action="{{url_for('.change_task_status', task_id=task.id)}}" class="inline">
                         {% if task.status == "done" %}
                             <input type="hidden" name="status" value="todo">
                             <button class="task-check task-check-done" type="submit"><div><div>✓</div></div></button>
@@ -107,7 +107,7 @@
                     {{ task.text }}
                 {% if editable %}
                     <div class="task-edit">
-                        <a href="{{ url_for('tasks', task_id=task.id) }}">✎</a>
+                        <a href="{{ url_for('.tasks', task_id=task.id) }}">✎</a>
                     </div>
                     <div class="clear"></div>
                 {% endif %}

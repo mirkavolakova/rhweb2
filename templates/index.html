@@ -3,7 +3,7 @@
 {% block title %}index{% endblock %}
 
 {% block content %}
-    <!--<h1><a href="{{url_for('index')}}">RHForum</a></h1>-->
+    <!--<h1><a href="{{url_for('.index')}}">RHForum</a></h1>-->
     {% if false %}
         {% if g.user.in_group('retroherna') and tasks %}
             <div class="tasks-container">
@@ -11,7 +11,7 @@
                 <div class="tasks">
                     {{ task_list(tasks) }}
                 </div>
-                <a href="{{url_for('tasks')}}" class="task-list-link">Úkolník...</a>
+                <a href="{{url_for('.tasks')}}" class="task-list-link">Úkolník...</a>
             </div>
         {% endif %}
     {% endif %}
@@ -29,7 +29,7 @@
                         {% if category and g.user.admin and not editable %} 
                             <span class="category-admin">
                                 [ skupina: {{ category.group.name }} ]
-                                <a href="{{url_for('edit_category', category_id=category.id)}}" class="edit-category-link">Upravit kategorii</a>
+                                <a href="{{url_for('.edit_category', category_id=category.id)}}" class="edit-category-link">Upravit kategorii</a>
                             </span>
                         {% endif %}
                     {% else %}
@@ -116,14 +116,14 @@
                 {% else %}
                     Tato kategorie
                 {% endif %}
-                je přístupná jen pro přihlášené.<br>Můžete se <a href="{{url_for('login')}}">přihlásit</a> či <a href="{{url_for('register')}}">registrovat</a>.
+                je přístupná jen pro přihlášené.<br>Můžete se <a href="{{url_for('.login')}}">přihlásit</a> či <a href="{{url_for('register')}}">registrovat</a>.
             </div>
         {% endif %}
     {% endfor %}
     {% if g.user and g.user.admin and not editable %}
         <div class="index-admin">
-            <a href="{{url_for('edit_forum')}}">Přidat fórum</a> &bull;
-            <a href="{{url_for('edit_category')}}">Přidat kategorii</a>
+            <a href="{{url_for('.edit_forum')}}">Přidat fórum</a> &bull;
+            <a href="{{url_for('.edit_category')}}">Přidat kategorii</a>
             <br>
             <a href="{{trash.url}}">Koš</a>
         </div>
@@ -144,7 +144,7 @@
                 </div>
             {% endfor %}
             <div class="morerow">
-                <a href="{{url_for('active')}}">Více aktivních témat...</a>
+                <a href="{{url_for('.active')}}">Více aktivních témat...</a>
             </div>
         </div>
     {% endif %}
