@@ -11,7 +11,11 @@
     
     <meta property="og:title" content="RetroHerna{% if g.pagetitle %} - {{ g.pagetitle }}{%endif%}">
     <meta property="og:description" content="{{g.pagedescription}}">
-    <meta property="og:image" content="/static/banner.png">
+    {% if path == "index" %}
+        <meta property="og:image" content="/static/banner.png">
+    {% else %}
+        <meta property="og:image" content="/static/banner_square.png">
+    {% endif %}
     <meta property="og:type" content="website">
     
     <meta name="viewport" content="width=device-width, initial-scale=1">
