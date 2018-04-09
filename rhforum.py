@@ -284,7 +284,7 @@ def active():
 
 @rhforum.route("/edit-forum/<int:forum_id>", endpoint="edit_forum", methods="GET POST".split())
 @rhforum.route("/edit-forum/new", endpoint="edit_forum", methods="GET POST".split())
-@rhforum.route("/edit-catgory/<int:category_id>", endpoint="edit_category", methods="GET POST".split())
+@rhforum.route("/edit-category/<int:category_id>", endpoint="edit_category", methods="GET POST".split())
 @rhforum.route("/edit-category/new", endpoint="edit_category", methods="GET POST".split())
 def edit_forum_or_category(forum_id=None, category_id=None):
     if not g.user.admin: abort(403) # TODO minrights decorator
@@ -681,7 +681,7 @@ def edit_post(forum_id, thread_id, post_id, forum_identifier=None, thread_identi
             db.session.commit()
             return redirect(thread.url)
     
-    return render_template("forum/thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=now(), edit_post=post, edit_thread=edit_thread, last_read_timestamp=g.now)
+    return render_template("forum/thread.html", thread=thread, forum=thread.forum, posts=posts, form=form, now=dtnow(), edit_post=post, edit_thread=edit_thread, last_read_timestamp=g.now)
 
 @rhforum.route("/users/")
 def users():
