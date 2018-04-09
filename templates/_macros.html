@@ -1,0 +1,131 @@
+## REMEMBER TO ADD AN IMPORT TO _base.html
+{% macro txt(num, rules) %}
+    {% if   num == 1 %}            {{num}} {{rules[0]}}
+    {% elif num > 1 and num < 5 %} {{num}} {{rules[1]}}
+    {% else %}                     {{num}} {{rules[2]}}
+    {% endif %}
+{% endmacro %}
+{% macro txt_threads(num) %}
+    {{ txt(num, 'téma témata témat'.split()) }}
+{% endmacro %}
+{% macro txt_posts(num) %}
+    {{ txt(num, 'příspěvek příspěvky příspěvků'.split()) }}
+{% endmacro %}
+{% macro ago(d) %}
+    <span title="{{d|datetime}}">
+        {% with diff = g.now - d %}
+            {% if diff.days < 0 %}
+                {% if diff.days < -6 %}
+                    {{d|datetime}}
+                {% elif diff.days < -2 or (diff.days == -2 and g.tomorrow.day != d.day) %}
+                    {% if   d.weekday() == 0 %} pondělí
+                    {% elif d.weekday() == 1 %} úterý
+                    {% elif d.weekday() == 2 %} středa
+                    {% elif d.weekday() == 3 %} čtvrtek
+                    {% elif d.weekday() == 4 %} pátek
+                    {% elif d.weekday() == 5 %} sobota
+                    {% elif d.weekday() == 6 %} neděle
+                    {% endif %}
+                    {{d|datetime("%H:%M")}}
+                {% elif diff.seconds < 60*60*24 and g.tomorrow.day == d.day %}
+                    zítra {{d|datetime("%H:%M")}}
+                {% else %}
+                    dnes {{d|datetime("%H:%M")}}
+                {% endif %}
+            {% elif diff.days == 0 %}
+                {% if   diff.seconds < 10 %}      teď
+                {% elif diff.seconds < 60 %}      před {{diff.seconds}} vteřinami
+                {% elif diff.seconds < 120 %}     před minutou
+                {% elif diff.seconds < 3600 %}    před {{diff.seconds//60}} minutami
+                {% elif diff.seconds < 7200 %}    před hodinou
+                {% elif diff.seconds < 86400 and g.now.day == d.day %}
+                    před {{diff.seconds//3600}} hodinami
+                {% else %}
+                    včera {{d|datetime("%H:%M")}}
+                {% endif %}
+            {% else %}
+                {% if diff.seconds < 86400*2 and g.yesterday.day == d.day and diff.days < 2 %}
+                    včera {{d|datetime("%H:%M")}}
+                {% else %}
+                    {{d|datetime("%d. %m. %Y %H:%M")}}
+                {% endif %}
+            {% endif %}
+        {% endwith %}
+    </span>
+{% endmacro %}
+{% macro errors(errors) %}
+    {% if errors %}
+        <ul class="errors">
+            {% for name, texts in errors.items() %}
+                {% for text in texts %}
+                    <li> <b>{{name}}</b>: {{text}}
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+{% macro task_list(tasks, editable=False, task_id=None) %}
+    {% for task in tasks %}
+        {% if task.id == task_id %}
+            <div class="task">
+                <form method="POST">
+                    <div class="task-controls">
+                        {{ form.due_time }}
+                    </div>
+                    {{ form.user_id }}
+                    {{ form.text }}
+                    {{ form.submit }}
+                    {{ errors(form.errors) }}
+                </form>
+            </div>
+        {% else %}
+            <div class="task">
+                <div class="task-controls">
+                    <form method="POST" action="{{url_for('.change_task_status', task_id=task.id)}}" class="inline">
+                        {% if task.status == "done" %}
+                            <input type="hidden" name="status" value="todo">
+                            <button class="task-check task-check-done" type="submit"><div><div>✓</div></div></button>
+                        {% elif task.status == "todo" %}
+                            <input type="hidden" name="status" value="done">
+                            <button class="task-check" type="submit"><div></div></button>
+                        {% else %}
+                            <div class="task-check"></div>
+                        {% endif %}
+                    </form>
+                    
+                    {% if task.due_time and (g.now-task.due_time).seconds < 60*60*2 %}
+                        <span class="task-time task-time-soon"> {{ ago(task.due_time) }} </span>
+                    {% elif task.due_time %}
+                        <span class="task-time"> {{ ago(task.due_time) }} </span>
+                    {% else %}
+                        <span class="task-time"> &nbsp; </span>
+                    {% endif %}
+                </div>
+                    {% if task.user.name %}
+                        <strong>({{ task.user.name }})</strong>
+                    {% endif %}
+                    {{ task.text }}
+                {% if editable %}
+                    <div class="task-edit">
+                        <a href="{{ url_for('.tasks', task_id=task.id) }}">✎</a>
+                    </div>
+                    <div class="clear"></div>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="task-free">
+            Žádné úkoly, dobrá práce!
+        </div>
+    {% endfor %}
+{% endmacro %}
+{% macro new_icon(thread) %}
+    {% if g.user.unread(thread) %}
+        <a class="new-icon" href="{{g.user.unread(thread).url}}">
+            {% if g.user.num_unread(thread) > 1 %}
+                {{ g.user.num_unread(thread) }}
+            {% endif %}
+            NEW
+        </a>
+    {% endif %}
+{% endmacro %}

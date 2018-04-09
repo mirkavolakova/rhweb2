@@ -1,0 +1,94 @@
+{% from '_macros.html' import txt, txt_threads,
+    txt_posts, ago, errors, task_list,
+    new_icon with context -%}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>RHforum » {% block title %}{% endblock %}</title>
+    <!--<link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,latin-ext' rel='stylesheet' type='text/css'>-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<link rel="stylesheet" type="text/css" href="{{url_for('.static', filename='style.css')}}">-->
+    <style>
+        {% include "style.css" %}
+    </style>
+    <script>
+        window.onload = function(){
+            Array.prototype.forEach.call(document.getElementsByClassName('delete-button'), function(el) {
+                el.addEventListener('click', function(event) {
+                    console.log('click');
+                    if (!this.confirmed) {
+                        this.confirmed = true;
+                        this.value = "Opravdu?";
+                        event.preventDefault()
+                    }
+                });
+            });
+            
+            /*document.querySelector(".new-task").style.display = "none";
+            document.querySelector(".tasks-add-button").onClick = function() {
+                console.log('hi')
+                document.querySelector(".new-task").style.display = "block";
+                document.querySelector(".tasks-add-button").style.visibility = "hidden";
+            }*/
+        };
+    </script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
+    <!--
+    <script src="/static/js/webshim/minified/polyfiller.js"></script> 
+    <script> 
+        webshims.polyfill();
+        webshims.activeLang("cs");
+    </script>-->
+</head>
+<body>
+    <div class="topbar">
+        <div class="topbar-contents">
+            <div class="topbar-links">
+                <img src="/static/logo-white.png" class="topbar-logo">
+                {% if g.production %}
+                    <span class="rhtitle">RetroHerna</span>
+                {% else %}
+                    <span class="rhtitle" style="color: red;">DerpoHerpa</span>
+                {% endif %}
+                &bull; <a href="/">Web</a>
+                {% if g.user.in_group("retroherna") %}
+                    &bull; <a href="/wiki/">Wiki</a>
+                {% endif %}
+                &bull; <a href="/forum/" class="primary-link">Fórum</a>
+                &bull; <a href="/chat">Chat</a>
+                {% if g.user.admin %}
+                &bull; <a href="{{url_for('.users')}}">Uživatelé</a>
+                {% endif %}
+            </div>
+            <div class="topbar-user">
+                {% if g.user %}
+                    Přihlášen/a za <a href="{{g.user.url}}">{{g.user.name}}</a> &bull;
+                    <a href="{{url_for('.logout')}}">Odhlásit se</a>
+                {% else %}
+                    <a href="{{url_for('.login')}}">Přihlásit se</a> &bull;
+                    <a href="{{url_for('.register')}}">Registrovat</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h1 class="logo {% if hide_logo %}hide_logo{% endif %}">
+            <a href="{{url_for('.index')}}" class="logolink">
+                <img src="/static/logo-white.png" class="rhlogo">
+                <div class="inner">
+                    <img src="/static/img/logo_text_white.png" class="rhlogotext" alt="RetroHerna - Interaktivní muzeum videoherní historie">
+                </div>
+            </a>
+        </h1>
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+        
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{% extends "_base.html" %}
+
+{% block title %}index{% endblock %}
+
+{% block content %}
+    <h2>IRC send</h2>
+    <p>Tohle pošle zprávu na IRC skrz bota (možná).  Je to jen pro adminy.
+    {% if text %}
+        <p>Odesláno: <tt>{{text}}</tt>
+    {% endif %}
+    
+    <form method="POST">
+        <p>{{form.text}}
+        <p>{{form.submit}}
+    </form>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "_base.html" %}
+
+{% block title %}{{ user.name }}{% endblock %}
+
+{% block content %}
+    <h2><a href="{{url_for('.users')}}">Uživatelé</a> » <a href="{{user.url}}">{{user.name}}</a></h2>
+    <div class="card">
+        {% if not edit %}
+                <div class="card-edit">
+                    {% if g.user.admin or user == g.user %}
+                        <a href="{{ user.url }}/edit">Upravit</a>
+                    {% endif %}
+                </div>
+                <div class="card-image">
+                    {% if user.avatar_url %}
+                        <img src="{{user.avatar_url}}" class="avatar">
+                    {% endif %}
+                </div>
+                <div class="card-user">
+                        <h2>{{user.name}}</h2>
+                        {{ user.title }}
+                        <dl>
+                            <dt>Email</dt>
+                            <dd>{{ user.email.replace('@', ' zavináč ') if user.email else "-" }}</dd>
+                            {% if user.homepage %}
+                                <dt>Homepage</dt>
+                                <dd><a href="{{user.homepage}}">{{ user.homepage }}</a></dd>
+                            {% endif %}
+                            <dt>Registrace</dt>
+                            <dd>{{ ago(user.timestamp) if user.timestamp else "-" }}</dd>
+                            <dt>Poslední návštěva</dt>
+                            <dd>{{ ago(user.laststamp) if user.laststamp else "-" }}</dd>
+                            {% if g.user.admin %}
+                                <dt><i>Skupiny (vidí jen admini):</i></t>
+                                <dd>
+                                    {% for group in user.groups %}
+                                        &bull; {{group.name}}
+                                    {% endfor %}
+                                </dd>
+                            {% endif %}
+                        </dl>
+                        <ul>
+                            <li><a href="{{user.url}}/threads">Založená témata</a>
+                        </ul>
+                </div>
+        {% else %}
+            <form method="POST">
+                <div class="card-image card-image-editing">
+                    URL avataru: {{ form.avatar_url }}<br>
+                    Avatar bude u příspěvků max. 100x100px.
+                </div>
+                <div class="card-user">
+                    <h2>{{ form.fullname }}</h2>
+                    <dl>
+                        <dt>Email</dt>
+                        <dd>{{ form.email }}<dd>
+                        <dt>Homepage</dt>
+                        <dd>{{ form.homepage }}<dd>
+                    </dl>
+                </div>
+                {% if g.user.admin %}
+                    <div class="edit-groups">
+                        <strong>Skupiny</strong>
+                        {{ form.group_ids }}
+                    </div>
+                {% endif %}
+                {{ form.submit }}
+            </form>
+        {% endif %}
+        <div class="card-threads">
+        </div>
+    </div>
+{% endblock %}

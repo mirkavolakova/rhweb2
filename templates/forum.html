@@ -1,0 +1,93 @@
+{% extends "_base.html" %}
+
+{% set hide_logo = True %}
+
+{% block title %}{{ forum.name }}{% endblock %}
+
+{% block content %}
+    <div class="breadcrumbs">
+        <a href="{{url_for('.index')}}">RHForum</a>
+        »
+            {% if user %}
+                <a href="{{user.url}}">{{user.name}}</a>
+            {% else %}
+                <a href="{{forum.category.url}}">{{forum.category.symbol_name}}</a>
+            {% endif %}
+        » 
+    </div>
+    {% if forum.id and g.user and g.user.admin %}
+        <div class="forum-admin">
+            <a href="{{url_for('.edit_forum', forum_id=forum.id)}}">Editovat fórum</a>
+        </div>
+    {% endif %}
+    <h2 class="category-name">
+        <a href="{{forum.url}}">{{forum.name}}</a></h1>
+    </h2>
+    <div class="forum-desc">
+        {{ forum.description or "" }}
+    </div>
+    <div class="threads">
+        {% for thread in threads %}
+            <div class="row {{'row-pinned' if thread.pinned else ''}} {{'row-archived' if thread.archived else ''}}">
+                <div class="row-data">
+                    <div class="row-total">
+                        {{ txt_posts(thread.num_posts) }}
+                        {{ new_icon(thread) }}
+                    </div>
+                    {% if thread.num_posts %}
+                        <div class="row-last" title="{{thread.last_post.timestamp|datetime}}">{{ago(thread.laststamp)}} <a href="{{thread.last_post.url}}"> od <i>{{ thread.last_post.author.name }}</i></a></div>
+                    {% endif %}
+                </div>
+                <a class="row-text" href="{{thread.url}}">
+                    <div class="row-name">
+                        {% if thread.forum != forum %}
+                            {{thread.forum.symbol_name}}: 
+                        {% endif %}
+                        <strong>{{thread.name}}</strong>
+                        {% if not user %}
+                            <span class="author" href="#">{{thread.author.name}}</span>
+                        {% endif %}
+                    </div>
+                    <div class="row-description">
+                        {% if thread.description %}
+                            {{thread.description}}
+                        {% elif thread.wiki_article %}
+                            Diskuze k wiki článku {{thread.wiki_article}}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}</div>
+                </a>
+            </div>
+        {% else %}
+            Ještě tu žádná témata nejsou.
+        {% endfor %}
+    </div>
+    {% if g.user and form %}
+        <h2>Nové téma</h2>
+        <form method="POST" class="new-thread">
+            {{ form.name(tabindex=1) }}
+            <div class="post">
+                <div class="post-sidebar">
+                    <div><a href="{{ g.user.url }}">{{ g.user.name }}</a></div>
+                    <div class="post-avatar">
+                        {% if g.user.avatar_url %}
+                            <img src="{{g.user.avatar_url}}" class="avatar">
+                        {% endif %}
+                    </div>
+                </div>
+                    <div class="post-contents">
+                        <div class="post-data">
+                            {{ now | datetime }}
+                        </div>
+                        <div class="post-text">
+                            {{ form.text(tabindex=2) }}
+                        </div>
+                        <div class="new-post-controls">
+                            {{ form.submit(tabindex=3) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}

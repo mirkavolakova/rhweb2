@@ -1,0 +1,292 @@
+* {box-sizing: content-box;} /* border-box */
+
+@font-face {
+  font-family: "Rockwell";
+  src:  local("Rockwell"), /* Prefer a locally installed version of the font. */
+        url("/static/Rockwell.woff");
+}
+@font-face {
+  font-family: "Myriad Pro";
+  src:  local("Myriad Pro"), /* Prefer a locally installed version of the font. */
+        url("/static/MyriadPro-Regular.woff");
+}
+
+.clear {clear: both;}
+
+body {background: #111; color: white; 
+    font-family: "Ubuntu", sans-serif; margin: 0; padding: 0; padding-bottom: 32px;}
+    
+.container {width: 75%; margin: auto; padding: 8px; padding-bottom: 16px;
+    margin-top: 28px;}
+    
+.hide_logo {display: none;}
+.logo {text-align: center; margin: 24px 0 24px 0; max-width: 100%;}
+.logolink {display: block; text-decoration: none;}
+.inner {display: inline-block; margin: auto; max-width: 100%;}
+.rhlogo { margin-right: 8px; width: 80px; height: 80px;}
+.rhtitle { font-family: "Rockwell", "Courier New"; text-transform: uppercase; }
+.logo .rhlogo {vertical-align:auto;}
+.rhlogotext {width: 420px; max-width: 100%;}
+
+.logo_small {margin: 12px 0 4px 0;}
+.logo_small .rhlogo {height: 42px; width: auto;}
+.logo_small .rhlogotext {height: 42px; width: auto;}
+    
+
+input[type="text"], input[type="password"] { border: 2px solid #840B49; background: black; padding: 2px; margin: 1px; border-radius: 3.5px; color: white; box-shadow: 0 0 4px #111;}
+input[type="text"]:focus, input[type="password"]:focus { box-shadow: inset 0 0 3px #ff0; }
+input[type="submit"], select { border: 2px solid #840B49;
+    background: linear-gradient(to bottom, #000 0%, #222 35%);
+    padding: 3px; margin: 2px 2px 2px 2px; border-radius: 3.5px;
+    box-shadow: inset -2px -2px 6px 0px #000;
+    color: #ffffff;
+    font-size: 15px; box-shadow: 0 0 4px #111;
+    }
+input[type="submit"]:focus, select:focus {  box-shadow: inset -0px -0px 6px 0px #333333; 
+    border-color: rgb(224, 17, 123);}
+input.delete-button {box-shadow: inset -2px -2px 6px 0px #a00, 0 0 4px #111; color: #fee; }
+
+a {color: rgb(255, 151, 204); transition: 0.4s ease-out;
+    text-decoration: underline; cursor: pointer;}
+a:hover {color: rgb(255, 202, 229);  transition: 0.1s ease;}
+
+.topbar { width: auto; position: fixed; top: 0; background: #420524; width: 100%;
+    border-bottom: 1px solid #33071f; z-index: 10;}
+.topbar-contents { padding: 4px 32px 4px 32px; }
+.topbar a {text-decoration: none; color: rgb(255, 202, 229);}
+.topbar a:hover {text-decoration: underline;}
+.topbar-links {display: inline-block; }
+.primary-link {font-weight: bold;}
+.topbar-user {float: right; display: inline-block; padding-left: 8px;}
+.topbar-logo {height: 18px; width: auto; vertical-align: top;}
+
+.flash {border: 1px solid rgb(197, 188, 16); background: rgb(248, 241, 190);
+    border-radius:8px; padding: 8px; margin: 6px 12px 0px 12px; color: black;
+    margin-bottom: 24px;}
+
+h1 {font-weight: normal; margin: 0; margin-bottom: 6px;}
+h1 a:first-child {font-weight: bold;}
+
+.inline-list {margin: 0; padding: 0; list-style: none;}
+.inline-list li {margin: 0; padding: 0; display: inline;}
+.inline-list li:before {content: '•';}
+
+.tasks-container { width: 80%; margin: auto;}
+.tasks-container h2 {margin: 0;}
+.tasks { border: 1px solid #c76899; max-height: 8em; overflow-y: scroll; font-size: 14px; }
+.tasks-full {max-height: 100%; height: auto; overflow-y: hidden;}
+.tasks-add-button {margin: auto; display: inline-block; float: left; margin: 2px 1px 0 0;}
+.task {padding: 2px 4px 1px 2px; clear: both;}
+.task:nth-child(even) {background: #222222;}
+.task-controls {display: inline-block; width: 30%; float: left;}
+.task-controls input {max-width: 90%;}
+.task-time {font-weight: bold;}
+.task-time-soon {color: red;}
+.task-check {width: 18px; height: 18px;  vertical-align: middle; padding: 0; margin: 0;  background: none; border: 0; display: inline-block;}
+.task-check:hover {}
+.task-check > div {width: 14px; height: 14px; background: white; border: 1px solid #888; border-radius: 3px;
+    font-size: 20px; margin: -2px 0 0 -2px;}
+.dask-check > div:hover {box-shadow: inset 0px 0px 2px 0px #666666;}
+.task-check > div > div {margin-top: -5px;}
+.task-free {text-align: center; margin-top: 6px;}
+.task-list-link {float: right; margin: 2px;}
+.task-edit {float: right;}
+.task-edit a {text-decoration: none;}
+.new-task {padding-bottom: 16px; width: 80%; margin: auto; text-align: center;}
+.new-task #text {width: 100%;}
+
+.breadcrumbs {margin-bottom: 6px; margin-top: 32px;}
+.breadcrumbs a {text-decoration: none;}
+.breadcrumbs a:hover {text-decoration: underline;}
+.small-logo {vertical-align: middle;}
+.small-rlogo img {height: 26px; width: auto; vertical-align: middle;  }
+
+h2 {font-size: 26px; margin: 2px 0px 2px 0px; background: #420524;
+    border-bottom: 2px solid #840B49; border-left: 2px solid #840B49; border-radius: 0 0 0 8px; padding: 4px 4px 2px 6px;
+    /*background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #1a0210 100%);*/}
+h2 > a {color: white; text-decoration: none;}
+h2 > a:hover {text-decoration: underline;}
+h2#reply {margin-top: 20px;}
+.category-group {font-size: 14px; font-weight: normal;}
+
+.forum-info {text-align: center; margin: 6px 10% 6px 10%;}
+
+.fora {margin-bottom: 16px;}
+.forum-desc {font-style: italic; margin-bottom: 2px; padding-left: 16px;
+    border-bottom: 1px solid #333333; padding-bottom: 6px;}
+    
+.threads {margin-bottom:48px;}
+.row {border-bottom: 1px solid rgb(81, 6, 44); display: block; clear: both; padding: 3px;}
+.morerow {text-align: center; width: 85%; margin: auto; margin-top: 4px;}
+.row-pinned { border-left: 32px solid #840B49;
+    /*background: linear-gradient(to right, rgb(246, 246, 195) 0%, rgba(255, 255, 255, 0) 15%);*/ }
+.row-archived {opacity: 0.4;}
+.row-archived * {font-size: 90%;}
+.row:hover {background: #840B49; border-bottom: 1px solid rgb(224, 17, 123);}
+.row-name {font-size: 22px;}
+.row-description {font-size: 14px;}
+.row-data {float: right; text-align: right; font-size: 14px; }
+.row-user-groups {font-size: 12px;}
+.rownew { background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(255, 255, 255, 0) 48px); }
+.rownew:hover {background: linear-gradient(to left, rgba(255, 255, 128, 1) 0%, rgba(186, 186, 255, 0.5) 48px); transition-delay: 0.1s;}
+a.row-text {display: block; text-decoration: none; color: white;}
+a.row-text:hover {color: rgb(255, 202, 229);}
+
+.row-name .author {font-size: 16px; margin-left: 12px; font-style:italic;}
+.row-name .author::before {content: '—';}
+
+hr {border: 1px solid #840B49; margin: 32px 0 32px 0;}
+
+.index-admin {text-align: right;}
+.forum-admin    {text-align: right; float: right; margin-top: 16px;;}
+/*.category-admin {text-align: right; float: right; margin-top: 4px;}*/
+.category-admin {float: right; font-size: 14px; font-weight: normal;}
+
+.thread-controls {float: right; text-align: right;}
+.thread-desc {font-style: italic; margin-bottom: 2px; padding-left: 16px;
+    border-bottom: 1px solid #333333; padding-bottom: 6px;}
+.thread-article {padding: 4px 0 4px 0;
+    border-bottom: 1px solid #222222; margin: 4px auto 8px auto;}
+.thread-article-text {width: 90%; margin: auto;}
+.thread-article-text p {text-indent: 4%; text-align: justify;}
+.article-error {color: #f00;}
+
+/*.post:before { content: ''; display: block; position: relative; width: 0; height: 5em; margin-top: -5em; background: none !important; }*/ /* For anchor */ 
+.post {min-height: 100px; margin-bottom: 14px; position: relative;
+    background: none; padding: 4px; clear: both;}
+.fragment {position:relative; top:-50px;}
+
+.post-deleted {opacity: 0.9; background-color: rgba(255, 0, 0, 0.2);
+    border-radius: 8px;}
+
+.post-sidebar {height: 100%; min-height: 100px; display:inline-block; width: 150px; border-right: 1px solid #840B49;
+    float: left; background: none; text-align: center;  padding-bottom: 6px;}
+.post-author {font-weight: bold; margin-bottom: 0px;}
+.post-author a {text-decoration: none;}
+.post-author a:hover {text-decoration: underline;}
+.post-author-title {font-size: smaller; margin-bottom: 4px;}
+.post-author-posts {font-size: x-small; margin-bottom: 3px;}
+
+.post-contents {margin-left: 150px;  height: 100%; min-height: 100px; border-left: 1px solid #840B49; }
+.post-data {border: 1px solid #840B49; border-left: 0; padding: 2px 6px 2px 2px; border-radius: 0 8px 8px 0;  width: 100%; text-align: right; font-size: smaller; background: #420524;}
+.post-text {padding: 4px 4px 4px 12px;}
+.post-text p {text-indent: 12px; padding-left: 4px;}
+.post-text textarea {width: 95%; min-height: 250px; border: none; font-family: 'Ubuntu', sans-serif;
+    background: black; color: white; box-shadow: inset 0 0 6px #333333; border-radius: 1em; padding:0.5em;
+    border: 1px solid #840B49; }
+.post-text textarea:focus {box-shadow: inset 0 0 6px #40400e;}
+
+blockquote {border: 1px solid #840B49; border-width: 0 0 0px 1px; margin-left: 12px; padding-left: 12px; }
+blockquote .quoting {text-align: left; font-style: italic;
+    border: 1px solid #840B49; border-width: 1px 1px 1px 0; border-radius: 0 8px 8px 0;
+    margin-bottom: 6px; background: #420524;
+    margin-left: -12px; padding-left: 12px; }
+
+.new-post-controls {text-align: center;}
+.post-edited {font-size: smaller; text-align: right; font-style: italic;
+    /*position: absolute; right: 0; bottom: 0;*/}
+a.permalink {text-decoration: inherit; color: inherit;}
+a.permalink:hover {text-decoration: underline;}
+
+.locked-text {text-align: center; font-size: 17px; margin: 4px;}
+
+.post:target, .post:target .post-sidebar {background-color: #000000fe4;
+    background: linear-gradient(to bottom, #000000000000 0%, rgba(255, 255, 255, 0) 50%);}
+
+.new-thread #name, .post-contents #name, .category-name #name{width: 100%; margin-bottom:6px; font-size: 24px;}
+.card-user #fullname {font-size: 24px; max-width: 300px;}
+.category-name #name {font-weight: bold; width: 50%;}
+
+.fail {color: #ff8787;}
+
+.card {margin: auto; margin-top: 32px; width: 90%; max-width: 600px; min-height: 200px;
+    border: 2px solid #840B49; border-radius: 8px;
+    padding: 12px; box-shadow:  0 0 1em #333;  color: white; background: #420524;}
+.card h2 {background: inherit;}
+/*.card a {color: #840B49;}*/
+.card-image {width: 250px; height: 250px; border: 2px solid #840B49; border-radius: 8px;
+    float: left; margin-right: 12px; text-align: center; background: black;
+    position: relative;}
+.card-edit {float: right;}
+.card-user {/*display: inline-block;*/ overflow: auto;} 
+.card-threads {clear: both;}
+.card dt {font-weight: bold;}
+
+.avatar {
+    display: block; max-width: 200px; max-height: 200px;
+}
+.card-image .avatar {
+    width: auto; height: auto;
+    position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+
+.users { margin-bottom: 12px; }
+.users .avatar {
+    max-height: 32px; display: inline-block;
+}
+.row-avatar {width: 32px; height: 32px; display: inline-block; vertical-align: middle;}
+.row-avatar .avatar {max-width: 32px;}
+
+.post-avatar {  }
+.post-avatar .avatar {
+    max-width: 100px;
+    max-height: 100px;
+    margin: auto;
+}
+
+.edit-groups {max-height: 400px; border: 1px solid #b8b8b8; overflow-y: scroll; padding: 8px; margin-bottom: 4px;}
+.edit-groups ul {list-style: none; padding: 0; margin: 0;}
+
+.new-icon {display: inline-block; font-size: 8px; color: black; background-color: yellow;
+    border-radius: 6px; vertical-align: middle; padding: 1px 3px 1px 3px;
+    text-decoration: none; margin-bottom: 3px;
+    font-weight: bold;
+    }
+.new-icon:hover {color: black; box-shadow: 0 0 6px yellow;}
+
+.forum-controls {text-align: center;}
+
+.inline {display: inline;}
+
+@media (max-width: 800px) {
+    
+    .container {width: 90%; margin: auto; padding: 8px; margin-top: 34px;}
+    
+    .tasks-container {width: 85%;}
+    
+    .row {position: relative;}
+    .row a.row-text {min-height: 62px;}
+    .users .row a.row-text {min-height: inherit;}
+    .latest-posts .row a.row-text {min-height: 32px;}
+    .row-data {font-size: 12px; position: absolute; bottom: 0; right: 0; margin-top: 64px;}
+    
+    .post-contents {margin-left: 0;}
+    .post-sidebar {float: left; position: inherit; height: auto; border-bottom: 1px solid #840B49; margin-right: 4px;
+        width: 150px; background: #111; border-radius: 0 0 8px 0;}
+        
+    .post-text textarea {width: calc(100% - 160px);}
+        
+}
+@media (max-width: 600px) {
+    .tasks-container {width: 95%;}
+    .tasks {font-size: 12px;}
+    .task-controls {width: 100px;}
+    .post-sidebar {width: 125px;}
+    .card-image {width: 150px; height: 150px;}
+    .row-total {display: none;}
+    .rhtitle {display: none;}
+    
+    .topbar {letter-spacing: -0.2px;}
+    
+}
+
+@media (max-width: 400px) {
+    .topbar-contents {
+        padding: 4px 16px;}
+    }
+    /*.topbar-links {width: 100%; overflow-x: scroll; white-space: nowrap;}*/
+}
+
+
+

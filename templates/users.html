@@ -1,0 +1,40 @@
+{% extends "_base.html" %}
+
+{% block title %}Uživatelé{% endblock %}
+
+{% block content %}
+    <h2><a href="{{url_for('.users')}}">Uživatelé</a></h2>
+    <div class="users">
+        {% for user in users %}
+            <div class="row">
+                <div class="row-data">
+                    <div class="row-total">
+                        {{ txt_posts(user.num_posts) }}
+                    </div>
+                    <ul class="inline-list row-user-groups">
+                        {% for group in user.groups %}
+                           <li> {{ group.name }} 
+                        {% endfor %}
+                    </ul>
+                </div>
+                <a class="row-text" href="{{user.url}}">
+                    <div class="row-name">
+                        <div class="row-avatar">
+                            {% if user.avatar_url %}
+                                <img src="{{user.avatar_url}}" class="avatar">
+                            {% endif %}
+                        </div>
+                        {{user.name}}
+                    </div>
+                    <div class="row-description"></div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    
+    {% if g.user.admin %}
+        <div class="forum-controls">
+            <a href="{{url_for('.groups')}}">Upravit skupiny</a>
+        </div>
+    {% endif %}
+{% endblock %}

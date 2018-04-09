@@ -1,0 +1,190 @@
+{% extends "_base.html" %}
+
+{% set hide_logo = True %}
+
+{% block title %}{{ forum.name }} » {{ thread.name }}{% endblock %}
+
+{% block content %}
+    <div class="breadcrumbs">
+        <a href="{{url_for('.index')}}">RHForum</a>
+        » <a href="{{forum.category.url}}">{{forum.category.symbol_name}}</a>
+        » <a href="{{forum.url}}">{{forum.name}}</a>
+        » 
+    </div>
+    <h2><a href="{{thread.url}}">{{thread.name}}</a></h2>
+    {% if g.user.admin %}
+        <div class="thread-controls">
+            <form action="{{thread.url}}/set" method="POST">
+                {% if not thread.pinned %}
+                    <input type="submit" name="pin" value="Přišpendlit">
+                {% else %}
+                    <input type="submit" name="unpin" value="Odšpendlit">
+                {% endif %}
+                
+                {% if not thread.locked %}
+                    <input type="submit" name="lock" value="Zamknout">
+                {% else %}
+                    <input type="submit" name="unlock" value="Odemknout">
+                {% endif %}
+                
+                {% if not thread.archived %}
+                    <input type="submit" name="archive" value="Zarchivovat">
+                {% else %}
+                    <input type="submit" name="unarchive" value="Odarchivovat">
+                {% endif %}
+            </form>
+            
+            {% if not show_deleted %}
+                <a href="{{thread.url}}?show_deleted">Ukázat odstraněné příspěvky ({{ num_deleted }})</a>
+            {% else %}
+                <a href="{{thread.url}}">Skrýt odstraněné příspěvky</a>
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if thread.wiki_article %}
+        <div class="thread-article">
+            <div class="thread-desc">
+                <div>
+                    Diskuze k wiki článku <a href="/wiki/doku.php?id={{thread.wiki_article}}">{{thread.wiki_article}}</a>
+                </div>
+                {% if article_info %}
+                    <div>
+                        Poslední revize {{article_info['author']}}, {{article_info['lastModified']}}
+                    </div>
+                {% endif %}
+                {% if g.user.admin or (thread.wiki_article.startswith("encyklopedie") and g.user) %}
+                    <div>
+                        <a href="/wiki/doku.php?id={{thread.wiki_article}}&do=edit">Editovat</a> &bull;
+                        <a href="/wiki/doku.php?id={{thread.wiki_article}}&do=revisions">Historie</a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="thread-article-text">
+                {% if article %}
+                    {{ article | postfilter | safe }}
+                {% elif doku_error %}
+                    <div class="article-error">
+                        Selhalo získávání článku z DokuWiki: {{doku_error}}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    <div class="posts">
+        {% for post in posts %}
+            <div class="post {{ 'post-deleted' if post.deleted else '' }}">
+                <div id="post-{{post.id}}" class="fragment"></div>
+                {% if post.original_id %}
+                    <div id="post-{{post.original_id}}" class="fragment"></div>
+                {% endif %}
+                {% if loop.last %}
+                    <div id="post-latest" class="fragment"></div>
+                {% endif %}
+                <div class="post-sidebar">
+                    <div class="post-author"><a href="{{post.author.url}}">{{ post.author.name }}</a></div>
+                    <div class="post-author-title">{{ post.author.title }}</div>
+                    <div class="post-author-posts">
+                        {{ txt_posts(post.author.num_posts) }}
+                        <!--
+                            {% if post.author.timestamp %}
+                                &bull; {{ post.author.timestamp.year }}
+                            {% endif %}
+                        -->
+                    </div>
+                    <div class="post-avatar">
+                        {% if post.author.avatar_url %}
+                            <img src="{{post.author.avatar_url}}" class="avatar">
+                        {% else %}
+                            <img src="/static/img/rhunknown_alpha_75px.png" class="avatar">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="post-contents">
+                    <div class="post-data">
+                        {% if not reply_post and not post.deleted %}
+                            <a href="{{thread.url}}?reply={{post.id}}#reply">Odpovědět</a>
+                            &bull;
+                        {% endif %}
+                        {% if ((post.author == g.user) or g.user.admin) and post != edit_post and not post.deleted %}
+                            <a href="{{thread.url}}/edit/{{post.id}}#post-{{post.id}}">Upravit</a> &bull;
+                        {% endif %}
+                        <a href="{{post.url}}" class="permalink">{{ ago(post.timestamp) }}</a>
+                        {% if not last_read_timestamp or last_read_timestamp < post.timestamp %}
+                            <div class="new-icon">NEW</div>
+                        {% endif %}
+                    </div>
+                    <div class="post-text">
+                        {% if post != edit_post %}
+                            <p>{{ post.text | postfilter | bbcode | safe | urlize  | replace("<3", "&lt;3") | clean | safe | replace("\n", "\n<p>"|safe)  }}
+                            {% if post.editstamp %}
+                                <div class="post-edited">
+                                    Naposledy upraveno {% if (post.editor != post.author) and post.editor.admin %}moderátorem{% endif %} {{ ago(post.editstamp) }} {% if g.user.admin %}({{post.editor.name}}){% endif %}
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <form method="POST">
+                                {% if edit_thread %}
+                                    <div>{{ form.name }}</div>
+                                    <div>Fórum: {{ form.forum_id }}</div>
+                                {% endif %}
+                                <div>{{ form.text }}</div>
+                                {% if form.wiki_article %}
+                                    <div>
+                                        Wiki článek: {{ form.wiki_article }}
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    {{ form.submit }}
+                                    {% if form.delete %}
+                                        {{ form.delete(class_="delete-button") }}
+                                        {% if edit_thread %}
+                                            (pro smazání celého tématu přesuňte do koše)
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="clear"></div>
+    {% if g.user and not edit_post and form %}
+        <h2 id="reply">Nový příspěvek</h2>
+        {% if thread.locked %}
+            <div class="locked-text">
+                Téma je zamčené pro běžné uživatele.
+            </div>
+        {% endif %}
+        <form method="POST">
+            <div class="post">
+                <div class="post-sidebar">
+                    <div class="post-author"><a href="{{ g.user.url }}">{{ g.user.name }}</a></div>
+                    <div class="post-avatar">
+                        {% if g.user.avatar_url %}
+                            <img src="{{g.user.avatar_url}}" class="avatar">
+                        {% endif %}
+                    </div>
+                </div>
+                    <div class="post-contents">
+                        <div class="post-data">
+                            {{ ago(now) }}
+                        </div>
+                        <div class="post-text">
+                            {{ form.text }}
+                        </div>
+                        <div class="new-post-controls">
+                            {{ form.submit }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+    {% if thread.locked and not g.user.admin %}
+        <div class="locked-text">
+            Téma je zamčené.
+        </div>
+    {% endif %}
+{% endblock %}

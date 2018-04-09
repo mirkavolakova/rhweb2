@@ -1,0 +1,158 @@
+{% extends "_base.html" %}
+
+{% block title %}index{% endblock %}
+
+{% block content %}
+    <!--<h1><a href="{{url_for('.index')}}">RHForum</a></h1>-->
+    {% if false %}
+        {% if g.user.in_group('retroherna') and tasks %}
+            <div class="tasks-container">
+                <!--<button class="tasks-add-button">+</button>-->
+                <div class="tasks">
+                    {{ task_list(tasks) }}
+                </div>
+                <a href="{{url_for('.tasks')}}" class="task-list-link">Úkolník...</a>
+            </div>
+        {% endif %}
+    {% endif %}
+    <div class="clear"></div>
+    {% for category in categories %}
+        {% if (not category.group or category.group in g.user.groups)
+            and not (not category and not g.user.admin) %}
+            {% if category != editable %}
+                {% if category and g.user and g.user.admin and not editable %}
+                {% endif %}
+                <div id="category-{{category.id}}" class="fragment"></div>
+                <h2 class="category-name">
+                    {% if category %}
+                        {{category.symbol_name}}
+                        {% if category and g.user.admin and not editable %} 
+                            <span class="category-admin">
+                                [ skupina: {{ category.group.name }} ]
+                                <a href="{{url_for('.edit_category', category_id=category.id)}}" class="edit-category-link">Upravit kategorii</a>
+                            </span>
+                        {% endif %}
+                    {% else %}
+                        Nezařazené
+                    {% endif %}
+                </h2>
+            {% else %}
+                <form class="form-edit-category" method="POST">
+                    <h2 class="category-name">
+                        {{ form.name }}
+                        {{form.move_up or ""}}
+                        {{form.move_down or ""}}<br>
+                        <span class="category-group">Nutná skupina: {{ form.group_id }}</span>
+                        {{form.save}}
+                        {{form.delete(class_="delete-button")}}
+                    </h2>
+                </form>
+            {% endif %}
+            {% if not category %}
+                <div class="forum-info">
+                    Nezařazená fóra vidí tady jenom admini, ale témata z nich jsou přístupná všem - přidejte fórum do kategorie!
+                </div>
+            {% endif %}
+            <div class="fora">
+                {% for forum in (category.fora if category else uncategorized_fora) %}
+                    {% if forum != editable %}
+                        <div class="row">
+                            <div class="row-data">
+                                <div class="row-total">
+                                    {{ txt_threads(forum.threads | count) }}
+                                </div>
+                                
+                                <div class="row-last">
+                                    {% if forum.last_post %}
+                                        <a href="{{forum.last_post.url}}">{{ forum.last_post.thread.name }} od <i>{{ forum.last_post.author.name }}</i>
+                                        </a>
+                                        {{ new_icon(forum.last_post.thread) }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <a class="row-text" href="{{forum.url}}">
+                                <div class="row-name">
+                                    <strong>{{forum.name}}</strong>
+                                </div>
+                                <div class="row-description">{{forum.description}}</div>
+                            </a>
+                        </div>
+                    {% else %}
+                        <form class="form-edit-forum" method="POST">
+                        <div class="row">
+                            <div class="row-data">
+                                {% if not new %}
+                                    {{form.move_up or ""}}<br>
+                                    {{form.move_down or ""}}<br>
+                                {% endif %}
+                            </div>
+                            <div class="row-text">
+                                <div class="row-name">{{form.name}}</div>
+                                <div class="row-description">
+                                    {{ form.description }}
+                                    {{ form.category_id }}
+                                    {{ form.save }}
+                                    <div>
+                                        {% if forum.threads %}
+                                            Přesunout existující témata do {{form.new_forum_id}} a {{form.delete(class_="delete-button")}}
+                                        {% elif not new %}
+                                            {{form.delete(class_="delete-button")}}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% elif category.group and category.group.name == "user" %}
+            <h2 class="category-name">
+                {{category.name}}
+            </h2>
+            <div class="forum-info">
+                {% if category.name == "Burza" %}
+                    Burza
+                {% else %}
+                    Tato kategorie
+                {% endif %}
+                je přístupná jen pro přihlášené.<br>Můžete se <a href="{{url_for('.login')}}">přihlásit</a> či <a href="{{url_for('register')}}">registrovat</a>.
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% if g.user and g.user.admin and not editable %}
+        <div class="index-admin">
+            <a href="{{url_for('.edit_forum')}}">Přidat fórum</a> &bull;
+            <a href="{{url_for('.edit_category')}}">Přidat kategorii</a>
+            <br>
+            <a href="{{trash.url}}">Koš</a>
+        </div>
+    {% endif %}
+    <hr>
+    {% if latest_threads %}
+        <h2>Aktivní témata</h2>
+        <div class="threads latest-posts">
+            {% for thread in latest_threads %}
+                <div class="row">
+                    <div class="row-data">
+                        {{ago(thread.laststamp)}}
+                        {{ new_icon(thread) }}
+                    </div>
+                    <a class="row-text" href="{{thread.url}}">
+                        <div class="row-single">{{thread.forum.symbol_name}}: <strong>{{thread.name}}</strong></div>
+                    </a>
+                </div>
+            {% endfor %}
+            <div class="morerow">
+                <a href="{{url_for('.active')}}">Více aktivních témat...</a>
+            </div>
+        </div>
+    {% endif %}
+    {% if g.user %}
+        <div class="forum-controls">
+            <form method="POST">
+                {{form.mark_read}}
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+
+{% block title %}register{% endblock %}
+
+{% block content %}
+    <h2><a href="{{url_for('.register')}}">Registrace</a></h2>
+    <style>
+        .loginform dd:first-child {visibility: hidden;}
+    </style>
+    <form method="POST" class="loginform">
+        <dl>
+            <dd>{{form.username}} nevyplňovat</dd>
+            <dt>Login:</dt>     <dd>{{form.bbq}}</dd>
+            <dt>Jméno:</dt>     <dd>{{form.fullname}}</dd>
+            <dt>Heslo:</dt>     <dd>{{form.password}}</dd>
+            <dt>Heslo znovu:</dt><dd>{{form.confirm_password}}</dd>
+            <dt>Email:</dt>     <dd>{{form.email}}</dd>
+        </dl>
+        {{form.submit}}
+        <!-- Labels are coming 2016 -->
+    </form>
+{% endblock %}

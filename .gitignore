@@ -2,3 +2,7 @@
 DOKUPASS
 cache/
 env/
+config.py
+*.log
+*.pyc
+env
