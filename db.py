@@ -125,7 +125,6 @@ class User(Base):
         session.commit()
     
     def verify_password(self, password):
-        print(self.pass_, bcrypt.hashpw(password.encode('utf-8'), self.pass_.encode('utf-8')))
         if self.pass_.startswith('$2a'):
             return bcrypt.hashpw(password.encode('utf-8'), self.pass_.encode('utf-8')).decode('ascii') == self.pass_
         else:
