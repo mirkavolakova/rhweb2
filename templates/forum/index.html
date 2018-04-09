@@ -15,7 +15,7 @@
             </div>
         {% endif %}
     {% endif %}
-    <div class="clear"></div>
+    <!--<div class="clear"></div>-->
     {% for category in categories %}
         {% if (not category.group or category.group in g.user.groups)
             and not (not category and not g.user.admin) %}

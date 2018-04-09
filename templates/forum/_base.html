@@ -4,9 +4,6 @@
 {% extends '_base.html' %}
 {% block content %}
 <!--    <title>RHforum » {% block title %}{% endblock %}</title> -->
-    <style>
-        {% include "forum/style.css" %}
-    </style>
     <script>
         window.onload = function(){
             Array.prototype.forEach.call(document.getElementsByClassName('delete-button'), function(el) {
@@ -36,45 +33,14 @@
         webshims.activeLang("cs");
     </script>-->
 <section id="forumsection">
-    <div class="topbar">
-        <div class="topbar-contents">
-            <div class="topbar-links">
-                <img src="/static/logo-white.png" class="topbar-logo">
-                {% if g.production %}
-                    <span class="rhtitle">RetroHerna</span>
-                {% else %}
-                    <span class="rhtitle" style="color: red;">DerpoHerpa</span>
-                {% endif %}
-                &bull; <a href="/">Web</a>
-                {% if g.user.in_group("retroherna") %}
-                    &bull; <a href="/wiki/">Wiki</a>
-                {% endif %}
-                &bull; <a href="/forum/" class="primary-link">Fórum</a>
-                &bull; <a href="/chat">Chat</a>
-                {% if g.user.admin %}
-                &bull; <a href="{{url_for('.users')}}">Uživatelé</a>
-                {% endif %}
-            </div>
-            <div class="topbar-user">
-                {% if g.user %}
-                    Přihlášen/a za <a href="{{g.user.url}}">{{g.user.name}}</a> &bull;
-                    <a href="{{url_for('.logout')}}">Odhlásit se</a>
-                {% else %}
-                    <a href="{{url_for('.login')}}">Přihlásit se</a> &bull;
-                    <a href="{{url_for('.register')}}">Registrovat</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    {% if g.user %}
+        Přihlášen/a za <a href="{{g.user.url}}">{{g.user.name}}</a> &bull;
+        <a href="{{url_for('.logout')}}">Odhlásit se</a>
+    {% else %}
+        <a href="{{url_for('.login')}}">Přihlásit se</a> &bull;
+        <a href="{{url_for('.register')}}">Registrovat</a>
+    {% endif %}
     <div class="container">
-        <h1 class="logo {% if hide_logo %}hide_logo{% endif %}">
-            <a href="{{url_for('.index')}}" class="logolink">
-                <img src="/static/logo-white.png" class="rhlogo">
-                <div class="inner">
-                    <img src="/static/img/logo_text_white.png" class="rhlogotext" alt="RetroHerna - Interaktivní muzeum videoherní historie">
-                </div>
-            </a>
-        </h1>
         {% with messages = get_flashed_messages() %}
             {% for message in messages %}
                 <div class="flash">{{ message }}</div>

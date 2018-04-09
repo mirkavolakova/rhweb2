@@ -1,20 +1,4 @@
-* {box-sizing: content-box;} /* border-box */
-
-@font-face {
-  font-family: "Rockwell";
-  src:  local("Rockwell"), /* Prefer a locally installed version of the font. */
-        url("/static/Rockwell.woff");
-}
-@font-face {
-  font-family: "Myriad Pro";
-  src:  local("Myriad Pro"), /* Prefer a locally installed version of the font. */
-        url("/static/MyriadPro-Regular.woff");
-}
-
 .clear {clear: both;}
-
-body {background: #111; color: white; 
-    font-family: "Ubuntu", sans-serif; margin: 0; padding: 0; padding-bottom: 32px;}
     
 .container {width: 75%; margin: auto; padding: 8px; padding-bottom: 16px;
     margin-top: 28px;}
@@ -116,7 +100,7 @@ h2#reply {margin-top: 20px;}
     border-bottom: 1px solid #333333; padding-bottom: 6px;}
     
 .threads {margin-bottom:48px;}
-.row {border-bottom: 1px solid rgb(81, 6, 44); display: block; clear: both; padding: 3px;}
+.row {border-bottom: 1px solid rgb(81, 6, 44); display: block; clear: right; padding: 3px;}
 .morerow {text-align: center; width: 85%; margin: auto; margin-top: 4px;}
 .row-pinned { border-left: 32px solid #840B49;
     /*background: linear-gradient(to right, rgb(246, 246, 195) 0%, rgba(255, 255, 255, 0) 15%);*/ }
@@ -153,7 +137,7 @@ hr {border: 1px solid #840B49; margin: 32px 0 32px 0;}
 
 /*.post:before { content: ''; display: block; position: relative; width: 0; height: 5em; margin-top: -5em; background: none !important; }*/ /* For anchor */ 
 .post {min-height: 100px; margin-bottom: 14px; position: relative;
-    background: none; padding: 4px; clear: both;}
+    background: none; padding: 4px; clear: right;}
 .fragment {position:relative; top:-50px;}
 
 .post-deleted {opacity: 0.9; background-color: rgba(255, 0, 0, 0.2);
@@ -209,7 +193,7 @@ a.permalink:hover {text-decoration: underline;}
     position: relative;}
 .card-edit {float: right;}
 .card-user {/*display: inline-block;*/ overflow: auto;} 
-.card-threads {clear: both;}
+.card-threads {clear: right;}
 .card dt {font-weight: bold;}
 
 .avatar {
@@ -280,13 +264,3 @@ a.permalink:hover {text-decoration: underline;}
     .topbar {letter-spacing: -0.2px;}
     
 }
-
-@media (max-width: 400px) {
-    .topbar-contents {
-        padding: 4px 16px;}
-    }
-    /*.topbar-links {width: 100%; overflow-x: scroll; white-space: nowrap;}*/
-}
-
-
-

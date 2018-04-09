@@ -839,6 +839,7 @@ if not app.debug:
     app.logger.addHandler(file_handler)
 
 if __name__ == "__main__":
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.run(host="", port=8080, debug=True, threaded=True)
 
 
