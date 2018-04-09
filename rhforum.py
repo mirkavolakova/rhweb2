@@ -85,7 +85,7 @@ class UserForm(Form):
 class AdminUserForm(UserForm):
     group_ids = MultiCheckboxField('Skupiny', coerce=int)
 
-@app.template_filter('datetime')
+@rhforum.app_template_filter('datetime')
 def datetime_format(value, format='%d. %m. %Y %H:%M:%S'):
     if not value: return "-"
     if isinstance(value, str): return value
@@ -93,12 +93,12 @@ def datetime_format(value, format='%d. %m. %Y %H:%M:%S'):
 
 cleaner = Cleaner(comments=False, style=False, embedded=False, annoying_tags=False)
 
-@app.template_filter('postfilter')
+@rhforum.app_template_filter('postfilter')
 def postfilter(text):
     text = text.replace("retroherna.cz", "retroherna.org")
     return text
 
-@app.template_filter('clean')
+@rhforum.app_template_filter('clean')
 def clean(value):
     try:
         return cleaner.clean_html(value)
@@ -106,7 +106,7 @@ def clean(value):
         return ""
     
 
-@app.template_filter('bbcode')
+@rhforum.app_template_filter('bbcode')
 def bbcode(text):
     text = re.sub("\[quote=([^\]@]*)@(\d)*\]", "<blockquote><div class='quoting' data-id='\\2'>\\1</div><p>", text)
     text = re.sub("\[quote=([^\]@]*)\]", "<blockquote><div class='quoting'>\\1</div><p>", text)

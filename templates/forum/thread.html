@@ -4,7 +4,7 @@
 
 {% block title %}{{ forum.name }} » {{ thread.name }}{% endblock %}
 
-{% block content %}
+{% block forum_content %}
     <div class="breadcrumbs">
         <a href="{{url_for('.index')}}">RHForum</a>
         » <a href="{{forum.category.url}}">{{forum.category.symbol_name}}</a>

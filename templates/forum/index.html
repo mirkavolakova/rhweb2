@@ -2,7 +2,7 @@
 
 {% block title %}index{% endblock %}
 
-{% block content %}
+{% block forum_content %}
     <!--<h1><a href="{{url_for('.index')}}">RHForum</a></h1>-->
     {% if false %}
         {% if g.user.in_group('retroherna') and tasks %}
@@ -116,7 +116,7 @@
                 {% else %}
                     Tato kategorie
                 {% endif %}
-                je přístupná jen pro přihlášené.<br>Můžete se <a href="{{url_for('.login')}}">přihlásit</a> či <a href="{{url_for('register')}}">registrovat</a>.
+                je přístupná jen pro přihlášené.<br>Můžete se <a href="{{url_for('.login')}}">přihlásit</a> či <a href="{{url_for('.register')}}">registrovat</a>.
             </div>
         {% endif %}
     {% endfor %}

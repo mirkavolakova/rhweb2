@@ -2,7 +2,7 @@
 
 {% block title %}{{ user.name }}{% endblock %}
 
-{% block content %}
+{% block forum_content %}
     <h2><a href="{{url_for('.users')}}">Uživatelé</a> » <a href="{{user.url}}">{{user.name}}</a></h2>
     <div class="card">
         {% if not edit %}
