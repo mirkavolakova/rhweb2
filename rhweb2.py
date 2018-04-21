@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 
-from flask import Blueprint, Flask, render_template, render_template_string, request, flash, redirect, session, abort, url_for, make_response, g
+from flask import Blueprint, Flask, render_template, render_template_string, request, flash, redirect, session, abort, url_for, make_response, g, send_from_directory
 
 from dokuwiki import DokuWiki, DokuWikiError
 from bs4 import BeautifulSoup
@@ -206,6 +206,10 @@ def vyjezdy():
 def clanky():
     return render_template("clanky.html")
 """
+
+@app.route("/robots.txt")
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
 
 app.register_blueprint(rhweb, url_prefix='')
 app.register_blueprint(rhforum.rhforum, url_prefix='/forum')

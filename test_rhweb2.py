@@ -11,6 +11,11 @@ def test_index(client, purge):
     title = bs.find("title")
     assert "RetroHerna" in title.string
 
+def test_robots_txt(client):
+    robots_txt = client.get("/robots.txt")
+    assert robots_txt.status_code == 200
+    assert b"Allow: /" in robots_txt.data
+
 @pytest.mark.parametrize("log_in,magic,code,url", [
         (False, False, 200, "/"),
         (False, False, 200, "/login"), 
