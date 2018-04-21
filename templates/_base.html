@@ -5,12 +5,15 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="google-site-verification" content="_bvnLB-S2IdrLetU49YrmAk9Rf9tBTSXFJq9uJLJFmk" />
+    <meta name="google-site-verification" content="dHBxJL8auRX0ESAji5RdnuBeE9Oa_QHu1KZBqKbddEY" />
     
         <title>RetroHerna{% if g.pagetitle %} - {{ g.pagetitle }}{%endif%}</title>
     
     <meta property="og:title" content="RetroHerna{% if g.pagetitle %} - {{ g.pagetitle }}{%endif%}">
-    <meta property="og:description" content="{{g.pagedescription}}">
+    {% if g.pagedescription %}
+        <meta property="og:description" content="{{g.pagedescription}}">
+        <meta name="description" content="{{g.pagedescription}}">
+    {% endif %}
     {% if path == "index" %}
         <meta property="og:image" content="/static/banner.png">
     {% else %}
