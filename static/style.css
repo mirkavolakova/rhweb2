@@ -124,7 +124,9 @@ background-size: 50%; background-repeat: repeat-x;}
 .action-links-small li {width: 100px;}
 
 p {line-height: 1.75; font-size: 11pt;
-   margin-bottom: 1em;}
+   margin-bottom: 1em;
+   text-align: justify;
+   }
 
 ul {margin-left: 1.2em;}
 li {padding-left: 0.5em;}
