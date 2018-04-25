@@ -7,7 +7,14 @@
     <meta charset="utf-8">
     <meta name="google-site-verification" content="dHBxJL8auRX0ESAji5RdnuBeE9Oa_QHu1KZBqKbddEY" />
     
-        <title>RetroHerna{% if g.pagetitle %} - {{ g.pagetitle }}{%endif%}</title>
+        <title>RetroHerna
+            {% if g.pagetitle %}
+                 - {{ g.pagetitle }}
+            {% else %}
+                - RHFórum - 
+                {% block title %}
+                {% endblock %}
+            {% endif %}</title>
     
     <meta property="og:title" content="RetroHerna{% if g.pagetitle %} - {{ g.pagetitle }}{%endif%}">
     {% if g.pagedescription %}
