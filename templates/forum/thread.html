@@ -101,7 +101,7 @@
                 </div>
                 <div class="post-contents">
                     <div class="post-data">
-                        {% if not reply_post and not post.deleted %}
+                        {% if not reply_post and not post.deleted and g.user %}
                             <a href="{{thread.url}}?reply={{post.id}}#reply">Odpovědět</a>
                             &bull;
                         {% endif %}
