@@ -57,6 +57,7 @@ a {color: #f8f7f6;}
 h1 .logo {width: 200px;}
 h1, h2, .copyright {font-family: 'Amatic SC', 'Open Sans', 'Helvetica', 'Arial', sans-serif;}
 h1 {font-size: 44pt;}
+h1 a, h1 a:hover {text-decoration: none;}
 h2 {color: #ee234f; font-size: 35pt; margin-top: 0.9em;}
 h3:first {margin-top: 1.2em; margin-bottom: 1em;}
 h3 {margin-top: 2em; margin-bottom: 1em;}
