@@ -15,6 +15,12 @@
     {% if g.user.admin %}
         <div class="thread-controls">
             <form action="{{thread.url}}/set" method="POST">
+                {% if not show_deleted %}
+                    <a href="{{thread.url}}?show_deleted">Ukázat odstraněné příspěvky ({{ num_deleted }})</a>
+                {% else %}
+                    <a href="{{thread.url}}">Skrýt odstraněné příspěvky</a>
+                {% endif %}
+                
                 {% if not thread.pinned %}
                     <input type="submit" name="pin" value="Přišpendlit">
                 {% else %}
@@ -34,11 +40,6 @@
                 {% endif %}
             </form>
             
-            {% if not show_deleted %}
-                <a href="{{thread.url}}?show_deleted">Ukázat odstraněné příspěvky ({{ num_deleted }})</a>
-            {% else %}
-                <a href="{{thread.url}}">Skrýt odstraněné příspěvky</a>
-            {% endif %}
         </div>
     {% endif %}
     {% if thread.wiki_article %}
@@ -102,11 +103,11 @@
                 <div class="post-contents">
                     <div class="post-data">
                         {% if not reply_post and not post.deleted and g.user %}
-                            <a href="{{thread.url}}?reply={{post.id}}#reply">Odpovědět</a>
-                            &bull;
+                            <a href="{{thread.url}}?reply={{post.id}}#reply">↶</a>
+                            
                         {% endif %}
                         {% if ((post.author == g.user) or g.user.admin) and post != edit_post and not post.deleted %}
-                            <a href="{{thread.url}}/edit/{{post.id}}#post-{{post.id}}">Upravit</a> &bull;
+                            <a href="{{thread.url}}/edit/{{post.id}}#post-{{post.id}}">🖉</a> 
                         {% endif %}
                         <a href="{{post.url}}" class="permalink">{{ ago(post.timestamp) }}</a>
                         {% if not last_read_timestamp or last_read_timestamp < post.timestamp %}

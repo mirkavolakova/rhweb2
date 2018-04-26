@@ -94,6 +94,8 @@ hr {border: 1px solid white; margin: 32px 0 32px 0;}
     float: right; font-size: 14px; font-weight: normal;}
 
 .thread-controls {float: right; text-align: right;}
+.thread-controls input {font-size: 10px; margin: 3px 1px 3px 1px;}
+.thread-controls a {font-size: 10px; text-decoration: none;}
 .thread-desc {font-style: italic; margin-bottom: 2px; padding-left: 16px;
     /*border-bottom: 1px solid #333333;*/ padding-bottom: 6px;}
 .thread-article {padding: 4px 0 4px 0;
