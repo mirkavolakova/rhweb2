@@ -184,9 +184,9 @@ def page(path):
     
     return render_template_string(page, path=path, page=page)
 
-@app.route("/o-nas")
-def o_nas():
-    return redirect("/")
+#@app.route("/o-nas")
+#def o_nas():
+#    return redirect("/")
 
 
 """
