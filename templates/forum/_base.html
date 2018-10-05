@@ -4,6 +4,7 @@
 {% extends '_base.html' %}
 
 {% block forum_sidebar %}
+    <h2 class="rhforum-title"><a href="{{url_for('.index')}}">RHForum</a></h2>
     {% if g.user %}
         Přihlášen/a za <a href="{{g.user.url}}">{{g.user.name}}</a> &bull;
         <a href="{{url_for('.logout')}}">Odhlásit se</a>
