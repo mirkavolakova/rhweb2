@@ -127,7 +127,7 @@ def new_template_globals():
         "twitter": "https://twitter.com/hernihistorie",
         "discord": "https://discord.gg/9jajeqZ",
         "instagram": "https://www.instagram.com/retroherna/",
-        "bankaccount": "https://www.moneta.cz/firmy/instituce-a-verejna-sprava/transparentni-ucty/001/-/transparent-account/8686868686",
+        "bankaccount": "https://transparentniucty.moneta.cz/homepage?accountNumber=8686868686",
         "forum": "/forum/",
         "email": "mailto:info@retroherna.org",
         "hernihistorie": "https://hernihistorie.cz/",
