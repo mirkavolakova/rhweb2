@@ -141,7 +141,11 @@ class User(Base):
             self.read(thread.last_post) # XXX each does a commit..
     
     def set_password(self, password):
-        self.pass_ = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('ascii')
+        pass_ = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('ascii')
+        # for DokuWiki compatibility
+        if pass_.startswith('$2b'):
+            pass_ = '$2a' + pass_[3:]
+        self.pass_ = pass_
     
     
     def __bool__(self): # this is fine.
