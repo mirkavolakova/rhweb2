@@ -88,6 +88,7 @@ class ThreadForm(PostForm):
 class UserForm(Form):
     fullname = TextField('Nadpis', [validators.required()])
     email = TextField('Email', [validators.required()])
+    new_password = PasswordField('Nové heslo')
     homepage = TextField('Homepage')
     avatar_url = TextField('URL avataru')
     profile = TextAreaField('Profil')
@@ -409,7 +410,7 @@ def login():
     form = LoginForm(request.form)
     failed = False
     if request.method == 'POST' and form.validate():
-        user = db.session.query(db.User).filter(db.User.login == form.name.data.lower()).scalar()
+        user = db.session.query(db.User).filter(db.User.login == form.name.data.lower()).first()
         if not user: failed = True
         else:
             try:
@@ -417,7 +418,7 @@ def login():
             except db.OldHashingMethodException:
                 failed = True
                 password_matches = False
-                flash("Prosím, změňte si heslo na DokuWiki..")
+                flash("Prosím, požádejte admina o změnu hesla.")
             if password_matches:
                 g.user = user
                 session['user_id'] = g.user.id
@@ -451,10 +452,11 @@ def register():
     if request.method == 'POST' and form.validate():
         if form.username.data:
             return "OK"
-        if db.session.query(db.User).filter(db.User.login == form.bbq.data.lower()).scalar():
+        username = form.bbq.data.lower()
+        if db.session.query(db.User).filter(db.User.login == username).first():
             flash("Tento login je už zabraný, vyberte si prosím jiný.")
         else:
-            user = db.User(login=form.bbq.data.lower(), fullname=form.fullname.data, email=form.email.data, timestamp=now(), laststamp=now())
+            user = db.User(login=username, fullname=form.fullname.data, email=form.email.data, timestamp=now(), laststamp=now())
             user.set_password(form.password.data)
             user_group = db.session.query(db.Group).filter(db.Group.name=="user").scalar()
             if user_group:
@@ -719,6 +721,9 @@ def edit_user(user_id, name=None):
         user.email = form.email.data
         user.homepage = form.homepage.data
         user.avatar_url = form.avatar_url.data
+        if form.new_password.data:
+            user.set_password(form.new_password.data)
+            flash("Heslo změněno.")
         if g.user.admin:
             user.groups = []
             for group_id in form.group_ids.data:

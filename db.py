@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship, backref
 from sqlalchemy.schema import Column, ForeignKey, Table
-from sqlalchemy.types import DateTime, Integer, Unicode, Enum, UnicodeText, Boolean, TypeDecorator
+from sqlalchemy.types import DateTime, Integer, String, Enum, Text, Boolean, TypeDecorator
 
 from flask import Flask, url_for
 
@@ -40,16 +40,16 @@ class User(Base):
     __tablename__ = 'users'
     
     uid = Column(Integer, primary_key=True, nullable=False)
-    login = Column(Unicode(20))
-    pass_ = Column('pass', Unicode(60))
-    fullname = Column(Unicode(255))
-    email = Column(Unicode(255))
-    homepage = Column(Unicode(255), default='')
-    minipic_url = Column(Unicode(255), default='')
-    avatar_url = Column(Unicode(255), default='')
+    login = Column(String(20))
+    pass_ = Column('pass', String(60))
+    fullname = Column(String(255))
+    email = Column(String(255))
+    homepage = Column(String(255), default='')
+    minipic_url = Column(String(255), default='')
+    avatar_url = Column(String(255), default='')
     timestamp = Column(DateTime)
     laststamp = Column(DateTime)
-    profile = Column(UnicodeText, default='')
+    profile = Column(Text, default='')
     
     
     groups = relationship("Group", secondary='usergroup')
@@ -125,8 +125,12 @@ class User(Base):
         session.commit()
     
     def verify_password(self, password):
-        if self.pass_.startswith('$2a'):
-            return bcrypt.hashpw(password.encode('utf-8'), self.pass_.encode('utf-8')).decode('ascii') == self.pass_
+        pass_ = self.pass_
+        if isinstance(pass_, bytes):
+            pass_ = pass_.decode('ascii')
+        if pass_.startswith('$2a') or pass_.startswith('$2b'):
+            #return bcrypt.hashpw(password.encode('utf-8'), pass_.encode('utf-8')).decode('ascii') == pass_
+            return bcrypt.checkpw(password.encode('utf-8'), pass_.encode('ascii'))
         else:
             # Old hashing method
             raise OldHashingMethodException
@@ -137,12 +141,12 @@ class User(Base):
             self.read(thread.last_post) # XXX each does a commit..
     
     def set_password(self, password):
-        self.pass_ = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        self.pass_ = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('ascii')
     
     
     def __bool__(self): # this is fine.
-        if not self.in_group("user"):
-            return False
+        #if not self.in_group("user"):
+        #    return False
         return True
 
 class Guest(User):
@@ -152,10 +156,10 @@ class Guest(User):
 class Group(Base):
     __tablename__="groups"
     gid = Column(Integer, primary_key=True, nullable=False)
-    name = Column(Unicode(255))
+    name = Column(String(255))
     
-    symbol = Column(Unicode(16))
-    title = Column(Unicode(255))
+    symbol = Column(String(16))
+    title = Column(String(255))
     rank = Column(Integer, default=0)
     display = Column(Boolean)
     
@@ -174,7 +178,7 @@ class Category(Base):
     __tablename__ = 'categories'
     
     id = Column(Integer, primary_key=True, nullable=False)
-    name = Column(Unicode(255))
+    name = Column(String(255))
     position = Column(Integer)
     
     group_id = Column(Integer, ForeignKey('groups.gid'))
@@ -195,9 +199,9 @@ class Forum(Base):
     __tablename__ = 'fora'
     
     id = Column(Integer, primary_key=True, nullable=False)
-    identifier = Column(Unicode(255))
-    name = Column(Unicode(255))
-    description = Column(UnicodeText)
+    identifier = Column(String(255))
+    name = Column(String(255))
+    description = Column(Text)
     position = Column(Integer)
     
     category_id = Column(Integer, ForeignKey('categories.id'))
@@ -227,13 +231,13 @@ class Thread(Base):
     __tablename__ = 'threads'
     
     id = Column(Integer, primary_key=True, nullable=False)
-    name = Column(Unicode(255))
-    description = Column(UnicodeText)
+    name = Column(String(255))
+    description = Column(Text)
     forum_id = Column(Integer, ForeignKey('fora.id'), nullable=False)
     forum = relationship("Forum", backref='threads', order_by="Thread.laststamp")
     author_id = Column(Integer, ForeignKey('users.uid'), nullable=False)
     author = relationship("User", backref='threads')
-    wiki_article = Column(Unicode(255))
+    wiki_article = Column(String(255))
     timestamp = Column(DateTime)
     laststamp = Column(DateTime)
     pinned = Column(Boolean, default=False, nullable=False)
@@ -265,13 +269,13 @@ class Post(Base):
     __tablename__ = 'posts'
     
     id = Column(Integer, primary_key=True, nullable=False)
-    name = Column(Unicode(255))
+    name = Column(String(255))
     thread_id = Column(Integer, ForeignKey('threads.id'), nullable=False)
     thread = relationship("Thread", order_by="Post.timestamp")
     author_id = Column(Integer, ForeignKey('users.uid'), nullable=False)
     author = relationship("User", foreign_keys=[author_id], backref='posts')
     timestamp = Column(DateTime)
-    text = Column(UnicodeText)
+    text = Column(Text)
     
     deleted = Column(Boolean, default=False, nullable=False)
     editstamp = Column(DateTime)
@@ -308,7 +312,7 @@ class Task(Base):
     
     id = Column(Integer, primary_key=True, nullable=False)
     
-    text = Column(UnicodeText)
+    text = Column(Text)
     created_time = Column(DateTime)
     due_time = Column(DateTime, nullable=True)
     status = Column(Enum("todo", "inprogress", "done", name="status"), nullable=True)
