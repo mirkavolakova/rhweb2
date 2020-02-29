@@ -120,11 +120,14 @@ body {
       width: 100%;
       margin-left: 0;
       padding: 0; } }
-.main {
-  padding: 0 32px 8px 32px !important; }
-  @media (max-width: 800px) {
-    .main h2:first-child {
-      margin-top: .2em; } }
+@media (max-width: 800px) {
+  .main {
+    padding: 0 32px 8px 32px !important; } }
+
+@media (max-width: 800px) {
+  .main h2:first-child {
+    margin-top: .2em; } }
+
 .mobile-logo {
   display: none; }
   @media (max-width: 800px) {
